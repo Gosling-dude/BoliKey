@@ -133,21 +133,20 @@ public final class BoliKeyEngine {
         let wordCount = sentence.split(separator: " ").count
         var out: [Suggestion] = []
         var used = Set<String>()
+        let words = prediction.nextWords(context: context, blend: b, limit: 4)
+        // The likeliest single word comes first: it is usually all that is wanted.
+        if let first = words.first {
+            let text = capitalizedIfSentenceStart(first.text, head: context)
+            used.insert(first.text.lowercased())
+            out.append(Suggestion(kind: .nextWord, display: text, replacing: "", insertion: text))
+        }
         // Two words of context are enough for a phrase to mean something.
         if wordCount >= 2 {
-            for phrase in prediction.phrases(context: context, blend: b, limit: 3) where used.insert(phrase.text.lowercased()).inserted {
+            for phrase in prediction.phrases(context: context, blend: b, limit: 4) where out.count < 3 && used.insert(phrase.text.lowercased()).inserted {
                 out.append(Suggestion(kind: .phrase, display: phraseDisplay(sentence: sentence, continuation: phrase.text), replacing: "", insertion: phrase.text))
             }
-            if out.count > 1 {
-                // Keep a single next word in the mix: it is often all that is wanted.
-                if let word = prediction.nextWords(context: context, blend: b, limit: 1).first,
-                   !out.contains(where: { $0.insertion.split(separator: " ").first.map(String.init) == word.text }), out.count == 3 {
-                    out[2] = Suggestion(kind: .nextWord, display: word.text, replacing: "", insertion: word.text)
-                }
-            }
         }
-        for word in prediction.nextWords(context: context, blend: b, limit: 4) where out.count < 3 && used.insert(word.text.lowercased()).inserted {
-            if out.contains(where: { $0.insertion.hasPrefix(word.text + " ") }) { continue }
+        for word in words.dropFirst() where out.count < 3 && used.insert(word.text.lowercased()).inserted {
             let text = capitalizedIfSentenceStart(word.text, head: context)
             out.append(Suggestion(kind: .nextWord, display: text, replacing: "", insertion: text))
         }
@@ -191,6 +190,9 @@ public final class BoliKeyEngine {
             switch reason {
             case .knownHinglish, .knownEnglish, .devanagari, .personalVocabulary:
                 addKnownWordSuggestions(typed: typed, context: context, head: head, sentence: sentence, blend: b, add: add)
+            case .shortForm:
+                // One or two letters are the start of a word far more often than a word to keep.
+                break
             default:
                 add(preserve)
                 for c in candidates { add(correctionSuggestion(c, typed: typed)) }
@@ -231,20 +233,28 @@ public final class BoliKeyEngine {
             }
             return
         }
-        if wordCount >= 2 {
+        if wordCount >= 1 {
             // "kal mil" is a word already, but "milte" is what usually comes next. Being in the middle
             // of a longer word is likelier than being done, so that gets the first slot.
             if let likely = prediction.expectedCompletion(prefix: typed, context: head, blend: b) {
                 let word = Self.matchCase(of: typed, in: likely)
                 add(Suggestion(kind: .completion, display: word, replacing: typed, insertion: word))
             }
-            for phrase in prediction.phrases(context: context, blend: b, limit: 3) {
-                add(Suggestion(kind: .phrase, display: phraseDisplay(sentence: sentence, continuation: phrase.text), replacing: "", insertion: " " + phrase.text))
+            // After a single English word the sentence corpus has little to say about what comes
+            // next, and the phrases read as translation exercises. Hinglish phrases hold up.
+            if wordCount >= 2 || b.hinglish >= 0.5 {
+                for phrase in prediction.phrases(context: context, blend: b, limit: 3) {
+                    add(Suggestion(kind: .phrase, display: phraseDisplay(sentence: sentence, continuation: phrase.text), replacing: "", insertion: " " + phrase.text))
+                }
             }
         }
         if let normal = hinglish.conventionalSpelling(of: typed), b.hinglish >= 0.5 {
             add(Suggestion(kind: .preserve, display: "“\(typed)”", replacing: typed, insertion: typed))
             add(Suggestion(kind: .correction, display: Self.matchCase(of: typed, in: normal), replacing: typed, insertion: Self.matchCase(of: typed, in: normal)))
+        }
+        // A finished word with nothing else to offer still has a likely next word.
+        for next in prediction.nextWords(context: context, blend: b, limit: 3) {
+            add(Suggestion(kind: .nextWord, display: next.text, replacing: "", insertion: " " + next.text))
         }
     }
 

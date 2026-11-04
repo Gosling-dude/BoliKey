@@ -7,6 +7,7 @@ Inputs
   Data/hinglish/corpus.txt    hand-written conversational Hinglish messages
   Data/hinglish/nosuggest.txt recognised but never proposed words
   Data/english/corpus.txt     hand-written conversational English messages
+  Data/english/abbreviations.psv  everyday chat short forms
   Data/raw/*                  see Tools/fetch_sources.sh and NOTICE.md
 
 Outputs, in Packages/BoliKeyKit/Sources/LanguageCore/LanguageData
@@ -30,7 +31,7 @@ RAW = os.path.join(ROOT, "Data/raw")
 EN_VOCAB = 32000
 EN_SENTENCE_LIMIT = 400000
 EN_BIGRAM_MIN, EN_TRIGRAM_MIN = 8, 8
-EN_BIGRAMS_PER_WORD, EN_TRIGRAMS_PER_CTX = 8, 4
+EN_BIGRAMS_PER_WORD, EN_TRIGRAMS_PER_CTX = 12, 8
 HI_DEVA_VOCAB = 9000
 WORD_RE = re.compile(r"[a-z]+(?:'[a-z]+)?")
 END = "</s>"
@@ -276,6 +277,18 @@ def main():
         r = row(word)
         r["en"] = c
         r["flags"].add("e")
+    # Short forms are known English: recognised, never corrected, and not Hindi evidence.
+    for line in read_lines(os.path.join(ROOT, "Data/english/abbreviations.psv")):
+        forms, meaning = line.split("|")
+        for form in forms.split(","):
+            if form in lexicon:
+                continue
+            r = row(form)
+            r["en"] = max(r["en"], 3000)
+            r["flags"].add("e")
+            r["gloss"] = meaning
+            if " " not in meaning:
+                r["canon"] = meaning
     for word in nosuggest:
         row(word)["flags"].add("n")
     # Devanagari vocabulary, from the lexicon and from the sentence corpus.

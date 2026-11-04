@@ -126,3 +126,32 @@ final class SentenceStartTests: XCTestCase {
         XCTAssertTrue(makeEngine(settings: settings).suggestions(before: "").map(\.insertion).contains("I"))
     }
 }
+
+final class SuggestionQualityTests: XCTestCase {
+    let engine = makeEngine()
+    private func inserted(_ context: String) -> [String] { engine.suggestions(before: context).map { $0.insertion.trimmingCharacters(in: .whitespaces) } }
+
+    func testVeryShortPrefixesGoStraightToCompletions() {
+        XCTAssertEqual(inserted("bh").first, "bhai")
+        XCTAssertFalse(engine.suggestions(before: "bhai k").contains { $0.kind == .preserve })
+    }
+    func testFinishedWordsAlwaysOfferSomething() {
+        for word in ["kya", "hello", "ok", "kal"] { XCTAssertFalse(inserted(word).isEmpty, word) }
+    }
+    func testNextWordComesFirst() {
+        XCTAssertEqual(inserted("I am going ").first, "to")
+        XCTAssertEqual(inserted("theek ").first, "hai")
+    }
+    func testContextualCompletion() {
+        XCTAssertEqual(inserted("Can we m").first, "meet")
+        XCTAssertEqual(inserted("ghar p").first, "pahuch")
+    }
+    func testAbbreviationsAreKnownAndKept() {
+        for word in ["plz", "pls", "lol", "omg", "idk", "btw", "gm", "gn", "thx", "msg", "tmrw", "bcz", "ok", "u"] {
+            XCTAssertNil(engine.autoCorrection(for: word, context: ""), word)
+        }
+    }
+    func testVariantsOfTheTypedWordAreNotOffered() {
+        XCTAssertFalse(inserted("kal").contains("kall"))
+    }
+}

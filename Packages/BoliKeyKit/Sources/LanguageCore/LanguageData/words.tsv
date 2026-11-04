@@ -1642,7 +1642,7 @@ aryans	e	0	258
 as	e	0	1792220			
 asa	e	0	1026			
 asan	h	16	0	aasan	आसान	easy
-asap	e	0	2878			
+asap	e	0	3000			as soon as possible
 asbestos	e	0	775			
 ascend	e	0	865			
 ascendant	e	0	299			
@@ -2761,6 +2761,9 @@ bchugi	h	4	0	bechungi	बेचूँगी	sell
 bchun	h	4	0	bechu	बेचूँ	sell
 bchunga	h	4	0	bechunga	बेचूँगा	sell
 bchungi	h	4	0	bechungi	बेचूँगी	sell
+bcoz	e	0	3000	because		because
+bcs	e	0	3000	because		because
+bcz	e	0	3000	because		because
 bd	h	64	0	baad	बाद	after
 bda	h	64	0	bada	बड़ा	big
 bde	h	16	0	bade	बड़े	big
@@ -4208,6 +4211,7 @@ brazen	e	0	808
 brazil	e	0	6802			
 brazilian	e	0	2914			
 brazilians	e	0	397			
+brb	e	0	3000			be right back
 bre	h	4	0	bure	बुरे	bad
 breach	e	0	5520			
 breached	e	0	1223			
@@ -4494,6 +4498,7 @@ bthun	h	4	0	baithu	बैठूँ	sit
 bthunga	h	4	0	baithunga	बैठूँगा	sit
 bthungi	h	4	0	baithungi	बैठूँगी	sit
 btii	h	16	0	beti	बेटी	daughter
+btw	e	0	3000			by the way
 bu	e	0	1933			
 bub	e	0	922			
 bubba	e	0	2153			
@@ -7594,7 +7599,7 @@ cox	e	0	1909
 coy	e	0	1128			
 coyote	e	0	2413			
 coyotes	e	0	911			
-coz	e	0	1264			
+coz	e	0	3000	because		because
 cozy	e	0	3560			
 cr	h	4	0	crore	करोड़	ten million
 crab	e	0	5300			
@@ -8035,7 +8040,7 @@ cutting	e	0	15498
 cuttings	e	0	228			
 cuttlefish	e	0	283			
 cutty	e	0	284			
-cuz	e	0	2909			
+cuz	e	0	3000	because		because
 cyanide	e	0	1816			
 cybernetic	e	0	283			
 cycle	e	0	7022			
@@ -12998,6 +13003,7 @@ futuristic	e	0	467
 fuzz	e	0	1085			
 fuzzy	e	0	2617			
 fyda	h	4	0	fayda	फ़ायदा	benefit
+fyi	e	0	3000			for your information
 ga	e	0	3760			
 gaa	h	16	0		गा	sing
 gaadi	h	436	0		गाड़ी	car
@@ -13701,6 +13707,8 @@ gluten	e	0	595
 glutton	e	0	484			
 gluttony	e	0	357			
 glynn	e	0	328			
+gm	e	0	3000			good morning
+gn	e	0	3000			good night
 gnarly	e	0	615			
 gnat	e	0	254			
 gnaw	e	0	367			
@@ -14222,6 +14230,7 @@ guarding	e	0	3115
 guards	e	0	19757			
 guatemalan	e	0	212			
 guava	e	0	325			
+gud	e	0	3000	good		good
 guerrilla	e	0	1044			
 guerrillas	e	0	778			
 guess	e	0	250320			
@@ -15778,6 +15787,7 @@ icy	e	0	2228
 id	e	0	16835			
 ida	e	0	2709			
 idaho	e	0	1322			
+idc	e	0	3000			I do not know
 idea	e	0	263097			
 ideal	e	0	8087			
 idealism	e	0	457			
@@ -15802,6 +15812,7 @@ idiom	e	0	203
 idiot	e	0	62357			
 idiotic	e	0	2438			
 idiots	e	0	12614			
+idk	e	0	3000			I do not know
 idle	e	0	2953			
 idleness	e	0	287			
 idly	e	0	607			
@@ -17653,8 +17664,6 @@ kala	e	0	490
 kale	e	0	1309			
 kaleidoscope	e	0	260			
 kali	e	0	1294			
-kalki	h	4	0		कल की	of tomorrow
-kalkii	h	4	0	kalki	कल की	of tomorrow
 kall	h	256	0	kal	कल	tomorrow/yesterday
 kam	h	256	0		कम	less
 kamaal	h	436	0		कमाल	amazing
@@ -18232,6 +18241,7 @@ kiyaa	h	256	0	kiya	किया	did
 kiye	h	256	0		किये	do
 kiyi	h	256	0		कियी	do
 kjiye	h	16	0	kijiye	कीजिए	please do
+kk	e	0	3000	okay		okay
 kkhushi	h	16	0	khushi	ख़ुशी	happiness
 kl	h	256	0	kal	कल	tomorrow/yesterday
 klan	e	0	746			
@@ -18422,8 +18432,7 @@ kutta	h	64	0		कुत्ता	dog
 kutti	n	0	0			
 kwan	e	0	1419			
 kya	h	10084	0		क्या	what
-kyaa	h	4	0		क्या	what
-kyaaa	h	4	0	kyaa	क्या	what
+kyaa	h	256	0	kya	क्या	what
 kyle	e	0	18807			
 kyoki	h	64	0	kyunki	क्योंकि	because
 kyon	h	256	0	kyun	क्यों	why
@@ -19464,11 +19473,13 @@ loins	e	0	700
 lois	e	0	9872			
 loiter	e	0	222			
 loitering	e	0	753			
+lol	e	0	3000			laugh out loud
 lola	e	0	6262			
 lollipop	e	0	1274			
 lollipops	e	0	472			
 lolly	e	0	800			
 lolo	e	0	290			
+lolz	e	0	3000			laugh out loud
 lombard	e	0	583			
 london	e	0	42880			
 lone	e	0	3807			
@@ -20439,7 +20450,6 @@ maths	e	0	2040
 matinee	e	0	670			
 mating	e	0	1936			
 matlab	h	1204	0		मतलब	meaning
-matlabi	h	4	0		मतलबी	selfish
 matriarch	e	0	272			
 matrimonial	e	0	382			
 matrimony	e	0	1320			
@@ -21574,7 +21584,9 @@ mrie	h	4	0	mariye	मरिए	die
 mriye	h	4	0	mariye	मरिए	die
 mrna	h	4	0	marna	मरना	die
 mrne	h	4	0	marne	मरने	die
+mrng	e	0	3000	morning		morning
 mrni	h	4	0	marni	मरनी	die
+mrnng	e	0	3000	morning		morning
 mro	h	4	0	maro	मरो	die
 mroge	h	4	0	maroge	मरोगे	die
 mrogi	h	4	0	marogi	मरोगी	die
@@ -21599,7 +21611,6 @@ mt	h	64	0	mat	मत	don't
 mtg	h	64	0	meeting	मीटिंग	meeting
 mtlab	h	256	0	matlab	मतलब	meaning
 mtlb	h	256	0	matlab	मतलब	meaning
-mtlbi	h	4	0	matlabi	मतलबी	selfish
 mu	e	0	2082			
 mubarak	h	124	0		मुबारक	congratulations
 mubrak	h	16	0	mubarak	मुबारक	congratulations
@@ -22314,6 +22325,7 @@ nips	e	0	370
 nirvana	e	0	932			
 nis	e	0	377			
 nit	e	0	282			
+nite	e	0	3000	night		night
 nitrate	e	0	714			
 nitric	e	0	202			
 nitro	e	0	726			
@@ -22404,12 +22416,13 @@ nonprofit	e	0	283
 nonsense	e	0	32097			
 nonsensical	e	0	305			
 nonstop	e	0	1392			
+noo	e	0	3000	no		no
 noodle	e	0	2590			
 noodles	e	0	5053			
 nook	e	0	808			
 noon	e	0	10982			
 noose	e	0	1919			
-nope	e	0	26427			
+nope	e	0	26427	no		no
 nor	e	0	34821			
 nora	e	0	7593			
 norad	e	0	246			
@@ -22779,10 +22792,13 @@ oiled	e	0	377
 oils	e	0	848			
 oily	e	0	876			
 ointment	e	0	1259			
-ok	el	10	388338			
+ok	el	10	388338	okay		okay
 oka	e	0	347			
 okay	el	10	1428884			
-oki	e	0	269			
+oki	e	0	3000	okay		okay
+okie	e	0	3000	okay		okay
+okk	e	0	3000	okay		okay
+okkk	e	0	3000	okay		okay
 oklahoma	e	0	2186			
 okra	e	0	330			
 ol	e	0	4872			
@@ -22822,6 +22838,8 @@ omelette	e	0	975
 omen	e	0	1865			
 omens	e	0	505			
 omer	e	0	527			
+omfg	e	0	3000			oh my god
+omg	e	0	3000			oh my god
 omicron	e	0	213			
 ominous	e	0	4270			
 omission	e	0	354			
@@ -24834,6 +24852,7 @@ plentiful	e	0	566
 plenty	e	0	36941			
 pliers	e	0	841			
 plight	e	0	1376			
+pliz	e	0	3000	please		please
 pln	h	256	0	plan	प्लान	plan
 plop	e	0	469			
 plot	e	0	9006			
@@ -24847,6 +24866,8 @@ plow	e	0	1253
 plowed	e	0	411			
 plowing	e	0	462			
 ploy	e	0	1390			
+pls	e	0	3000	please		please
+plss	e	0	3000	please		please
 pluck	e	0	2095			
 plucked	e	0	1147			
 plucking	e	0	525			
@@ -24885,6 +24906,8 @@ plutonium	e	0	1133
 ply	e	0	399			
 plymouth	e	0	898			
 plywood	e	0	406			
+plz	e	0	3000	please		please
+plzz	e	0	3000	please		please
 pm	e	0	8007			
 pneumatic	e	0	285			
 pneumonia	e	0	2587			
@@ -32870,6 +32893,7 @@ taylor	e	0	17672
 tayyar	h	16	0	taiyar	तैयार	ready
 tb	h	16	0	tab	तब	then
 tbiyat	h	64	0	tabiyat	तबीयत	health
+tc	e	0	3000			take care
 tch	e	0	461			
 td	h	4	0	tod	तोड़	break
 tde	h	4	0	tode	तोड़े	break
@@ -33568,6 +33592,8 @@ tmhare	h	256	0	tumhare	तुम्हारे	your
 tmhari	h	256	0	tumhari	तुम्हारी	your
 tmhe	h	256	0	tumhe	तुम्हें	to you
 tmne	h	64	0	tumne	तुमने	you (did)
+tmr	e	0	3000	tomorrow		tomorrow
+tmrw	e	0	3000	tomorrow		tomorrow
 tmse	h	64	0	tumse	तुमसे	from you
 tnsn	h	256	0	tension	टेंशन	tension
 to	eh	296	17099834	toh	तो	then
@@ -34243,6 +34269,7 @@ tsar	e	0	1664
 tsk	e	0	2520			
 tsunami	e	0	1594			
 tsunamis	e	0	250			
+ttyl	e	0	3000			talk to you later
 tu	eh	2044	3368		तू	you
 tuan	e	0	513			
 tub	e	0	6944			
@@ -34456,6 +34483,7 @@ tyre	e	0	1641
 tyres	e	0	2640			
 tyrone	e	0	1008			
 tyson	e	0	2473			
+u	e	0	3000	you		you
 ubiquitous	e	0	212			
 udhaar	h	16	0		उधार	loan
 udhar	h	124	0		उधर	there
@@ -35005,7 +35033,7 @@ uptight	e	0	2456
 uptown	e	0	1885			
 upward	e	0	1110			
 upwards	e	0	1473			
-ur	e	0	628			
+ur	e	0	3000	your		your
 uranium	e	0	2091			
 uranus	e	0	671			
 urban	e	0	4019			
@@ -36056,7 +36084,7 @@ wets	e	0	244
 wetter	e	0	384			
 wetting	e	0	498			
 weve	e	0	283			
-wfh	l	20	0			
+wfh	el	20	3000			work from home
 wh	e	0	4287			
 wha	eh	256	7214	wahan	वहाँ	there
 whack	e	0	4297			
@@ -36693,10 +36721,11 @@ yen	e	0	8215
 yeo	e	0	657			
 yeoman	e	0	334			
 yeon	e	0	2336			
-yep	e	0	45096			
+yep	e	0	45096	yes		yes
 yer	e	0	2600			
 yes	e	0	1634050			
 yeses	e	0	264			
+yess	e	0	3000	yes		yes
 yesterday	e	0	83823			
 yesterday's	e	0	1230			
 yet	e	0	257947			
@@ -36765,7 +36794,7 @@ yr	h	256	0	yaar	यार	friend
 yrr	h	256	0	yaar	यार	friend
 yrs	e	0	252			
 ys	e	0	230			
-yu	e	0	6750			
+yu	e	0	6750	you		you
 yuan	e	0	3152			
 yuck	e	0	2975			
 yucky	e	0	358			
@@ -36778,7 +36807,7 @@ yum	e	0	3032
 yuma	e	0	382			
 yummy	e	0	3515			
 yun	e	0	2200			
-yup	e	0	13494			
+yup	e	0	13494	yes		yes
 yuri	e	0	3571			
 yurt	e	0	207			
 yvonne	e	0	2721			
@@ -38331,7 +38360,7 @@ zyada	h	1084	0		ज़्यादा	more
 कौवे	d	6	0			
 कौवों	d	2	0			
 कौशल	d	1	0			
-क्या	d	1309	0			
+क्या	d	1289	0			
 क्यूँ	d	10	0			
 क्यूट	d	43	0			
 क्यूबा	d	2	0			
@@ -42638,7 +42667,7 @@ zyada	h	1084	0		ज़्यादा	more
 मठाधीश	d	1	0			
 मत	d	229	0			
 मतलब	d	84	0			
-मतलबी	d	42	0			
+मतलबी	d	2	0			
 मतली	d	1	0			
 मदद	d	236	0			
 मदर	d	3	0			

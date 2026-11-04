@@ -73,7 +73,7 @@ public final class PredictionEngine {
         return rank(scores, limit: limit)
     }
 
-    private func accumulate(words: [String], blend: Blend, into scores: inout [String: Float]) {
+    private func accumulate(words: [String], blend: Blend, trigramsOnly: Bool = false, into scores: inout [String: Float]) {
         let first = words.count >= 2 ? words[words.count - 2] : Self.start
         let second = words.last ?? Self.start
         func add(_ language: NGramModel.Language, weight: Float) {
@@ -81,6 +81,7 @@ public final class PredictionEngine {
             if words.count >= 1 {
                 for n in lexicon.ngrams.next(after: first, second, in: language) { scores[n.word, default: 0] += n.probability * weight * 0.7 }
             }
+            guard !trigramsOnly else { return }
             for n in lexicon.ngrams.next(after: second, in: language) { scores[n.word, default: 0] += n.probability * weight * 0.3 }
         }
         if blend.devanagari {
@@ -119,11 +120,13 @@ public final class PredictionEngine {
         struct Beam { var words: [String]; var added: [String]; var score: Float; var closed: Bool }
         var beams = [Beam(words: words, added: [], score: 1, closed: false)]
         var finished: [Beam] = []
-        for _ in 0..<maxWords {
+        for step in 0..<maxWords {
             var expanded: [Beam] = []
             for beam in beams {
                 var scores: [String: Float] = [:]
-                accumulate(words: beam.words, blend: blend, into: &scores)
+                // Past the first word, a phrase must have real three-word evidence. Stitching
+                // together unrelated pairs is how a phrase ends up sounding wrong.
+                accumulate(words: beam.words, blend: blend, trigramsOnly: step > 0, into: &scores)
                 for (word, p) in scores.sorted(by: { $0.value == $1.value ? $0.key < $1.key : $0.value > $1.value }).prefix(5) {
                     if word == Self.end {
                         if !beam.added.isEmpty { finished.append(Beam(words: beam.words, added: beam.added, score: beam.score * p, closed: true)) }
@@ -174,6 +177,9 @@ public final class PredictionEngine {
         var scored: [String: Float] = [:]
         for match in trie.completions(of: lower, limit: 24) where match.word != lower {
             guard let entry = lexicon.entries[match.word], !entry.flags.contains(.noSuggest) else { continue }
+            // A variant spelling is no use when its conventional form also fits what was typed:
+            // "kal" should not offer "kall". "kr" still offers "krna", the writer's own style.
+            if let canonical = entry.canonical, canonical.hasPrefix(lower), !blend.devanagari { continue }
             var score: Float
             if blend.devanagari {
                 score = Float(log10(max(1, Double(match.score))))
@@ -183,12 +189,12 @@ public final class PredictionEngine {
                 let isEnglish = entry.flags.contains(.english)
                 score += (isHindi ? blend.hinglish : 0) * 1.1 + (isEnglish ? blend.english : 0) * 1.1
             }
-            score += (nextScores[entry.canonicalOrSelf] ?? 0) * 6
+            score += (nextScores[entry.canonicalOrSelf] ?? 0) * 14
             scored[match.word] = score
         }
         // Words that the n-gram model expects here, even if they are rare overall.
         for (word, p) in nextScores where word.hasPrefix(lower) && word != lower && word != Self.end {
-            scored[word] = max(scored[word] ?? 0, p * 6 + 1.5)
+            scored[word] = max(scored[word] ?? 0, p * 14 + 1.5)
         }
         for word in personal.completions(of: lower, limit: limit) {
             scored[word, default: 0] += 3 + Float(min(personal.usage(of: word), 6)) * 0.5
