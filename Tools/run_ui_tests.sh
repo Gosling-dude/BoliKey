@@ -5,6 +5,9 @@ cd "$(dirname "$0")/.."
 SIM="${1:-$(xcrun simctl list devices booted | grep -Eo '[0-9A-F-]{36}' | head -1)}"
 [ $# -gt 0 ] && shift
 OUT="${BOLIKEY_TEST_OUT:-build/uitest}"
+# Make BoliKey the active keyboard on this simulator. This changes the simulator's preferences only.
+xcrun simctl spawn "$SIM" defaults write .GlobalPreferences AppleKeyboards -array \
+  "com.sumitxfermi.bolikey.keyboard" "en_IN@sw=QWERTY;hw=Automatic;ml=100"
 rm -rf "$OUT/result.xcresult"
 mkdir -p "$OUT"
 xcodebuild test -project BoliKey.xcodeproj -scheme BoliKey -destination "platform=iOS Simulator,id=$SIM" \

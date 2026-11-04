@@ -90,7 +90,7 @@ final class KeyboardUITests: KeyboardTestCase {
         }
         func tap(_ label: String) {
             // iOS 27 calls the General row "Keyboards", where earlier versions say "Keyboard".
-            let text = settings.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", label)).firstMatch
+            let text = settings.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", label)).firstMatch
             var tries = 0
             while !(text.exists && text.isHittable) && tries < 6 {
                 settings.swipeUp()
@@ -108,7 +108,7 @@ final class KeyboardUITests: KeyboardTestCase {
         shot("settings-keyboards")
         let listed = NSPredicate(format: "label CONTAINS 'BoliKey'")
         if !settings.staticTexts.matching(listed).firstMatch.exists {
-            let add = settings.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Add New Keyboard'")).firstMatch
+            let add = settings.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH 'Add New Keyboard'")).firstMatch
             var tries = 0
             while !add.isHittable && tries < 4 {
                 settings.swipeUp()
