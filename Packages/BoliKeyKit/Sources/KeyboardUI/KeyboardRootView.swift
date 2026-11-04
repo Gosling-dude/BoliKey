@@ -96,6 +96,12 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         applySettingsToUI()
         applyFieldTraits()
         haptics.prepare()
+        // A reused keyboard can open in a field with a different appearance.
+        if let host {
+            theme = .resolve(dark: host.usesDarkAppearance)
+            bar.apply(theme: theme)
+            grid.apply(theme: theme)
+        }
         if let host, host.prefersNumericPage, page == .letters {
             page = .numbers
         }
@@ -116,6 +122,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         grid.apply(theme: theme)
         emojiPanel.apply(theme: theme)
         rewritePanel.apply(theme: theme)
+        rewritePanel.backgroundColor = theme.panelBackground
         rebuildKeys()
     }
 
@@ -298,7 +305,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
 
     private func applyLanguageChange() {
         let store = storeFactory()
-        store.writePrivate(KeyboardLocalState(languageMode: settings.languageMode, activeProfileID: settings.activeProfileID), file: StoreFile.keyboardState)
+        store.writePrivate(KeyboardLocalState(languageMode: settings.languageMode, activeProfileID: settings.activeProfileID, basedOnRevision: settings.revision), file: StoreFile.keyboardState)
         bar.setLanguage(settings.languageMode)
         page = basePage()
         rebuildKeys()
@@ -385,11 +392,15 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
             self?.input.tapBackspace()
             self?.refreshSuggestions()
         }
-        panel.onDismiss = { [weak self] in self?.emojiPanel.removeFromSuperview() }
+        panel.onDismiss = { [weak self] in
+            self?.emojiPanel.removeFromSuperview()
+            self?.grid.isHidden = false
+        }
         return panel
     }
 
     private func showEmoji() {
+        grid.isHidden = true
         addSubview(emojiPanel)
         setNeedsLayout()
     }

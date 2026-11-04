@@ -111,6 +111,9 @@ private struct PrivacyDashboardScreen: View {
                 ForEach(model.inventory) { item in
                     VStack(alignment: .leading, spacing: 2) {
                         LabeledContent(item.title, value: "\(item.count)")
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(item.title)
+                            .accessibilityValue("\(item.count)")
                             .accessibilityIdentifier("inventory-\(item.id)")
                         Text(item.detail).font(.caption).foregroundStyle(.secondary)
                     }

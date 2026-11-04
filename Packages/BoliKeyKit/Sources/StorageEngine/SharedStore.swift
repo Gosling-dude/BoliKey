@@ -114,8 +114,8 @@ public enum SettingsStore {
         var settings = store.readShared(KeyboardSettings.self, file: StoreFile.settings)
             ?? store.readPrivate(KeyboardSettings.self, file: StoreFile.settings)
             ?? KeyboardSettings()
-        // The keyboard's own choice of language or profile wins for the keyboard itself.
-        if let state = store.readPrivate(KeyboardLocalState.self, file: StoreFile.keyboardState) {
+        // A choice made on the keyboard holds until the app saves something newer.
+        if let state = store.readPrivate(KeyboardLocalState.self, file: StoreFile.keyboardState), state.basedOnRevision == settings.revision {
             settings.languageMode = state.languageMode ?? settings.languageMode
             settings.activeProfileID = state.activeProfileID ?? settings.activeProfileID
         }
@@ -123,15 +123,19 @@ public enum SettingsStore {
     }
 
     public static func save(_ settings: KeyboardSettings, to store: SharedStore) {
-        store.write(settings, file: StoreFile.settings)
+        var stamped = settings
+        stamped.revision = UUID().uuidString
+        store.write(stamped, file: StoreFile.settings)
     }
 }
 
 public struct KeyboardLocalState: Codable, Sendable {
     public var languageMode: LanguageMode?
     public var activeProfileID: String?
-    public init(languageMode: LanguageMode? = nil, activeProfileID: String? = nil) {
+    public var basedOnRevision: String
+    public init(languageMode: LanguageMode? = nil, activeProfileID: String? = nil, basedOnRevision: String) {
         self.languageMode = languageMode
         self.activeProfileID = activeProfileID
+        self.basedOnRevision = basedOnRevision
     }
 }

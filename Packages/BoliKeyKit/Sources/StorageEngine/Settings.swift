@@ -80,6 +80,8 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
     public var onboardingCompleted = false
     /// Raised by the app on "Reset learning". The keyboard then wipes its own private copy.
     public var resetGeneration = 0
+    /// Changed on every save from the app, so that a newer choice there beats an older one on the keyboard.
+    public var revision = ""
 
     public init() {}
 
@@ -103,5 +105,6 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
         profiles = try c.decodeIfPresent([LanguageProfile].self, forKey: .profiles) ?? d.profiles
         onboardingCompleted = try c.decodeIfPresent(Bool.self, forKey: .onboardingCompleted) ?? d.onboardingCompleted
         resetGeneration = try c.decodeIfPresent(Int.self, forKey: .resetGeneration) ?? d.resetGeneration
+        revision = try c.decodeIfPresent(String.self, forKey: .revision) ?? d.revision
     }
 }

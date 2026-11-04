@@ -89,22 +89,25 @@ final class KeyboardUITests: KeyboardTestCase {
             Thread.sleep(forTimeInterval: 0.5)
         }
         func tap(_ label: String) {
-            let text = settings.staticTexts[label].firstMatch
+            // iOS 27 calls the General row "Keyboards", where earlier versions say "Keyboard".
+            let text = settings.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", label)).firstMatch
             var tries = 0
             while !(text.exists && text.isHittable) && tries < 6 {
                 settings.swipeUp()
                 tries += 1
             }
             text.tap()
+            // Let the push animation finish, or the next tap lands on the outgoing screen.
+            Thread.sleep(forTimeInterval: 1.2)
         }
         tap("General")
         tap("Keyboard")
-        Thread.sleep(forTimeInterval: 1)
         let row = settings.collectionViews.cells.containing(.staticText, identifier: "Keyboards").firstMatch
         (row.exists ? row : settings.cells.element(boundBy: 0)).tap()
         Thread.sleep(forTimeInterval: 1)
         shot("settings-keyboards")
-        if !settings.staticTexts["BoliKey — BoliKey"].exists && !settings.staticTexts["BoliKey"].exists {
+        let listed = NSPredicate(format: "label CONTAINS 'BoliKey'")
+        if !settings.staticTexts.matching(listed).firstMatch.exists {
             let add = settings.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Add New Keyboard'")).firstMatch
             var tries = 0
             while !add.isHittable && tries < 4 {
@@ -231,6 +234,27 @@ final class KeyboardUITests: KeyboardTestCase {
         XCTAssertEqual(value(of: field), "Ok5.#")
     }
 
+    func testHoldingBackspaceRepeats() {
+        launch()
+        let field = openTryField()
+        type("kal milte hai")
+        element("key.Delete").press(forDuration: 1.3)
+        let remaining = value(of: field).count
+        XCTAssertLessThan(remaining, 10, "Holding delete keeps deleting")
+    }
+
+    func testLandscapeLayout() {
+        launch()
+        let field = openTryField()
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+        Thread.sleep(forTimeInterval: 1.5)
+        XCTAssertTrue(element("language-indicator").waitForExistence(timeout: 3))
+        type("kal")
+        XCTAssertEqual(value(of: field), "Kal")
+        shot("landscape")
+    }
+
     func testLongPressAlternate() {
         launch()
         let field = openTryField()
@@ -263,6 +287,7 @@ final class KeyboardUITests: KeyboardTestCase {
         launch()
         let field = openTryField()
         let indicator = element("language-indicator")
+        XCTAssertTrue(indicator.label.contains("Hinglish"), "A data reset in the app must also reset the keyboard: \(indicator.label)")
         indicator.tap() // English
         indicator.tap() // Hindi
         XCTAssertTrue(element("key.क").waitForExistence(timeout: 2))
@@ -298,14 +323,18 @@ final class KeyboardUITests: KeyboardTestCase {
     }
 
     func testDarkAppearanceRenders() {
-        launch()
-        _ = openTryField()
-        shot("light-keyboard")
-        XCUIDevice.shared.appearance = .dark
-        Thread.sleep(forTimeInterval: 1)
-        XCTAssertTrue(element("key.q").exists || element("key.Q").exists)
+        app.launchArguments = ["-uiTestSkipOnboarding", "-uiTestResetData", "-uiTestDark"]
+        app.launch()
+        let field = openTryField()
+        type("bhai kal mil")
+        XCTAssertNotNil(waitForSuggestion("milte"))
+        XCTAssertEqual(value(of: field), "Bhai kal mil")
         shot("dark-keyboard")
-        XCUIDevice.shared.appearance = .light
+        element("key.Numbers").tap()
+        shot("dark-numbers")
+        element("style-control").tap()
+        XCTAssertTrue(element("rewrite-Casual").waitForExistence(timeout: 3))
+        shot("dark-styles")
     }
 
     func testSwitchKeyboardsWithGlobe() {
@@ -388,7 +417,7 @@ final class CompanionAppUITests: KeyboardTestCase {
         element("settings-privacy").tap()
         XCTAssertTrue(element("inventory-dictionary").waitForExistence(timeout: 3))
         shot("privacy-dashboard")
-        XCTAssertEqual(element("inventory-dictionary").value as? String, "1")
+        XCTAssertEqual(element("inventory-dictionary").value as? String, "1", "One word was added")
         var tries = 0
         while !element("privacy-clear").isHittable && tries < 5 {
             app.swipeUp()
@@ -399,6 +428,55 @@ final class CompanionAppUITests: KeyboardTestCase {
         Thread.sleep(forTimeInterval: 0.5)
         goToTab("Dictionary")
         XCTAssertFalse(element("dictionary-entry-chintu").exists)
+    }
+
+    func testExplicitChoiceIsLearnedAndCanBeReset() {
+        launch()
+        let field = openTryField()
+        type("kal kya")
+        waitForSuggestion("Kal kya plan hai")?.tap()
+        XCTAssertEqual(value(of: field), "Kal kya plan hai ")
+        Thread.sleep(forTimeInterval: 0.5)
+        element("keyboard-done").tap()
+        goToTab("Settings")
+        element("settings-privacy").tap()
+        let phrases = element("inventory-phrases")
+        XCTAssertTrue(phrases.waitForExistence(timeout: 3))
+        XCTAssertEqual(phrases.value as? String, "1", "The tapped phrase is what was learned")
+        shot("privacy-after-learning")
+        var tries = 0
+        while !element("privacy-reset").isHittable && tries < 5 {
+            app.swipeUp()
+            tries += 1
+        }
+        element("privacy-reset").tap()
+        app.buttons["Reset Learning"].firstMatch.tap()
+        Thread.sleep(forTimeInterval: 0.5)
+        app.swipeDown()
+        XCTAssertEqual(phrases.value as? String, "0")
+    }
+
+    func testPlainTypingLearnsNothing() {
+        launch()
+        _ = openTryField()
+        type("mera secret ")
+        Thread.sleep(forTimeInterval: 0.5)
+        element("keyboard-done").tap()
+        goToTab("Settings")
+        element("settings-privacy").tap()
+        XCTAssertTrue(element("inventory-words").waitForExistence(timeout: 3))
+        XCTAssertEqual(element("inventory-words").value as? String, "0")
+    }
+
+    func testSecureFieldsDoNotUseBoliKey() {
+        app.launchArguments = ["-uiTestSkipOnboarding", "-uiTestResetData", "-uiTestSecureField"]
+        app.launch()
+        let secure = app.secureTextFields["secure-field"]
+        XCTAssertTrue(secure.waitForExistence(timeout: 8))
+        secure.tap()
+        Thread.sleep(forTimeInterval: 1.5)
+        shot("secure-field")
+        XCTAssertFalse(element("language-indicator").exists, "iOS must replace third-party keyboards in password fields")
     }
 
     func testStylesScreenShowsRealRewrites() {
@@ -455,10 +533,12 @@ final class RealAppUITests: KeyboardTestCase {
         let messages = XCUIApplication(bundleIdentifier: "com.apple.MobileSMS")
         messages.launch()
         Thread.sleep(forTimeInterval: 2)
-        let compose = messages.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'Compose' OR label CONTAINS[c] 'New'")).firstMatch
-        if compose.waitForExistence(timeout: 5) { compose.tap() }
-        let body = messages.textViews.firstMatch
-        let fieldToUse = body.waitForExistence(timeout: 5) ? body : messages.textFields.firstMatch
+        // The simulator ships with one sample conversation. Nothing is sent by this test.
+        let conversation = messages.cells.firstMatch
+        XCTAssertTrue(conversation.waitForExistence(timeout: 8))
+        conversation.tap()
+        let fieldToUse = element("messageBodyField", in: messages)
+        XCTAssertTrue(fieldToUse.waitForExistence(timeout: 5))
         fieldToUse.tap()
         ensureBoliKey(in: messages)
         type("bhai kal milte hai ", in: messages)
@@ -474,7 +554,10 @@ final class RealAppUITests: KeyboardTestCase {
         let add = reminders.buttons.matching(NSPredicate(format: "label CONTAINS[c] 'New Reminder'")).firstMatch
         XCTAssertTrue(add.waitForExistence(timeout: 8))
         add.tap()
-        Thread.sleep(forTimeInterval: 1)
+        Thread.sleep(forTimeInterval: 1.5)
+        shot("reminders-after-add")
+        let row = reminders.textViews.firstMatch
+        if row.exists { row.tap() }
         ensureBoliKey(in: reminders)
         type("meeting kal baje hai", in: reminders)
         Thread.sleep(forTimeInterval: 0.5)

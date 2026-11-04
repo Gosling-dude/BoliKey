@@ -156,7 +156,9 @@ public final class BoliKeyEngine {
 
     private func phraseDisplay(sentence: String, continuation: String) -> String {
         let lastTwo = sentence.split(separator: " ").suffix(2).joined(separator: " ")
-        return lastTwo.isEmpty ? continuation : "\(lastTwo) \(continuation)"
+        // The strip has room for about 20 characters. Beyond that, only the new words matter.
+        let full = "\(lastTwo) \(continuation)"
+        return lastTwo.isEmpty || full.count > 20 ? continuation : full
     }
 
     private func midWordSuggestions(typed: String, context: String) -> [Suggestion] {
@@ -230,6 +232,12 @@ public final class BoliKeyEngine {
             return
         }
         if wordCount >= 2 {
+            // "kal mil" is a word already, but "milte" is what usually comes next. Being in the middle
+            // of a longer word is likelier than being done, so that gets the first slot.
+            if let likely = prediction.expectedCompletion(prefix: typed, context: head, blend: b) {
+                let word = Self.matchCase(of: typed, in: likely)
+                add(Suggestion(kind: .completion, display: word, replacing: typed, insertion: word))
+            }
             for phrase in prediction.phrases(context: context, blend: b, limit: 3) {
                 add(Suggestion(kind: .phrase, display: phraseDisplay(sentence: sentence, continuation: phrase.text), replacing: "", insertion: " " + phrase.text))
             }
@@ -245,10 +253,12 @@ public final class BoliKeyEngine {
     /// Call when the user taps a suggestion. This is the main thing the keyboard learns from.
     public func didAccept(_ suggestion: Suggestion, context: String) {
         guard fieldPolicy.mayLearn else { return }
+        // Whole sentences are the user's own writing. Choosing one is not a phrase worth keeping.
+        if suggestion.kind == .improvement || suggestion.insertion.contains(" ") && suggestion.kind == .preserve { return }
         let head = String(context.dropLast(suggestion.replacing.count))
         let previous = Tokenizer.trailingWord(in: head.trimmingCharacters(in: .whitespaces))
         if suggestion.kind == .preserve {
-            for word in suggestion.insertion.split(separator: " ") { personalization.recordPreserved(word: String(word)) }
+            personalization.recordPreserved(word: suggestion.insertion)
         } else {
             personalization.recordAccepted(text: suggestion.insertion.trimmingCharacters(in: .whitespaces), previousWord: previous.isEmpty ? nil : previous)
         }

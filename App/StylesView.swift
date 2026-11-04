@@ -53,6 +53,7 @@ struct StylesView: View {
                     Text("iOS does not tell keyboards who you are writing to, so you choose the profile yourself, here or from the wand on the keyboard. Profiles stay on this iPhone.")
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Writing Styles")
         }
     }

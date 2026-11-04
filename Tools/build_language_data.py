@@ -34,7 +34,8 @@ EN_BIGRAMS_PER_WORD, EN_TRIGRAMS_PER_CTX = 8, 4
 HI_DEVA_VOCAB = 9000
 WORD_RE = re.compile(r"[a-z]+(?:'[a-z]+)?")
 END = "</s>"
-DEVA_RE = re.compile(r"[ऀ-ॿ]+")
+# Excludes the danda marks, which are punctuation and must not attach to words.
+DEVA_RE = re.compile("[\u0900-\u0963\u0966-\u097F]+")
 
 
 def read_lines(path):
@@ -244,7 +245,8 @@ def main():
             parts = line.rstrip("\n").split("\t")
             if len(parts) >= 3:
                 toks = DEVA_RE.findall(parts[2])
-                if toks:
+                # The same placeholder characters appear in the Hindi translations.
+                if toks and not any(t.startswith(("टॉम", "मैरी", "जॉन", "सामी", "लैला")) for t in toks):
                     deva_sents.append(toks)
     deva_extra = [e.deva for e in lexicon.values() if e.deva and " " not in e.deva]
     d_uni, d_bi, d_tri = ngram_counts(deva_sents)

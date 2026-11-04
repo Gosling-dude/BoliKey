@@ -95,7 +95,14 @@ public final class PredictionEngine {
         scores.filter { suggestable($0.key) }
             .sorted { $0.value == $1.value ? $0.key < $1.key : $0.value > $1.value }
             .prefix(limit)
-            .map { Prediction(text: personal.preferredSpelling(of: $0.key) ?? $0.key, score: $0.value) }
+            .map { Prediction(text: Self.written(personal.preferredSpelling(of: $0.key) ?? $0.key), score: $0.value) }
+    }
+
+    /// The model is lowercase, and the English pronoun should not be offered that way.
+    static func written(_ word: String) -> String {
+        if word == "i" { return "I" }
+        if word.hasPrefix("i'") { return "I" + word.dropFirst() }
+        return word
     }
 
     private func suggestable(_ word: String) -> Bool {
@@ -134,7 +141,7 @@ public final class PredictionEngine {
             .sorted { $0.score == $1.score ? $0.added.joined() < $1.added.joined() : $0.score > $1.score }
             .filter { seen.insert($0.added.joined(separator: " ")).inserted }
         var results = multi.prefix(limit).map { beam in
-            Prediction(text: beam.added.map { personal.preferredSpelling(of: $0) ?? $0 }.joined(separator: " "), score: beam.score)
+            Prediction(text: beam.added.map { Self.written(personal.preferredSpelling(of: $0) ?? $0) }.joined(separator: " "), score: beam.score)
         }
         // What this user has chosen before comes first.
         let learned = personal.phraseContinuations(of: words.joined(separator: " "), limit: limit)
@@ -143,6 +150,16 @@ public final class PredictionEngine {
             results.insert(Prediction(text: phrase, score: 1), at: 0)
         }
         return Array(results.prefix(limit))
+    }
+
+    /// The word the n-gram model expects here that extends `prefix`, if there is one.
+    public func expectedCompletion(prefix: String, context: String, blend: Blend) -> String? {
+        let lower = prefix.lowercased()
+        var scores: [String: Float] = [:]
+        accumulate(words: contextWords(context), blend: blend, into: &scores)
+        let best = scores.filter { $0.key.hasPrefix(lower) && $0.key != lower && $0.key != Self.end && suggestable($0.key) }
+            .max { $0.value == $1.value ? $0.key > $1.key : $0.value < $1.value }
+        return best.map { Self.written(personal.preferredSpelling(of: $0.key) ?? $0.key) }
     }
 
     /// Completions of a partly typed word, ranked using the sentence so far.
@@ -178,6 +195,6 @@ public final class PredictionEngine {
         }
         return scored.sorted { $0.value == $1.value ? $0.key < $1.key : $0.value > $1.value }
             .prefix(limit)
-            .map { Prediction(text: $0.key, score: $0.value) }
+            .map { Prediction(text: Self.written($0.key), score: $0.value) }
     }
 }

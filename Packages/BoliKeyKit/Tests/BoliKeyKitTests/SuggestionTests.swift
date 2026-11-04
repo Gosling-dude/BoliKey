@@ -57,6 +57,12 @@ final class SuggestionTests: XCTestCase {
         XCTAssertFalse(a.isEmpty)
     }
 
+    func testValidShortWordStillOffersItsLikelyCompletion() {
+        let suggestions = engine.suggestions(before: "bhai kal mil")
+        XCTAssertEqual(suggestions.first?.insertion, "milte", "\(suggestions.map(\.display))")
+        XCTAssertEqual(suggestions.first?.replacing, "mil")
+    }
+
     func testWordCompletion() {
         let c = engine.prediction.completions(prefix: "mil", context: "kal ", blend: .init(hinglish: 0.9, english: 0.1), limit: 3).map(\.text)
         XCTAssertTrue(c.contains("milte"), "\(c)")
@@ -87,6 +93,18 @@ final class SuggestionTests: XCTestCase {
         var settings = KeyboardSettings()
         settings.predictionsEnabled = false
         XCTAssertTrue(makeEngine(settings: settings).suggestions(before: "kal ").isEmpty)
+    }
+
+    func testMappedLookupsAreExact() {
+        XCTAssertEqual(Lexicon.shared.entry("thik")?.canonical, "theek")
+        XCTAssertNil(Lexicon.shared.entry("thi k"))
+        XCTAssertNil(Lexicon.shared.entries["zzzzzq"])
+        XCTAssertNotNil(Lexicon.shared.entries["a"], "First-band lookups work")
+        XCTAssertTrue(Lexicon.shared.ngrams.next(after: "kal", "kya", in: .hinglish).prefix(3).contains { $0.word == "plan" })
+        XCTAssertTrue(Lexicon.shared.ngrams.next(after: "zzzz", in: .english).isEmpty)
+        let bigram = Lexicon.shared.ngrams.next(after: "going", in: .english)
+        XCTAssertEqual(bigram.first?.word, "to")
+        XCTAssertEqual(bigram.reduce(0) { $0 + $1.probability }, 1, accuracy: 0.001)
     }
 
     func testOfflineModelLoaded() {

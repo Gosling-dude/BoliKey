@@ -46,6 +46,15 @@ final class RewritePanel: UIView {
         emptyLabel.textAlignment = .center
         addSubview(emptyLabel)
         apply(theme: theme)
+        // The system's scroll-edge blur would smear content in a panel this small.
+        if #available(iOS 26.0, *) {
+            for view in [scroll, profileScroll] {
+                view.topEdgeEffect.isHidden = true
+                view.bottomEdgeEffect.isHidden = true
+                view.leftEdgeEffect.isHidden = true
+                view.rightEdgeEffect.isHidden = true
+            }
+        }
     }
 
     required init?(coder: NSCoder) { fatalError("Not used") }
@@ -105,12 +114,12 @@ final class RewritePanel: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        closeButton.frame = CGRect(x: bounds.width - 44, y: 4, width: 40, height: 30)
-        profileScroll.frame = CGRect(x: 6, y: 6, width: bounds.width - 54, height: 26)
+        closeButton.frame = CGRect(x: bounds.width - 44, y: 8, width: 40, height: 30)
+        profileScroll.frame = CGRect(x: 6, y: 10, width: bounds.width - 54, height: 26)
         let size = profileStack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         profileStack.frame = CGRect(origin: .zero, size: CGSize(width: size.width, height: 26))
         profileScroll.contentSize = profileStack.frame.size
-        scroll.frame = CGRect(x: 6, y: 38, width: bounds.width - 12, height: bounds.height - 40)
+        scroll.frame = CGRect(x: 6, y: 44, width: bounds.width - 12, height: bounds.height - 46)
         let rowSize = stack.systemLayoutSizeFitting(CGSize(width: scroll.bounds.width, height: UIView.layoutFittingCompressedSize.height),
                                                     withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
         stack.frame = CGRect(x: 0, y: 0, width: scroll.bounds.width, height: rowSize.height)

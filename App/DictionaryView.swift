@@ -6,6 +6,7 @@ struct DictionaryView: View {
     @State private var text = ""
     @State private var kind: VocabularyEntry.Kind = .word
     @State private var expansion = ""
+    @FocusState private var editing: Bool
 
     private var canAdd: Bool {
         !text.trimmingCharacters(in: .whitespaces).isEmpty
@@ -19,6 +20,7 @@ struct DictionaryView: View {
                     TextField("Word, name or phrase", text: $text)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                        .focused($editing)
                         .accessibilityIdentifier("dictionary-text")
                     Picker("Type", selection: $kind) {
                         ForEach(VocabularyEntry.Kind.allCases) { Text($0.displayName).tag($0) }
@@ -27,12 +29,14 @@ struct DictionaryView: View {
                     if kind == .abbreviation {
                         TextField("Expands to", text: $expansion)
                             .textInputAutocapitalization(.never)
+                            .focused($editing)
                             .accessibilityIdentifier("dictionary-expansion")
                     }
                     Button("Add to Dictionary") {
                         model.addVocabulary(text: text, kind: kind, expansion: kind == .abbreviation ? expansion : nil)
                         text = ""
                         expansion = ""
+                        editing = false
                     }
                     .disabled(!canAdd)
                     .accessibilityIdentifier("dictionary-add")
@@ -57,6 +61,7 @@ struct DictionaryView: View {
                     }
                 }
             }
+            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Dictionary")
         }
     }

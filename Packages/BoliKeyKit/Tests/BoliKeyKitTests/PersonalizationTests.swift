@@ -42,6 +42,14 @@ final class PersonalizationTests: XCTestCase {
         XCTAssertFalse(next.contains("nahi"), "\(next)")
     }
 
+    func testChoosingASentenceDoesNotStoreIt() {
+        let engine = BoliKeyEngine(store: makeStore(), settings: KeyboardSettings())
+        let s = "mera secret plan hai"
+        engine.didAccept(Suggestion(kind: .improvement, display: s, replacing: s, insertion: s), context: s)
+        engine.didAccept(Suggestion(kind: .preserve, display: s, replacing: s, insertion: s), context: s)
+        XCTAssertTrue(engine.personalization.learned.isEmpty, "\(engine.personalization.learned)")
+    }
+
     func testTypingWithoutChoosingLearnsNothing() {
         let engine = BoliKeyEngine(store: makeStore(), settings: KeyboardSettings())
         let harness = TypingHarness(engine: engine)
@@ -108,5 +116,29 @@ final class PersonalizationTests: XCTestCase {
         let settings = try JSONDecoder().decode(KeyboardSettings.self, from: Data(#"{"autoCorrectEnabled":false}"#.utf8))
         XCTAssertFalse(settings.autoCorrectEnabled)
         XCTAssertEqual(settings.languageMode, .hinglish)
+    }
+}
+
+final class SettingsSyncTests: XCTestCase {
+    func testKeyboardChoiceHoldsUntilTheAppSavesAgain() throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("bolikey-s-\(UUID().uuidString)")
+        let store = SharedStore(sharedDirectory: base.appendingPathComponent("shared"), privateDirectory: base.appendingPathComponent("private"))
+        SettingsStore.save(KeyboardSettings(), to: store)
+        let current = SettingsStore.load(from: store)
+
+        store.writePrivate(KeyboardLocalState(languageMode: .hindi, activeProfileID: "work", basedOnRevision: current.revision), file: StoreFile.keyboardState)
+        XCTAssertEqual(SettingsStore.load(from: store).languageMode, .hindi)
+        XCTAssertEqual(SettingsStore.load(from: store).activeProfileID, "work")
+
+        var changed = current
+        changed.languageMode = .english
+        SettingsStore.save(changed, to: store)
+        XCTAssertEqual(SettingsStore.load(from: store).languageMode, .english, "The app's newer choice wins")
+    }
+
+    func testEnglishPronounIsNeverLowercase() {
+        let engine = makeEngine()
+        let next = engine.prediction.nextWords(context: "yes ", blend: .init(hinglish: 0, english: 1), limit: 8).map(\.text)
+        XCTAssertFalse(next.contains("i"), "\(next)")
     }
 }

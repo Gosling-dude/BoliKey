@@ -24,16 +24,61 @@ public struct WordEntry: Sendable {
     public var canonicalOrSelf: String { canonical ?? word }
 }
 
+/// The vocabulary, looked up in place in the mapped word table.
+public struct EntryTable: Sequence {
+    let table: MappedTable?
+
+    public var count: Int { table?.count ?? 0 }
+
+    public subscript(word: String) -> WordEntry? {
+        guard let table else { return nil }
+        let range = table.equalRange(of: word)
+        guard let index = range.first else { return nil }
+        return Self.decode(table.fields(at: index))
+    }
+
+    static func decode(_ fields: [String]) -> WordEntry? {
+        guard fields.count >= 7 else { return nil }
+        var flags: WordFlags = []
+        for ch in fields[1] {
+            switch ch {
+            case "h": flags.insert(.hinglish)
+            case "e": flags.insert(.english)
+            case "d": flags.insert(.devanagari)
+            case "l": flags.insert(.loanword)
+            case "n": flags.insert(.noSuggest)
+            default: break
+            }
+        }
+        return WordEntry(word: fields[0], flags: flags,
+                         hindiCount: Int32(clamping: Int(fields[2]) ?? 0), englishCount: Int32(clamping: Int(fields[3]) ?? 0),
+                         canonical: fields[4].isEmpty ? nil : fields[4],
+                         devanagari: fields[5].isEmpty ? nil : fields[5],
+                         gloss: fields[6].isEmpty ? nil : fields[6])
+    }
+
+    public func makeIterator() -> AnyIterator<(String, WordEntry)> {
+        var i = 0
+        return AnyIterator {
+            guard let table = self.table else { return nil }
+            while i < table.count {
+                defer { i += 1 }
+                if let e = Self.decode(table.fields(at: i)) { return (e.word, e) }
+            }
+            return nil
+        }
+    }
+}
+
 /// The read-only language model: vocabulary, n-grams and character statistics.
 /// Loaded once, off the main thread, and shared by every engine.
 public final class Lexicon {
-    public private(set) var entries: [String: WordEntry] = [:]
+    public private(set) var entries = EntryTable(table: nil)
     public let latinTrie = Trie()
     public let devanagariTrie = Trie()
     public let ngrams = NGramModel()
     private var charGrams: [String: (hi: Float, en: Float)] = [:]
     private var charFloor: (hi: Float, en: Float) = (-12, -12)
-    private var variantsByCanonical: [String: [String]] = [:]
     private var romanByDevanagari: [String: String] = [:]
     public private(set) var hindiTotal: Double = 1
     public private(set) var englishTotal: Double = 1
@@ -61,7 +106,7 @@ public final class Lexicon {
         let url = bundle.url(forResource: name, withExtension: "tsv", subdirectory: "LanguageData")
             ?? bundle.url(forResource: name, withExtension: "tsv")
         guard let url else { throw LoadError.missing(name) }
-        return try Data(contentsOf: url, options: .mappedIfSafe)
+        return try Data(contentsOf: url, options: .alwaysMapped)
     }
 
     private func load(from bundle: Bundle) throws {
@@ -72,39 +117,20 @@ public final class Lexicon {
 
     private func parseWords(_ data: Data) {
         latinTrie.reserve(40_000)
-        entries.reserveCapacity(46_000)
+        entries = EntryTable(table: MappedTable(data: data))
         forEachLine(data) { fields in
             guard fields.count >= 7 else { return }
             let word = fields[0]
-            var flags: WordFlags = []
-            for ch in fields[1] {
-                switch ch {
-                case "h": flags.insert(.hinglish)
-                case "e": flags.insert(.english)
-                case "d": flags.insert(.devanagari)
-                case "l": flags.insert(.loanword)
-                case "n": flags.insert(.noSuggest)
-                default: break
-                }
-            }
             let hi = Int32(clamping: Int(fields[2]) ?? 0)
             let en = Int32(clamping: Int(fields[3]) ?? 0)
-            let entry = WordEntry(word: word, flags: flags, hindiCount: hi, englishCount: en,
-                                  canonical: fields[4].isEmpty ? nil : fields[4],
-                                  devanagari: fields[5].isEmpty ? nil : fields[5],
-                                  gloss: fields[6].isEmpty ? nil : fields[6])
-            entries[word] = entry
             hindiTotal += Double(hi)
             englishTotal += Double(en)
-            if let canonical = entry.canonical {
-                variantsByCanonical[canonical, default: []].append(word)
-            }
-            if flags.contains(.devanagari) {
+            if fields[1].contains("d") {
                 devanagariTrie.insert(word, score: Float(hi))
             } else {
                 latinTrie.insert(word, score: unigramScore(hi: hi, en: en))
-                if let deva = entry.devanagari, entry.canonical == nil, romanByDevanagari[deva] == nil {
-                    romanByDevanagari[deva] = word
+                if !fields[5].isEmpty, fields[4].isEmpty, romanByDevanagari[fields[5]] == nil {
+                    romanByDevanagari[fields[5]] = word
                 }
             }
         }
@@ -126,13 +152,14 @@ public final class Lexicon {
         }
     }
 
-    public func entry(_ word: String) -> WordEntry? { entries[word.lowercased()] ?? entries[word] }
+    public func entry(_ word: String) -> WordEntry? {
+        let lower = word.lowercased()
+        return entries[lower] ?? (lower == word ? nil : entries[word])
+    }
 
     public func isKnown(_ word: String) -> Bool { entry(word) != nil }
 
     public func canonical(of word: String) -> String { entry(word)?.canonical ?? word.lowercased() }
-
-    public func variants(of canonical: String) -> [String] { variantsByCanonical[canonical] ?? [] }
 
     public func roman(forDevanagari word: String) -> String? { romanByDevanagari[word] }
 

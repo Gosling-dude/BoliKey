@@ -22,6 +22,7 @@ struct MainTabView: View {
 struct HomeView: View {
     @State private var text = ""
     @State private var showingPreview = false
+    @State private var secret = ""
     @FocusState private var focused: Bool
 
     var body: some View {
@@ -47,6 +48,11 @@ struct HomeView: View {
                                 }
                             }
                     }
+                    #if DEBUG
+                    if ProcessInfo.processInfo.arguments.contains("-uiTestSecureField") {
+                        SecureField("Password", text: $secret).accessibilityIdentifier("secure-field")
+                    }
+                    #endif
                     Button { showingPreview = true } label: {
                         Label("Preview the keyboard without enabling it", systemImage: "eye")
                     }
@@ -58,6 +64,12 @@ struct HomeView: View {
                 .padding()
             }
             .navigationBarHidden(true)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") { focused = false }.accessibilityIdentifier("keyboard-done")
+                }
+            }
             .scrollDismissesKeyboard(.interactively)
             .sheet(isPresented: $showingPreview) { KeyboardPreviewScreen() }
         }
