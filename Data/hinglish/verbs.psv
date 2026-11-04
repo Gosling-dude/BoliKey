@@ -1,0 +1,83 @@
+# Verb table expanded by Tools/build_language_data.py into conjugated forms.
+# stem | short-stem | devanagari-stem | gloss | class (C=consonant final, A=aa final, I=ee/i final) | past-stem-roman | past-stem-devanagari | weight
+kar|kr|कर|do|C|kiy|किय|5
+ho|h|हो|be|O|hu|हु|5
+ja|j|जा|go|A|ga|ग|5
+aa|a|आ|come|A|aa|आ|5
+de|d|दे|give|E|di|दि|5
+le|l|ले|take|E|li|लि|5
+dekh|dkh|देख|see|C|dekh|देख|5
+bol|bl|बोल|speak|C|bol|बोल|5
+sun|sn|सुन|listen|C|sun|सुन|4
+samajh|smjh|समझ|understand|C|samjh|समझ|4
+bata|bta|बता|tell|A|bata|बता|5
+mil|ml|मिल|meet|C|mil|मिल|5
+chal|chl|चल|walk|C|chal|चल|5
+khel|khl|खेल|play|C|khel|खेल|3
+kha|kh|खा|eat|A|kha|खा|4
+pi|p|पी|drink|I|pi|पि|3
+so|s|सो|sleep|O|so|सो|4
+uth|uth|उठ|get up|C|uth|उठ|3
+baith|bth|बैठ|sit|C|baith|बैठ|3
+ruk|rk|रुक|stop|C|ruk|रुक|4
+rakh|rkh|रख|keep|C|rakh|रख|4
+pakad|pkd|पकड़|hold|C|pakd|पकड़|2
+likh|lkh|लिख|write|C|likh|लिख|3
+padh|pdh|पढ़|read|C|padh|पढ़|4
+sikh|skh|सीख|learn|C|sikh|सीख|2
+sikha|skha|सिखा|teach|A|sikha|सिखा|1
+bhej|bhj|भेज|send|C|bhej|भेज|4
+la|l|ला|bring|A|la|ला|4
+pahuch|phuch|पहुँच|reach|C|pahuch|पहुँच|4
+nikal|nkl|निकल|leave|C|nikl|निकल|4
+daal|dal|डाल|put|C|daal|डाल|2
+gir|gr|गिर|fall|C|gir|गिर|2
+utha|utha|उठा|lift|A|utha|उठा|2
+bana|bna|बना|make|A|bana|बना|4
+ban|bn|बन|become|C|ban|बन|3
+badal|bdl|बदल|change|C|badl|बदल|2
+khol|khl|खोल|open|C|khol|खोल|3
+band kar|band kr|बंद कर|close|X|band ki|बंद कि|1
+dhund|dhnd|ढूँढ|search|C|dhund|ढूँढ|2
+soch|sch|सोच|think|C|soch|सोच|4
+maan|man|मान|agree|C|maan|मान|3
+jaan|jan|जान|know|C|jaan|जान|4
+pooch|puch|पूछ|ask|C|pooch|पूछ|4
+hans|hns|हँस|laugh|C|hans|हँस|2
+ro|r|रो|cry|O|ro|रो|2
+gaa|g|गा|sing|A|gaa|गा|2
+nach|nch|नाच|dance|C|nach|नाच|1
+daud|dd|दौड़|run|C|daud|दौड़|2
+bhool|bhul|भूल|forget|C|bhool|भूल|3
+yaad kar|yaad kr|याद कर|remember|X|yaad ki|याद कि|1
+lag|lg|लग|seem|C|lag|लग|5
+mang|mng|माँग|demand|C|maang|माँग|2
+kharid|khrd|खरीद|buy|C|kharid|खरीद|3
+bech|bch|बेच|sell|C|bech|बेच|2
+pehen|phn|पहन|wear|C|pehn|पहन|2
+dho|dh|धो|wash|O|dho|धो|1
+saaf kar|saaf kr|साफ़ कर|clean|X|saaf ki|साफ़ कि|1
+seekh|skh|सीख|learn|C|seekh|सीख|2
+jeet|jit|जीत|win|C|jeet|जीत|2
+haar|har|हार|lose|C|haar|हार|2
+tod|td|तोड़|break|C|tod|तोड़|2
+jod|jd|जोड़|join|C|jod|जोड़|1
+kaat|kat|काट|cut|C|kaat|काट|2
+mar|mr|मर|die|C|mar|मर|1
+maar|mar|मार|hit|C|maar|मार|2
+bach|bch|बच|escape|C|bach|बच|2
+bacha|bcha|बचा|save|A|bacha|बचा|2
+chhod|chod|छोड़|leave|C|chhod|छोड़|4
+pa|p|पा|get|A|pa|पा|3
+rah|rh|रह|stay|C|rah|रह|5
+laut|lt|लौट|return|C|laut|लौट|2
+dikha|dkha|दिखा|show|A|dikha|दिखा|3
+dikh|dkh|दिख|be visible|C|dikh|दिख|3
+sambhal|smbhl|सँभाल|handle|C|sambhal|सँभाल|2
+bula|bla|बुला|call|A|bula|बुला|3
+ghuma|ghma|घुमा|rotate|A|ghuma|घुमा|1
+ghoom|ghum|घूम|roam|C|ghoom|घूम|2
+pila|pla|पिला|make drink|A|pila|पिला|1
+khila|khla|खिला|feed|A|khila|खिला|1
+suna|sna|सुना|tell|A|suna|सुना|3
+sula|sla|सुला|put to sleep|A|sula|सुला|1

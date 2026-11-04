@@ -1,0 +1,164 @@
+# Hand-written everyday English messages. Weighted above the translation-style sentence corpus.
+i am going to the office
+i am on my way
+i am on the way
+i am at home
+i am almost there
+i am running late
+i am so tired
+i am not sure
+i am sorry
+i am busy right now
+i will call you later
+i will call you back
+i will be there soon
+i will be late
+i will let you know
+i will text you
+i will send it to you
+i will see you tomorrow
+i will come tomorrow
+i will check and get back to you
+i'll call you later
+i'll be there soon
+i'll let you know
+i'll get back to you
+i'm on my way
+i'm almost there
+i'm running late
+i'm at home
+i'm not sure
+i'm so sorry
+i'm in a meeting
+i'm free now
+i'm good how are you
+i don't know
+i don't think so
+i don't have time
+i can't make it
+i can't come today
+i think so
+i think we should
+i think it is fine
+i love you
+i miss you
+i need your help
+i need to go
+i want to go
+i have a meeting
+i have to go
+i just saw your message
+i just reached home
+can we meet tomorrow
+can we meet today
+can we talk later
+can we talk now
+can you call me
+can you call me back
+can you send me the file
+can you help me
+can you please check
+can i call you
+could you please send me
+could you please check
+do you want to come
+do you have time
+do you know
+did you eat
+did you see my message
+are you free today
+are you free tomorrow
+are you coming
+are you okay
+are you there
+are you at home
+how are you
+how are you doing
+how was your day
+how is it going
+how much is it
+how long will it take
+what are you doing
+what time is the meeting
+what time should we meet
+what is the plan
+what's up
+what's the plan for tomorrow
+what happened
+when are you coming
+when can we meet
+when is the meeting
+where are you
+where are you now
+where should we meet
+why are you late
+see you tomorrow
+see you soon
+see you later
+see you at the office
+talk to you later
+talk to you soon
+thank you so much
+thank you for your help
+thanks for the update
+thanks a lot
+no problem
+no worries
+not at all
+that sounds good
+that is great
+that's great
+that's fine
+sounds good
+looks good
+good morning
+good night
+good evening
+have a nice day
+have a good day
+take care
+let me know
+let me know when you are free
+let me check
+let's meet tomorrow
+let's talk later
+let's go
+please call me
+please call me back
+please let me know
+please send me the details
+please find the attached file
+sorry for the delay
+sorry i missed your call
+sorry i am late
+happy birthday
+congratulations on your new job
+the meeting is at five
+the meeting has been moved to tomorrow
+we have a meeting tomorrow
+we can talk tomorrow
+we should meet soon
+we are on our way
+we will discuss it tomorrow
+it was nice meeting you
+it is raining here
+it's okay
+it's fine
+it's not working
+just reached the office
+just got home
+on my way
+running late
+call me when you are free
+call me back
+send me the location
+send me the file
+meet me at the office
+looking forward to it
+looking forward to hearing from you
+kindly confirm
+kindly share the details
+as discussed
+please review the attached document
+i wanted to check if you are available
+would you be available tomorrow

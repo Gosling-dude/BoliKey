@@ -1,0 +1,24 @@
+// Generated from Data/hinglish/improvements.psv. Edit that file, not this one.
+enum ImprovementData {
+    static let rows: [(String, String)] = [
+        ("theek hu", "bilkul theek hu"),
+        ("theek hoon", "bilkul theek hoon"),
+        ("accha hai", "bahut accha hai"),
+        ("badhiya hai", "bahut badhiya hai"),
+        ("mast hai", "ekdum mast hai"),
+        ("thoda wait", "thoda sa wait"),
+        ("nahi pata", "bilkul nahi pata"),
+        ("samajh nahi aaya", "samajh nahi aaya, please batao"),
+        ("kal milte hai", "kal pakka milte hain"),
+        ("kal milte hain", "kal pakka milte hain"),
+        ("ghar pahuch gaya", "ghar safely pahuch gaya"),
+        ("ghar pahuch gayi", "ghar safely pahuch gayi"),
+        ("late ho jaunga", "thoda late ho jaunga"),
+        ("aa raha hoon", "bas aa raha hoon"),
+        ("aa raha hu", "bas aa raha hu"),
+        ("call karta hoon", "thodi der mein call karta hoon"),
+        ("kaam ho gaya", "kaam poora ho gaya"),
+        ("sorry", "really sorry"),
+        ("thanks", "thanks a lot"),
+    ]
+}

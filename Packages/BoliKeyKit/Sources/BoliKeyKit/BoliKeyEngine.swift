@@ -1,0 +1,275 @@
+@_exported import LanguageCore
+@_exported import HinglishEngine
+@_exported import LanguageDetectionEngine
+@_exported import TransliterationEngine
+@_exported import StorageEngine
+@_exported import PersonalizationEngine
+@_exported import CorrectionEngine
+@_exported import PredictionEngine
+@_exported import AIWritingEngine
+@_exported import KeyboardInputEngine
+@_exported import PrivacyManager
+import Foundation
+
+public struct Suggestion: Equatable, Sendable {
+    public enum Kind: String, Sendable {
+        /// Keep exactly what was typed.
+        case preserve
+        /// A fix for a likely typo.
+        case correction
+        case completion
+        case nextWord
+        case phrase
+        /// An optional better sentence: conventional spelling, punctuation or phrasing.
+        case improvement
+        case transliteration
+        case expansion
+    }
+
+    public let kind: Kind
+    /// Text shown in the bar.
+    public let display: String
+    /// The end of the existing text that this replaces.
+    public let replacing: String
+    public let insertion: String
+    public let addsSpace: Bool
+    /// When true, this is what would be auto-applied at the next space.
+    public var willAutoApply = false
+
+    public init(kind: Kind, display: String, replacing: String, insertion: String, addsSpace: Bool = true, willAutoApply: Bool = false) {
+        self.kind = kind
+        self.display = display
+        self.replacing = replacing
+        self.insertion = insertion
+        self.addsSpace = addsSpace
+        self.willAutoApply = willAutoApply
+    }
+}
+
+/// The offline language brain. Composes the engines and owns no UI.
+public final class BoliKeyEngine {
+    public let lexicon: Lexicon
+    public let hinglish: HinglishEngine
+    public private(set) var detector: LanguageDetector
+    public let transliterator: Transliterator
+    public let personalization: PersonalizationEngine
+    public let correction: CorrectionEngine
+    public let prediction: PredictionEngine
+    public let writing: WritingEngine
+    public let store: SharedStore
+    public var settings: KeyboardSettings {
+        didSet { applySettings() }
+    }
+    public var fieldPolicy: FieldPolicy = .full
+
+    public init(store: SharedStore, lexicon: Lexicon = .shared, settings: KeyboardSettings? = nil) {
+        self.store = store
+        self.lexicon = lexicon
+        let loaded = settings ?? SettingsStore.load(from: store)
+        self.settings = loaded
+        hinglish = HinglishEngine(lexicon: lexicon)
+        detector = LanguageDetector(lexicon: lexicon)
+        transliterator = Transliterator(lexicon: lexicon)
+        personalization = PersonalizationEngine(store: store, lexicon: lexicon)
+        correction = CorrectionEngine(lexicon: lexicon, hinglish: hinglish, detector: detector, personal: personalization)
+        prediction = PredictionEngine(lexicon: lexicon, detector: detector, personal: personalization)
+        writing = WritingEngine(lexicon: lexicon, hinglish: hinglish)
+        applySettings()
+    }
+
+    private func applySettings() {
+        personalization.isEnabled = settings.personalizationEnabled
+    }
+
+    /// Re-reads settings and personal data the app may have changed. Call when the keyboard appears.
+    public func reloadFromDisk() {
+        settings = SettingsStore.load(from: store)
+        personalization.reload(resetGeneration: settings.resetGeneration)
+    }
+
+    private var preference: Float {
+        switch settings.languageMode {
+        case .hinglish: return 0.7
+        case .english: return 0.05
+        case .hindi: return 0.95
+        }
+    }
+
+    // MARK: Correction at a word boundary
+
+    /// The replacement to apply automatically, or nil to preserve the word.
+    public func autoCorrection(for word: String, context: String) -> String? {
+        guard fieldPolicy.mayAutoCorrect, settings.autoCorrectEnabled else { return nil }
+        switch correction.decide(word: word, context: context, autoCorrectEnabled: true) {
+        case .preserve: return nil
+        case .correct(let best, _): return Self.matchCase(of: word, in: best.word)
+        }
+    }
+
+    // MARK: Suggestions
+
+    public func suggestions(before context: String) -> [Suggestion] {
+        guard fieldPolicy.mayPredict, settings.predictionsEnabled else { return [] }
+        let typed = Tokenizer.trailingWord(in: context)
+        return typed.isEmpty ? nextWordSuggestions(context) : midWordSuggestions(typed: typed, context: context)
+    }
+
+    private func blend(_ context: String) -> PredictionEngine.Blend {
+        let sentence = Tokenizer.currentSentence(in: context)
+        var blend = prediction.blend(forContext: sentence, preference: preference)
+        if settings.languageMode == .hindi, sentence.isEmpty { blend.devanagari = true }
+        return blend
+    }
+
+    private func capitalizedIfSentenceStart(_ text: String, head: String) -> String {
+        guard settings.autoCapitalizeEnabled else { return text }
+        let isStart = Tokenizer.currentSentence(in: head).isEmpty
+        return isStart ? text.prefix(1).uppercased() + text.dropFirst() : text
+    }
+
+    private func nextWordSuggestions(_ context: String) -> [Suggestion] {
+        let b = blend(context)
+        let sentence = Tokenizer.currentSentence(in: context)
+        let wordCount = sentence.split(separator: " ").count
+        var out: [Suggestion] = []
+        var used = Set<String>()
+        // Two words of context are enough for a phrase to mean something.
+        if wordCount >= 2 {
+            for phrase in prediction.phrases(context: context, blend: b, limit: 3) where used.insert(phrase.text.lowercased()).inserted {
+                out.append(Suggestion(kind: .phrase, display: phraseDisplay(sentence: sentence, continuation: phrase.text), replacing: "", insertion: phrase.text))
+            }
+            if out.count > 1 {
+                // Keep a single next word in the mix: it is often all that is wanted.
+                if let word = prediction.nextWords(context: context, blend: b, limit: 1).first,
+                   !out.contains(where: { $0.insertion.split(separator: " ").first.map(String.init) == word.text }), out.count == 3 {
+                    out[2] = Suggestion(kind: .nextWord, display: word.text, replacing: "", insertion: word.text)
+                }
+            }
+        }
+        for word in prediction.nextWords(context: context, blend: b, limit: 4) where out.count < 3 && used.insert(word.text.lowercased()).inserted {
+            if out.contains(where: { $0.insertion.hasPrefix(word.text + " ") }) { continue }
+            let text = capitalizedIfSentenceStart(word.text, head: context)
+            out.append(Suggestion(kind: .nextWord, display: text, replacing: "", insertion: text))
+        }
+        return out
+    }
+
+    private func phraseDisplay(sentence: String, continuation: String) -> String {
+        let lastTwo = sentence.split(separator: " ").suffix(2).joined(separator: " ")
+        return lastTwo.isEmpty ? continuation : "\(lastTwo) \(continuation)"
+    }
+
+    private func midWordSuggestions(typed: String, context: String) -> [Suggestion] {
+        let head = String(context.dropLast(typed.count))
+        let sentence = Tokenizer.currentSentence(in: context)
+        let b = blend(context)
+        let isDevanagari = Script.of(typed) == .devanagari
+        let decision = correction.decide(word: typed, context: head, autoCorrectEnabled: settings.autoCorrectEnabled && fieldPolicy.mayAutoCorrect)
+        var out: [Suggestion] = []
+
+        func add(_ s: Suggestion) {
+            guard out.count < 3, !out.contains(where: { $0.insertion.lowercased() == s.insertion.lowercased() && $0.replacing == s.replacing }) else { return }
+            out.append(s)
+        }
+        let preserve = Suggestion(kind: .preserve, display: "“\(typed)”", replacing: typed, insertion: typed)
+
+        // An abbreviation the user defined is offered, never applied.
+        if let expansion = personalization.entry(for: typed)?.expansion {
+            add(preserve)
+            add(Suggestion(kind: .expansion, display: expansion, replacing: typed, insertion: expansion))
+        }
+
+        switch decision {
+        case .correct(let best, let alternatives):
+            add(preserve)
+            let word = Self.matchCase(of: typed, in: best.word)
+            add(Suggestion(kind: .correction, display: word, replacing: typed, insertion: word, willAutoApply: true))
+            for alt in alternatives { add(correctionSuggestion(alt, typed: typed)) }
+        case .preserve(let reason, let candidates):
+            switch reason {
+            case .knownHinglish, .knownEnglish, .devanagari, .personalVocabulary:
+                addKnownWordSuggestions(typed: typed, context: context, head: head, sentence: sentence, blend: b, add: add)
+            default:
+                add(preserve)
+                for c in candidates { add(correctionSuggestion(c, typed: typed)) }
+            }
+        }
+
+        // Fill what is left with completions.
+        for completion in prediction.completions(prefix: typed, context: head, blend: b, limit: 4) {
+            let word = Self.matchCase(of: typed, in: completion.text)
+            add(Suggestion(kind: .completion, display: word, replacing: typed, insertion: word))
+        }
+        if settings.devanagariSuggestionsEnabled, !isDevanagari, hinglish.isHindi(typed), let last = out.indices.last, out.count == 3 {
+            let deva = transliterator.toDevanagari(word: typed)
+            out[last] = Suggestion(kind: .transliteration, display: deva, replacing: typed, insertion: deva)
+        }
+        return out
+    }
+
+    private func correctionSuggestion(_ candidate: Candidate, typed: String) -> Suggestion {
+        let word = Self.matchCase(of: typed, in: candidate.word)
+        return Suggestion(kind: .correction, display: word, replacing: typed, insertion: word)
+    }
+
+    private func addKnownWordSuggestions(typed: String, context: String, head: String, sentence: String, blend b: PredictionEngine.Blend,
+                                         add: (Suggestion) -> Void) {
+        let wordCount = sentence.split(separator: " ").count
+        // Sentence options: original first, then the optional better versions.
+        if wordCount >= 3, let options = correction.sentenceOptions(for: sentence), options.normalised != nil || options.improved != nil {
+            add(Suggestion(kind: .preserve, display: sentence, replacing: sentence, insertion: sentence))
+            if let normalised = options.normalised {
+                add(Suggestion(kind: .improvement, display: normalised, replacing: sentence, insertion: normalised))
+            }
+            if let improved = options.improved {
+                add(Suggestion(kind: .improvement, display: improved, replacing: sentence, insertion: improved))
+            }
+            if let punctuated = options.punctuated {
+                add(Suggestion(kind: .improvement, display: punctuated, replacing: sentence, insertion: punctuated))
+            }
+            return
+        }
+        if wordCount >= 2 {
+            for phrase in prediction.phrases(context: context, blend: b, limit: 3) {
+                add(Suggestion(kind: .phrase, display: phraseDisplay(sentence: sentence, continuation: phrase.text), replacing: "", insertion: " " + phrase.text))
+            }
+        }
+        if let normal = hinglish.conventionalSpelling(of: typed), b.hinglish >= 0.5 {
+            add(Suggestion(kind: .preserve, display: "“\(typed)”", replacing: typed, insertion: typed))
+            add(Suggestion(kind: .correction, display: Self.matchCase(of: typed, in: normal), replacing: typed, insertion: Self.matchCase(of: typed, in: normal)))
+        }
+    }
+
+    // MARK: Learning
+
+    /// Call when the user taps a suggestion. This is the main thing the keyboard learns from.
+    public func didAccept(_ suggestion: Suggestion, context: String) {
+        guard fieldPolicy.mayLearn else { return }
+        let head = String(context.dropLast(suggestion.replacing.count))
+        let previous = Tokenizer.trailingWord(in: head.trimmingCharacters(in: .whitespaces))
+        if suggestion.kind == .preserve {
+            for word in suggestion.insertion.split(separator: " ") { personalization.recordPreserved(word: String(word)) }
+        } else {
+            personalization.recordAccepted(text: suggestion.insertion.trimmingCharacters(in: .whitespaces), previousWord: previous.isEmpty ? nil : previous)
+        }
+        personalization.persist()
+    }
+
+    public func didUndoCorrection(typed: String, corrected: String) {
+        guard fieldPolicy.mayLearn else { return }
+        personalization.recordRejectedCorrection(typed: typed, corrected: corrected)
+        personalization.persist()
+    }
+
+    // MARK: Rewriting
+
+    public func rewrites(of sentence: String) -> [Rewrite] {
+        writing.rewrites(of: sentence)
+    }
+
+    public static func matchCase(of original: String, in replacement: String) -> String {
+        guard let first = original.first, first.isUppercase else { return replacement }
+        if original.count > 1, original == original.uppercased() { return replacement.uppercased() }
+        return replacement.prefix(1).uppercased() + replacement.dropFirst()
+    }
+}

@@ -1,0 +1,686 @@
+# Hand-authored Roman-script Hindi lexicon.
+# canonical | spelling variants (comma separated) | devanagari | english gloss | weight 1-5
+# Variants are legitimate ways people type the word. They are never auto-replaced.
+
+# Pronouns
+main|mai|मैं|I|5
+mujhe|mjhe,muje,mujhko,mjhko|मुझे|to me|5
+mera|mra,meraa|मेरा|my|5
+meri|mri|मेरी|my|5
+mere|mre|मेरे|my|5
+hum|hm,ham|हम|we|5
+humein|hme,hume,humko,hamein|हमें|to us|4
+hamara|hmara,humara|हमारा|our|4
+hamari|hmari,humari|हमारी|our|4
+hamare|hmare,humare|हमारे|our|4
+tu|too|तू|you|5
+tujhe|tjhe,tuje,tujhko|तुझे|to you|4
+tera|tra|तेरा|your|5
+teri|tri|तेरी|your|5
+tere|tre|तेरे|your|5
+tum|tm|तुम|you|5
+tumhe|tumhein,tmhe,tumko|तुम्हें|to you|5
+tumhara|tmhara,tumhra|तुम्हारा|your|5
+tumhari|tmhari,tumhri|तुम्हारी|your|5
+tumhare|tmhare,tumhre|तुम्हारे|your|5
+aap|ap|आप|you|5
+aapko|apko|आपको|to you|5
+aapka|apka|आपका|your|5
+aapki|apki|आपकी|your|5
+aapke|apke|आपके|your|5
+woh|wo,vo,voh|वह|he/she/that|5
+usko|usse,use,usey|उसको|to him/her|5
+uska|uskaa|उसका|his/her|5
+uski||उसकी|his/her|5
+uske||उसके|his/her|5
+unko|unhe,unhein,unse|उनको|to them|4
+unka||उनका|their|4
+unki||उनकी|their|4
+unke||उनके|their|4
+yeh|ye,yea,yh|यह|this|5
+isko|ise,isse,isey|इसको|to this|4
+iska||इसका|its|4
+iski||इसकी|its|4
+iske||इसके|its|4
+inko|inhe,inse|इनको|to these|3
+kaun|kon,koun|कौन|who|5
+kisko|kise,kisse|किसको|to whom|4
+kiska||किसका|whose|3
+kiski||किसकी|whose|3
+kiske||किसके|whose|3
+koi|kuii,koii|कोई|someone|5
+kuch|kch,kuchh|कुछ|something|5
+sab|sb|सब|all|5
+sabko|sbko|सबको|to all|3
+sabka|sbka|सबका|everyone's|2
+sabhi|sbhi|सभी|everyone|3
+apna|apnaa|अपना|own|4
+apni||अपनी|own|4
+apne||अपने|own|4
+khud|khudh|ख़ुद|self|3
+
+# Auxiliaries and copulas
+hai|h,hei|है|is|5
+hain|hn,hein|हैं|are|5
+hoon|hu,hun,hoo|हूँ|am|5
+ho|hoo|हो|are|5
+tha|th|था|was|5
+thi|th|थी|was|5
+the||थे|were|5
+thin|thi|थीं|were|4
+hoga||होगा|will be|4
+hogi||होगी|will be|4
+honge|hoge|होंगे|will be|4
+raha|rha,rhaa,rahaa|रहा|-ing|5
+rahi|rhi,rahii|रही|-ing|5
+rahe|rhe|रहे|-ing|5
+sakta|skta,sktaa|सकता|can|5
+sakti|skti|सकती|can|5
+sakte|skte|सकते|can|5
+chahiye|chahiya,chaiye,chahie,chaahiye,chiye|चाहिए|need|5
+chahta|chata|चाहता|want|4
+chahti|chati|चाहती|want|4
+chahte|chate|चाहते|want|4
+wala|vala,waala|वाला|one who|4
+wali|vali,waali|वाली|one who|4
+wale|vale,waale|वाले|ones who|4
+paunga|paaunga,pauga|पाऊँगा|will be able to|3
+paungi|paaungi,paugi|पाऊँगी|will be able to|3
+payenge|paayenge,payege|पाएँगे|will be able to|2
+
+# Particles and connectors
+nahi|nhi,nahin,nai,ni,nhin,nhai|नहीं|no/not|5
+na|naa|ना|no/right|5
+mat|mt|मत|don't|4
+haan|ha,han,haa,hna|हाँ|yes|5
+ji|jii|जी|respectful yes|4
+aur|or,aor,orr|और|and|5
+ya|yaa|या|or|4
+lekin|lkin,lakin|लेकिन|but|4
+par|pr,per|पर|on/but|5
+magar|mgr|मगर|but|2
+kyunki|kyuki,kyoki,kyonki,kuki|क्योंकि|because|4
+isliye|islie,islye,isliy|इसलिए|therefore|4
+toh|to,tho|तो|then|5
+bhi|bhe,bi|भी|also|5
+hi|hee|ही|only|4
+sirf|srf,sirff|सिर्फ़|only|4
+ki|kii|की|of|5
+ka|kaa|का|of|5
+ke|kay|के|of|5
+ko|koo|को|to|5
+se|say,sey|से|from|5
+tak|tk|तक|until|4
+liye|lie,liy|लिए|for|5
+saath|sath,sth|साथ|with|5
+wajah|vajah,wjh|वजह|reason|3
+agar|agr|अगर|if|4
+jab|jb|जब|when|4
+tab|tb|तब|then|3
+phir|fir,fer,phr|फिर|again|5
+abhi|abi,abhii|अभी|now|5
+ab|abb|अब|now|5
+kabhi|kbhi,kabi|कभी|sometimes|4
+sabse|sbse|सबसे|most|3
+bahut|bhot,bohot,bht,boht,bhut,bahot|बहुत|very|5
+thoda|thda,thodaa,thora|थोड़ा|little|5
+thodi|thdi,thori|थोड़ी|little|4
+thode|thde,thore|थोड़े|few|3
+zyada|jyada,zada,jada,zyaada|ज़्यादा|more|5
+kam|km|कम|less|4
+bilkul|blkl,bilkl|बिल्कुल|absolutely|4
+shayad|shyd,shyad|शायद|maybe|4
+pakka|pkka,pakaa|पक्का|sure|4
+sach|sch|सच|truth|4
+sahi|shi,sahii|सही|correct|5
+galat|glt,ghalat|ग़लत|wrong|4
+matlab|mtlb,mtlab|मतलब|meaning|5
+jaise|jese,jaisey|जैसे|like|4
+waise|vaise,wese,vese|वैसे|by the way|4
+aise|ese,aisey|ऐसे|like this|4
+kaise|kese,kaisey,kse|कैसे|how|5
+kya|kia,kyaa,kyua|क्या|what|5
+kyun|kyu,kyon,kiu|क्यों|why|5
+kab|kb|कब|when|5
+kahan|kaha,khan,kha,kahaan|कहाँ|where|5
+yahan|yaha,yhan,yha,yahaan|यहाँ|here|5
+wahan|waha,vaha,vahan,whan,wha|वहाँ|there|5
+idhar|idhr|इधर|here|3
+udhar|udhr|उधर|there|3
+kidhar|kidhr|किधर|where|3
+kitna|ktna,kitnaa|कितना|how much|4
+kitni|ktni|कितनी|how much|4
+kitne|ktne|कितने|how many|4
+jitna|jtna|जितना|as much|2
+itna|itnaa|इतना|this much|4
+itni|itnii|इतनी|this much|3
+itne||इतने|so many|3
+utna||उतना|that much|2
+kaisa|ksa,kesa|कैसा|how|4
+kaisi|ksi,kesi|कैसी|how|4
+aisa|esa|ऐसा|like this|4
+aisi|esi|ऐसी|like this|3
+waisa|vaisa,wesa|वैसा|like that|2
+jaisa|jesa|जैसा|like|2
+konsa|kaunsa,konsaa|कौनसा|which|3
+konsi|kaunsi|कौनसी|which|3
+konse|kaunse|कौनसे|which|2
+bina||बिना|without|3
+baad|bd|बाद|after|4
+pehle|phle,pahle,pehley|पहले|before|5
+aage|aagey|आगे|ahead|3
+peeche|piche,peechhe|पीछे|behind|3
+upar|upr,oopar|ऊपर|up|3
+neeche|niche|नीचे|down|3
+andar|andr|अंदर|inside|3
+bahar|bhar,baahar|बाहर|outside|3
+paas||पास|near|4
+door|dur|दूर|far|3
+beech|bich|बीच|middle|2
+
+# Time
+kal|kl,kall|कल|tomorrow/yesterday|5
+aaj|aj,aajj|आज|today|5
+parso|prso|परसों|day after tomorrow|3
+subah|subha,sbh,subh|सुबह|morning|4
+dopahar|dophar,dupahar|दोपहर|afternoon|3
+shaam|sham|शाम|evening|4
+raat|rt|रात|night|5
+din|dn|दिन|day|5
+hafta|hfta|हफ़्ता|week|3
+hafte|hfte|हफ़्ते|week|3
+mahina|mhina|महीना|month|3
+mahine|mhine|महीने|month|3
+saal|sal|साल|year|4
+ghanta|ghnta|घंटा|hour|3
+ghante|ghnte|घंटे|hours|4
+minute|min,mint|मिनट|minute|4
+baje|bje,bajay|बजे|o'clock|5
+baj|bj|बज|o'clock|2
+samay|smay|समय|time|3
+waqt|vaqt,wakt,wqt|वक़्त|time|3
+time|tym,taim|टाइम|time|4
+jaldi|jldi,jldii|जल्दी|quickly|5
+der||देर|late|4
+hamesha|hmesha|हमेशा|always|3
+roz|rozz,roj|रोज़|daily|3
+somwar|somvar|सोमवार|monday|2
+mangal|mangalwar|मंगलवार|tuesday|2
+budh|budhwar|बुधवार|wednesday|2
+guruwar|guruvar,veervar|गुरुवार|thursday|2
+shukrawar|shukravar|शुक्रवार|friday|2
+shaniwar|shanivar|शनिवार|saturday|2
+raviwar|itwaar,itvar|रविवार|sunday|2
+
+# People and address terms
+bhai|bhaii|भाई|brother|5
+bhaiya|bhaiyya,bhaiyaa,bhaiyyaa|भैया|elder brother|4
+behen|behan,bahen,bahan|बहन|sister|4
+didi||दीदी|elder sister|4
+yaar|yar,yrr,yr|यार|friend|5
+dost|dst|दोस्त|friend|5
+doston|dosto|दोस्तों|friends|3
+mummy|mumma,mumy,maa|मम्मी|mother|5
+papa|paapa,pappa|पापा|father|5
+beta|betaa|बेटा|son|4
+beti|btii|बेटी|daughter|3
+chacha|chachu|चाचा|uncle|3
+chachi|chachii|चाची|aunt|2
+mama|maama|मामा|uncle|3
+mami|maami|मामी|aunt|2
+nana|nanaji|नाना|grandfather|2
+nani|naniji|नानी|grandmother|2
+dada|dadaji|दादा|grandfather|2
+dadi|dadiji|दादी|grandmother|2
+pati|ptii|पति|husband|2
+patni|ptni|पत्नी|wife|2
+ladka|ldka|लड़का|boy|4
+ladki|ldki|लड़की|girl|4
+ladke|ldke|लड़के|boys|3
+log||लोग|people|5
+logon||लोगों|people|3
+aadmi|admi|आदमी|man|3
+aurat|auratt|औरत|woman|2
+bachcha|baccha|बच्चा|child|3
+bachche|bacche,bache|बच्चे|children|3
+sir|sirr|सर|sir|4
+madam|mam,maam|मैडम|madam|3
+boss|bos|बॉस|boss|3
+pagal|pgl,paagal|पागल|crazy|4
+saale|sale|साले|dude|3
+naam|nam|नाम|name|5
+ghar|ghr,gharr|घर|home|5
+gaon|gaav,ganv|गाँव|village|3
+sheher|shehar,shahar|शहर|city|3
+desh|dsh|देश|country|3
+kamra|kmra|कमरा|room|3
+kamre|kmre|कमरे|room|2
+dukaan|dukan,dkan|दुकान|shop|3
+bazaar|bazar,bzar|बाज़ार|market|3
+school|skool,skul|स्कूल|school|4
+college|clg,klg,kolej|कॉलेज|college|4
+office|ofc,offc,ofis,offic|ऑफ़िस|office|5
+kaam||काम|work|5
+naukri|nokri,nokari|नौकरी|job|3
+paisa|pesa|पैसा|money|5
+paise|pese,paisay|पैसे|money|5
+rupaye|rupay,rupee|रुपये|rupees|3
+kharcha|khrcha|ख़र्चा|expense|3
+udhaar||उधार|loan|2
+khana|khaana,khna|खाना|food|5
+paani|pani,pny|पानी|water|5
+chai|chaii,chay|चाय|tea|5
+doodh|dudh|दूध|milk|3
+roti|rotii|रोटी|bread|3
+chawal|chaval|चावल|rice|3
+sabzi|sabji|सब्ज़ी|vegetable|3
+biryani|biriyani|बिरयानी|biryani|3
+samosa|smosa|समोसा|samosa|2
+nashta|nasta|नाश्ता|breakfast|3
+mithai|mitai|मिठाई|sweets|2
+gaadi|gadi,gaddi|गाड़ी|car|4
+bike|bayk|बाइक|bike|4
+train|tren|ट्रेन|train|3
+sadak|sdak,sdk|सड़क|road|3
+raasta|rasta,rsta|रास्ता|way|3
+raste|rste,raaste|रास्ते|way|3
+phone|fone,fon|फ़ोन|phone|5
+call|kol|कॉल|call|5
+message|msg,mssg,msj|मैसेज|message|4
+photo|pic,foto|फ़ोटो|photo|4
+video|vid,vdo|वीडियो|video|3
+kitaab|kitab,ktab|किताब|book|3
+padhai|pdhai,padai|पढ़ाई|studies|4
+exam|xam,exm|एग्ज़ाम|exam|4
+meeting|meetng,mtg|मीटिंग|meeting|4
+plan|pln|प्लान|plan|5
+scene|sean|सीन|situation|5
+mood||मूड|mood|5
+party|prty|पार्टी|party|4
+movie|mvi,muvi|मूवी|movie|4
+gaana|gana|गाना|song|4
+gaane|gane|गाने|songs|3
+shaadi|shadi,shdi|शादी|wedding|4
+tyohar|tyohaar,tyauhar|त्योहार|festival|2
+diwali|deewali,dipawali|दिवाली|diwali|3
+holi|hoolii|होली|holi|3
+chutti|chhutti,chhuti,chuti|छुट्टी|holiday|4
+tabiyat|tbiyat,tabiat,tabeeyat|तबीयत|health|4
+bukhar|bukhaar|बुख़ार|fever|2
+dard|drd|दर्द|pain|3
+dawai|dvai,dawa|दवाई|medicine|3
+doctor|dr,doc|डॉक्टर|doctor|3
+hospital|aspatal|अस्पताल|hospital|3
+baat|bt|बात|talk|5
+baatein|baaten,batein,baate|बातें|talks|4
+jawab|jwb,jwab,javab|जवाब|answer|3
+sawal|swal,sawaal|सवाल|question|3
+problem|prblm,prob|प्रॉब्लम|problem|5
+dikkat|dikat,dkkt|दिक़्क़त|trouble|4
+tension|tensn,tnsn|टेंशन|tension|5
+pareshan|preshan,pareshaan|परेशान|worried|4
+pareshani|preshani|परेशानी|trouble|3
+gussa|gusa,ghussa|ग़ुस्सा|anger|4
+khushi|kushi,kkhushi|ख़ुशी|happiness|3
+khush||ख़ुश|happy|4
+dukh||दुख|sorrow|3
+pyaar|pyar,pyr|प्यार|love|5
+dil|dl|दिल|heart|5
+zindagi|jindagi,zindgi,jindgi|ज़िंदगी|life|4
+duniya|dunia,dnya|दुनिया|world|3
+izzat|ijjat,ezzat|इज़्ज़त|respect|2
+galti|glti,ghalti|ग़लती|mistake|4
+sorry|sry,sori,sorryy|सॉरी|sorry|5
+thanks|thx,thnks,thnx,thanku|थैंक्स|thanks|5
+shukriya|shukria,sukriya|शुक्रिया|thank you|4
+dhanyawad|dhanyavad,dhanywad|धन्यवाद|thank you|3
+namaste|namaskar,namastey|नमस्ते|hello|4
+pranam|parnam,pranaam|प्रणाम|respectful greeting|2
+alvida|alwida|अलविदा|goodbye|1
+khabar|khbr,khabr|ख़बर|news|3
+aankh|ankh|आँख|eye|2
+haath|hath|हाथ|hand|3
+pair||पैर|foot|3
+muh|munh,mooh|मुँह|mouth|3
+baal||बाल|hair|2
+kapde|kpde,kapre|कपड़े|clothes|3
+joota|juta|जूता|shoe|2
+joote|jute|जूते|shoes|2
+chabi|chaabi,chaabhi|चाबी|key|2
+darwaza|drwaza,darwaja|दरवाज़ा|door|2
+khidki|khdki|खिड़की|window|1
+bistar|bstr,bister|बिस्तर|bed|1
+kursi|krsi|कुर्सी|chair|1
+mez|mej|मेज़|table|1
+barish|baarish,brish|बारिश|rain|3
+garmi|grmi|गर्मी|heat|3
+sardi|srdi|सर्दी|cold|3
+thand|thnd|ठंड|cold|3
+dhoop|dhup|धूप|sunshine|2
+hawa|hwa|हवा|wind|2
+mausam|mosam|मौसम|weather|3
+kutta|ktta,kuta|कुत्ता|dog|3
+billi|bili|बिल्ली|cat|2
+
+# Adjectives
+accha|acha,achha,acchaa,achaa,acc|अच्छा|good/okay|5
+acchi|achi,achhi,achii|अच्छी|good|5
+acche|ache,achhe|अच्छे|good|4
+bura||बुरा|bad|4
+buri|bri|बुरी|bad|3
+bure|bre|बुरे|bad|2
+bada|bda,bara|बड़ा|big|4
+badi|bdi,bari|बड़ी|big|4
+bade|bde|बड़े|big|3
+chota|chhota,chotaa|छोटा|small|4
+choti|chhoti|छोटी|small|3
+chote|chhote|छोटे|small|3
+naya|nya|नया|new|4
+nayi|nyi|नई|new|4
+naye|nye|नए|new|3
+purana|prana|पुराना|old|3
+purani|prani|पुरानी|old|3
+purane|prane|पुराने|old|2
+lamba|lmba|लंबा|long|2
+lambi|lmbi|लंबी|long|2
+mast|mst|मस्त|awesome|5
+badhiya|badiya,bdiya,badhia,bdhiya,badhya|बढ़िया|great|5
+zabardast|jabardast,zbrdst|ज़बरदस्त|awesome|4
+jhakaas|jhakas|झकास|fantastic|2
+bakwas|bakwaas,bkwas|बकवास|nonsense|4
+faltu|phaltu,faaltu|फ़ालतू|useless|4
+bekar|bekaar,bkr|बेकार|useless|4
+sasta|ssta|सस्ता|cheap|2
+mehenga|mehnga,mahanga|महंगा|expensive|3
+garam|grm,garm|गरम|hot|3
+thanda|thnda|ठंडा|cold|3
+meetha|mitha|मीठा|sweet|2
+theek|thik,thk,thek,theekk,thikk,thikh|ठीक|okay|5
+aasan|asan|आसान|easy|3
+mushkil|mshkl,mushkl|मुश्किल|difficult|3
+zaroori|jaruri,zaruri,jaroori,zruri|ज़रूरी|important|4
+zaroor|jarur,zarur,jaroor|ज़रूर|definitely|4
+khaali|khali|ख़ाली|empty/free|3
+busy|bizy|बिज़ी|busy|4
+free|fre|फ़्री|free|4
+ready|rdy,redi|रेडी|ready|4
+done||डन|done|4
+sundar|sndr|सुंदर|beautiful|3
+pyaara|pyara|प्यारा|lovely|3
+pyaari|pyari|प्यारी|lovely|3
+pyaare|pyare|प्यारे|lovely|2
+cute|cutee|क्यूट|cute|3
+asli|asliii|असली|real|2
+nakli|nkli|नकली|fake|2
+poora|pura,puraa|पूरा|whole|4
+poori|puri|पूरी|whole|3
+poore||पूरे|whole|3
+aadha|adha|आधा|half|2
+akela|akla|अकेला|alone|3
+akeli|akli|अकेली|alone|2
+saara|sara|सारा|all|3
+saari|sari|सारी|all|3
+saare|sare|सारे|all|3
+pehla|phla|पहला|first|3
+pehli|phli|पहली|first|3
+doosra|dusra|दूसरा|second|3
+doosri|dusri|दूसरी|second|3
+doosre|dusre|दूसरे|other|3
+aakhri|akhri,aakhiri|आख़िरी|last|3
+agla||अगला|next|3
+agli||अगली|next|3
+agle||अगले|next|3
+pichla|pichhla|पिछला|last|3
+pichli|pichhli|पिछली|last|3
+pichle|pichhle|पिछले|last|3
+taiyar|tayyar,taiyaar,tyar|तैयार|ready|3
+thaka|thkaa|थका|tired|3
+thak||थक|tired|3
+bhookh|bhukh|भूख|hunger|4
+pyaas|pyas|प्यास|thirst|3
+neend|nind|नींद|sleep|4
+mazaa|maza,mza,mazza|मज़ा|fun|5
+masti|msti|मस्ती|fun|3
+dhyan|dhyaan|ध्यान|attention|4
+madad|mdd,madat,mdad|मदद|help|4
+koshish|kosis,koshis|कोशिश|try|3
+zaroorat|jarurat,zarurat,jaroorat|ज़रूरत|need|3
+mauka|moka|मौक़ा|chance|2
+fayda|faida,fyda|फ़ायदा|benefit|2
+nuksan|nuksaan|नुक़सान|loss|2
+pasand|psnd,pasnd|पसंद|like|5
+naraz|naraaz,nrz|नाराज़|upset|3
+yaad|yad,yd|याद|memory|5
+intezaar|intezar,intzar,intjar|इंतज़ार|wait|3
+jagah|jgh,jagha|जगह|place|4
+tarah|trah,tarh|तरह|way|4
+baar||बार|time|4
+ek|ekk|एक|one|5
+teen||तीन|three|3
+char|chaar|चार|four|3
+paanch|panch|पाँच|five|3
+chhe|che,chah|छह|six|2
+saat|sat|सात|seven|2
+aath|ath|आठ|eight|2
+nau|nao|नौ|nine|2
+das|dus|दस|ten|3
+bees|bis|बीस|twenty|2
+sau||सौ|hundred|3
+hazaar|hazar,hzar|हज़ार|thousand|3
+lakh|lac,lkh|लाख|hundred thousand|3
+crore|cr,karod|करोड़|ten million|2
+aadhe|adhe|आधे|half|2
+dono|donon|दोनों|both|4
+teeno|tino|तीनों|all three|2
+
+# Expressions and slang
+arre|arey,arree,areee|अरे|hey|5
+oye|oi,oyee,oyy|ओए|hey|4
+abe|abey,abee|अबे|hey|4
+ae|aye,ey|ऐ|hey|3
+haye|haaye|हाय|oh no|3
+hmm|hmmm,hmmmm|हम्म|hmm|4
+chalo|chlo,chaloo|चलो|let's go|5
+wah|waah,vah|वाह|wow|4
+shabash|shabaash|शाबाश|well done|2
+kamaal|kamal,kmal|कमाल|amazing|4
+jugaad|jugad|जुगाड़|hack|3
+timepass|tp|टाइमपास|timepass|4
+bindaas|bindas|बिंदास|carefree|3
+senti|sentii|सेंटी|emotional|3
+gazab|gajab,gzb|ग़ज़ब|amazing|4
+ekdum|ekdam,ekdm|एकदम|totally|4
+bas|bs,bass|बस|enough/just|5
+chhodo||छोड़ो|leave it|3
+dekhte|dkhte|देखते|let's see|3
+kasam|ksm|क़सम|swear|3
+shukar|shukr|शुक्र|thank god|2
+bhagwan|bhgwan,bhagavan|भगवान|god|3
+inshallah|insallah|इंशाअल्लाह|god willing|2
+sahab|saab,saheb|साहब|sir|3
+ladai|ldai,larai|लड़ाई|fight|3
+jhagda|jhgda,jhagra|झगड़ा|fight|3
+mazak|mzak,majak,mazaak|मज़ाक|joke|4
+majboori|majburi|मजबूरी|compulsion|2
+kismat|ksmt|क़िस्मत|luck|3
+sapna|spna|सपना|dream|3
+sapne|spne|सपने|dreams|2
+dhokha|dhoka|धोखा|betrayal|3
+sharam|shrm,sharm|शर्म|shame|3
+himmat|hmmt|हिम्मत|courage|3
+aadat|adat|आदत|habit|3
+rishta|rishtaa|रिश्ता|relationship|3
+parivaar|parivar|परिवार|family|3
+family|fam,fmly|फ़ैमिली|family|4
+cheez|chiz,chij,cheej|चीज़|thing|4
+cheezein|chizen,cheezen|चीज़ें|things|3
+ghumne|ghmne|घूमने|roaming|3
+kaafi|kafi|काफ़ी|quite|4
+lagbhag|lgbhg|लगभग|almost|3
+turant|trnt|तुरंत|immediately|3
+dhire|dheere,dhirey|धीरे|slowly|4
+aaram|araam,aram|आराम|rest|4
+wapas|vapas,waapas,wpas|वापस|back|4
+saamne|samne,smne|सामने|in front|3
+hisaab|hisab|हिसाब|account|2
+kisi||किसी|someone|5
+kis|ks|किस|which|4
+jo|joo|जो|which|5
+aaya|aya|आया|came|4
+aayi|ayi,aai|आई|came|3
+aaye|aae|आए|came|3
+gaya|gya,gyaa|गया|went|5
+gayi|gyi,gai|गई|went|5
+gaye|gye,gae|गए|went|5
+hua|huaa|हुआ|happened|5
+hui|huii|हुई|happened|4
+hue|huye|हुए|happened|3
+kiya|kiyaa|किया|did|5
+kiye|kie|किए|did|3
+diya|dia,diyaa|दिया|gave|5
+liya|lia,liyaa|लिया|took|5
+pata|pta,ptaa|पता|known|5
+lagta|lgta|लगता|seems|5
+lagti|lgti|लगती|seems|3
+lagte|lgte|लगते|seems|2
+laga|lga|लगा|felt|5
+lagi|lgi|लगी|felt|3
+lage|lge|लगे|felt|2
+milte|mlte|मिलते|meet|5
+milta|mlta|मिलता|meet|3
+milti|mlti|मिलती|meet|2
+milenge|mlenge,milege|मिलेंगे|will meet|5
+milega|mlega|मिलेगा|will get|4
+milegi|mlegi|मिलेगी|will get|3
+mila|mla|मिला|met|4
+mili|mli|मिली|met|3
+mile|mle|मिले|met|3
+karna|krna|करना|to do|5
+karta|krta|करता|does|5
+karti|krti|करती|does|5
+karte|krte|करते|do|5
+karo|kro|करो|do|5
+karunga|krunga,karuga,kruga|करूँगा|will do|4
+karungi|krungi,karugi,krugi|करूँगी|will do|4
+karenge|krenge,karege,krege|करेंगे|will do|4
+karoge|kroge|करोगे|will do|3
+karle|krle|कर ले|do it|3
+karlo|krlo|कर लो|do it|3
+kardo|krdo|कर दो|do it|4
+kariye|kriye|करिए|please do|3
+aana|ana|आना|to come|5
+aata|ata|आता|comes|4
+aati|ati|आती|comes|3
+aate|ate|आते|come|3
+aao|ao|आओ|come|5
+aaja|aja,ajaa|आजा|come|4
+aaunga|aunga,auga|आऊँगा|will come|4
+aaungi|aungi,augi|आऊँगी|will come|3
+jaana|jana|जाना|to go|5
+jaata|jata|जाता|goes|4
+jaati|jati|जाती|goes|3
+jaate|jate|जाते|go|4
+jao|jaoo|जाओ|go|5
+jaa|ja|जा|go|5
+jaunga|jauga,jaaunga|जाऊँगा|will go|4
+jaungi|jaugi,jaaungi|जाऊँगी|will go|3
+jayenge|jaenge,jayege|जाएँगे|will go|3
+jaega|jayega,jaaega|जाएगा|will go|4
+jaegi|jayegi|जाएगी|will go|3
+# Homograph split-outs and multi-sense words
+mein|me,mei|में|in|5
+do|doo|दो|two/give|4
+jaan|jaanu|जान|dear/life|3
+bacha|baccha|बच्चा|child|2
+maa|ma|माँ|mother|4
+gaali|gali|गाली|abuse|2
+hindi|hndi|हिंदी|hindi|3
+angrezi|angreji|अंग्रेज़ी|english|2
+kalki|kalkii|कल की|of tomorrow|1
+aapas|apas|आपस|mutual|1
+matlabi|mtlbi|मतलबी|selfish|1
+sochna|sochna|सोचना|to think|3
+kuchh|kuchhh|कुछ|something|1
+samjhe|smjhe|समझे|understood|4
+samjha|smjha|समझा|understood|4
+samjhi|smjhi|समझी|understood|3
+aagaya|agya,aagya|आ गया|arrived|3
+aagayi|agyi,aagyi|आ गई|arrived|2
+hogaya|hogya,ho gya|हो गया|happened|4
+hogayi|hogyi|हो गई|happened|3
+kyaa|kyaaa|क्या|what|1
+theek|thik|ठीक|okay|1
+nahi|nahii|नहीं|no|1
+
+# Added after reviewing corpus words missing from the lexicon
+pe|pey|पे|on|5
+maine|mne,maine|मैंने|I (did)|5
+tumne|tmne|तुमने|you (did)|4
+usne|usnee|उसने|he/she (did)|4
+kisne|ksne|किसने|who (did)|3
+aapne||आपने|you (did)|4
+humne|hmne,hamne|हमने|we (did)|3
+tune|tunee|तूने|you (did)|3
+mujhse|mjhse,muj se|मुझसे|from me|4
+tumse|tmse|तुमसे|from you|4
+tujhse|tjhse|तुझसे|from you|3
+aapse|apse|आपसे|from you|4
+humse|hmse|हमसे|from us|3
+haal|hal|हाल|condition|4
+kharab|khrb,kharaab|ख़राब|bad/broken|4
+khatam|khtm,khatm|ख़त्म|finished|4
+dunga|duga|दूँगा|will give|4
+dungi|dugi|दूँगी|will give|3
+denge|dege|देंगे|will give|3
+lunga|luga|लूँगा|will take|4
+lungi|lugi|लूँगी|will take|3
+lenge|lege|लेंगे|will take|3
+lena|lna|लेना|to take|4
+dena|dna|देना|to give|4
+chinta|chnta|चिंता|worry|3
+ghabrao|ghbrao|घबराओ|panic|2
+shuru|shru,suru|शुरू|start|4
+har|hr|हर|every|4
+kijiye|kjiye|कीजिए|please do|3
+dijiye|djiye|दीजिए|please give|3
+lijiye|ljiye|लीजिए|please take|3
+bataya|btaya|बताया|told|4
+bulaya|blaya|बुलाया|called|3
+khaya|khya|खाया|ate|4
+peeya|piya|पिया|drank|2
+peena|pina|पीना|to drink|3
+peete|pite|पीते|drink|3
+peene|pine|पीने|to drink|3
+khas|khaas|ख़ास|special|3
+gadbad|gdbd,garbar|गड़बड़|problem|3
+mubarak|mubrak|मुबारक|congratulations|3
+badhai|bdhai|बधाई|congratulations|3
+rehne|rahne|रहने|to stay|4
+rehna|rahna|रहना|to stay|4
+rehta|rahta|रहता|stays|3
+rehti|rahti|रहती|stays|3
+rehte|rahte|रहते|stay|3
+chaal||चाल|gait|1
+phas|fas|फँस|stuck|2
+phasa|fasa|फँसा|stuck|2
+samajh|smjh,samaj,samjh|समझ|understand|5
+pahuch|pahunch,phuch,pohoch|पहुँच|reach|5
+pahuche|pahunche,phuche|पहुँचे|reached|3
+pahuchoge|pahunchoge|पहुँचोगे|will reach|2
+pahuchne|pahunchne|पहुँचने|to reach|2
+niklega|nklega|निकलेगा|will leave|2
+karni|krni|करनी|to do|4
+khake|khaake|खाकर|after eating|2
+karke|krke,kr ke|करके|after doing|4
+hoke|hoke|होकर|after being|2
+aake|aake|आकर|after coming|2
+jaake|jake|जाकर|after going|2
+jaisa|jesa|जैसा|like|2
+aayega|ayega,aaega,aega|आएगा|will come|4
+aayegi|ayegi,aaegi,aegi|आएगी|will come|3
+aayenge|ayenge,aaenge,aenge|आएँगे|will come|3
+aaoge|aoge|आओगे|will come|4
+aaogi|aogi|आओगी|will come|2
+jaoge|jaaoge|जाओगे|will go|3
+jayega|jaayega|जाएगा|will go|4
+jayegi|jaayegi|जाएगी|will go|3

@@ -1,0 +1,1235 @@
+# Hand-written conversational Hinglish corpus used to train the Hinglish n-gram model.
+# One message per line. Spellings are intentionally varied; the trainer normalises them.
+bhai kal milte hai
+bhai kal milte hain
+kal milte hai
+kal milte hain
+kal milte hai bhai
+kal milte hai office mein
+bhai kya scene hai
+kya scene hai
+kya scene hai aaj
+aaj ka kya scene hai
+kal ka kya scene hai
+kal kya scene hai
+kal kya plan hai
+kal kya karna hai
+kal kya kar rahe ho
+kal kya hua tha
+kal kya time pe aana hai
+aaj kya plan hai
+aaj kya karna hai
+aaj kya kar rahe ho
+aaj ka kya plan hai
+aaj raat ka kya plan hai
+weekend ka kya plan hai
+kya plan hai
+kya plan hai aaj ka
+kya kar raha hai
+kya kar rahe ho
+kya kar rahi ho
+kya kr rha hai
+kya kr rhe ho
+kya kr rhi ho
+kya chal raha hai
+kya chal raha h
+kya chal rha h
+aur kya chal raha hai
+aur bata kya chal raha hai
+aur bhai kya haal hai
+aur sab theek hai
+sab theek hai na
+sab badhiya hai
+sab mast hai
+kya haal hai
+kya haal chaal hai
+kaise ho
+kaise ho bhai
+kaise ho aap
+kaisa hai bhai
+kaisi ho
+kaisi hai tu
+tu kaisa hai
+tum kaise ho
+aap kaise hain
+main theek hoon
+main thik hu
+mai thik hu
+mai theek hu
+main bilkul theek hoon
+main bhi theek hoon
+main thik hu tum batao
+main acha hu
+main ghar pe hoon
+mai ghar pe hu
+mai ghar par hu
+main ghar pahuch gaya
+mai ghar pahuch gya
+main ghar pahunch gayi
+mai ghar pahuch gyi
+ghar pahuch gaya
+ghar pahuch ke call karna
+ghar pahuch ke call karunga
+ghar kab aa rahe ho
+ghar kab aaoge
+ghar kab pahuchoge
+ghar pe koi nahi hai
+ghar pe sab kaise hain
+mai kal office nahi aa paunga
+main kal office nahi aa paunga
+bhai mai kal office nahi aa paunga
+main kal nahi aa paunga
+main aaj nahi aa paunga
+main aaj nahi aa paungi
+main aaj office nahi aa raha
+aaj office nahi jaana hai
+aaj office jaana hai
+aaj office nahi gaya
+aaj office mein bahut kaam hai
+office mein hoon abhi
+office se nikal gaya
+office se nikal raha hoon
+office se aa raha hoon
+office pahuch gaya
+office ja raha hoon
+kal office aana hai
+kal office jaana hai
+kal office aa rahe ho kya
+kal office mein milte hain
+kal meeting hai kya
+kal meeting hai
+kal subah meeting hai
+aaj meeting hai kya
+meeting 5 baje hai
+meeting kab hai
+meeting kitne baje hai
+meeting kitne baje shuru hogi
+meeting khatam ho gayi
+meeting mein hoon baad mein call karta hoon
+meeting mein hoon
+kal 8 baje aana
+kal subah 8 baje aana
+kal shaam ko milte hain
+kal raat ko call karna
+kal subah jaldi uthna hai
+kal subah call karta hoon
+kal call karta hoon
+kal baat karte hain
+kal baat karenge
+kal pakka
+kal pakka milte hain
+baad mein baat karte hain
+baad mein call karta hoon
+baad mein call karunga
+baad mein batata hoon
+baad mein milte hain
+baad mein dekhte hain
+abhi busy hoon
+abhi busy hu
+abhi nahi
+abhi aa raha hoon
+abhi aaya
+abhi nikal raha hoon
+abhi pahuch raha hoon
+abhi kya kar rahe ho
+abhi kahan ho
+abhi call karo
+abhi time nahi hai
+abhi free ho kya
+free ho kya
+free ho to call karna
+time hai kya
+time nahi hai
+time kya hua hai
+kitna time lagega
+kitna time aur lagega
+kitne baje aaoge
+kitne baje aana hai
+kitne baje milna hai
+kitne baje niklega
+kitne paise lagenge
+kitne paise hain
+kitna hua
+kitna paisa lagega
+tum kaha ho
+tum kahan ho
+tu kahan hai
+tu kaha hai
+kaha ho
+kahan ho
+kahan ho tum
+kahan hai tu
+kahan hai bhai
+kahan pahuche
+kahan jaana hai
+kahan milna hai
+kahan milenge
+kaha milna hai
+mujhe nahi pta
+mujhe nahi pata
+mujhe pata hai
+mujhe pata nahi
+mujhe samajh nahi aaya
+mujhe ye samajh nahi aaya
+mujhe kuch samajh nahi aa raha
+mujhe samajh aa gaya
+mujhe bhi nahi pata
+mujhe bhi aana hai
+mujhe bhi chahiye
+mujhe jaana hai
+mujhe ghar jaana hai
+mujhe abhi jaana hai
+mujhe kaam hai
+mujhe bahut kaam hai
+mujhe bhookh lagi hai
+mujhe neend aa rahi hai
+mujhe tumse baat karni hai
+mujhe tumse milna hai
+mujhe call karna
+mujhe bata dena
+mujhe batao
+mujhe yaad nahi
+mujhe yaad nahi aa raha
+mujhe lagta hai
+mujhe lagta hai ki
+mujhe nahi lagta
+mujhe accha laga
+mujhe bura laga
+mujhe pasand hai
+mujhe pasand nahi hai
+mujhe paise chahiye
+mujhe tumhari help chahiye
+mujhe thoda time chahiye
+pata nahi
+pata nahi yaar
+pata hai kya hua
+pata chala
+pata karo
+pata kar ke batata hoon
+aaj mood nahi hai
+aaj mood accha hai
+aaj mood kharab hai
+mood nahi hai
+mood nahi hai yaar
+mood off hai
+mood kharab hai
+mood kaisa hai
+thoda wait karna
+thoda wait krna
+thoda wait karo
+thoda ruk
+thoda ruko
+thoda time lagega
+thoda late ho jaunga
+thoda late ho gaya
+thoda busy hoon
+thoda sa
+thodi der mein aata hoon
+thodi der mein aa raha hoon
+thodi der mein call karta hoon
+thodi der ruk
+thodi der baad
+wait kar
+wait karo
+wait kar raha hoon
+wait kar rahi hoon
+late ho gaya
+late ho raha hai
+late ho jaunga
+late mat hona
+jaldi aao
+jaldi aa
+jaldi aa jao
+jaldi aa ja
+jaldi kar
+jaldi karo
+jaldi bata
+jaldi batao
+jaldi nikal
+jaldi reply kar
+jaldi se aa ja
+der ho gayi
+der ho rahi hai
+bahut der ho gayi
+bahut accha
+bahut badhiya
+bahut mast
+bahut kaam hai
+bahut time ho gaya
+bahut time baad
+bahut zyada
+bahut garmi hai
+bahut thand hai
+bahut bhookh lagi hai
+bahut neend aa rahi hai
+bahut maza aaya
+bhot maza aaya
+bohot accha laga
+maza aa gaya
+bahut maza aa gaya
+kya baat hai
+kya baat hai bhai
+kya hua
+kya hua bhai
+kya hua yaar
+kya hua tha
+kya hua tujhe
+kya hai
+kya hai yaar
+kya bol raha hai
+kya bol rahe ho
+kya bolu
+kya bolna hai
+kya karu
+kya karun
+kya karna hai
+kya karna chahiye
+kya khana hai
+kya khaya
+kya kha rahe ho
+kya dekh rahe ho
+kya soch rahe ho
+kya soch raha hai
+kya lagta hai
+kya mast hai
+kya bakwas hai
+kya bakwas kar raha hai
+kya samjha
+kya matlab
+kya matlab hai
+iska kya matlab hai
+kyun nahi
+kyu nahi
+kyun kya hua
+kyun aisa kar rahe ho
+kyun aaya
+kaise kya
+kaise kare
+kaise karna hai
+kaise hua
+kaise pata chala
+kaise jaana hai
+kab aa rahe ho
+kab aaoge
+kab milna hai
+kab milenge
+kab tak aaoge
+kab tak aa jaoge
+kab jaana hai
+kab free ho
+kab tak
+kab se
+kaun hai
+kaun aa raha hai
+kaun bola
+kaun hai ye
+kisne kaha
+kisko bolu
+sab log aa rahe hain
+sab log kahan hain
+sab ko bata do
+sabko bol do
+haan bhai
+haan yaar
+haan theek hai
+haan pata hai
+haan aa raha hoon
+haan kar dunga
+haan bol
+haan bolo
+haan ji
+ji haan
+ji sir
+ji bilkul
+ji theek hai
+nahi yaar
+nahi bhai
+nahi hai
+nahi aa raha
+nahi hoga
+nahi pata
+nahi chahiye
+nahi jaana
+nahi karna
+nahi hua
+nahi mila
+nahi dekha
+nahi bola
+nahi samjha
+nahi yaar rehne de
+rehne de
+rehne do
+chhod na
+chhod yaar
+chhodo yaar
+theek hai
+theek hai bhai
+theek hai yaar
+theek hai sir
+theek hai kal milte hain
+theek hai phir
+theek hai baad mein baat karte hain
+thik hai
+thik h
+thk h
+ok theek hai
+okay theek hai
+accha theek hai
+acha thik hai
+accha sun
+accha suno
+accha bata
+accha ye bata
+accha laga
+accha hai
+accha nahi hai
+accha lag raha hai
+acha h
+sun na
+suno na
+sun bhai
+sun yaar
+ek baat bolu
+ek baat batao
+ek kaam kar
+ek kaam karo
+ek minute
+ek minute ruk
+ek second
+ek baar
+ek baar call kar
+ek baar dekh le
+ek baar bata de
+ek din
+bata na
+bata de
+bata dena
+bata dunga
+batao na
+batao yaar
+batao kya karna hai
+bol na
+bol de
+bol diya
+bolo na
+bol raha hoon
+bol raha tha
+main bol raha tha
+maine kaha tha
+maine bola tha
+maine kar diya
+maine dekha
+maine call kiya tha
+maine message kiya tha
+maine bheja hai
+maine khana kha liya
+maine nahi kiya
+maine nahi dekha
+main aa raha hoon
+main aa rahi hoon
+main aa jaunga
+main aata hoon
+main aata hu
+main jaa raha hoon
+main ja raha hu
+main ja rahi hoon
+main kar raha hoon
+main kar lunga
+main kar dunga
+main dekh leta hoon
+main dekhta hoon
+main batata hoon
+main bata dunga
+main call karta hoon
+main call karunga
+main so raha hoon
+main so gaya tha
+main sochta hoon
+main soch raha tha
+main khana kha raha hoon
+main nikal raha hoon
+main nikal gaya
+main pahuch gaya
+main pahuchne wala hoon
+main wahan pahuch gaya
+main yahan hoon
+main ready hoon
+main bhi aa raha hoon
+main bhi chalta hoon
+main bhi yahi soch raha tha
+main nahi aa raha
+main nahi jaunga
+main nahi kar sakta
+main nahi kar paunga
+main kar sakta hoon
+main aa sakta hoon
+tum kya kar rahe ho
+tum aa rahe ho kya
+tum kab aaoge
+tum kaise ho
+tum batao
+tum bolo
+tum dekh lo
+tum kar lo
+tum aa jao
+tum chalo
+tum theek ho
+tum pagal ho kya
+tu aa raha hai kya
+tu kya kar raha hai
+tu kab aayega
+tu chal
+tu bata
+tu bol
+tu pagal hai kya
+tu rehne de
+tu aaja
+tujhe kya hua
+tujhe kya lagta hai
+tujhe pata hai
+tujhe call karta hoon
+tujhe bola tha
+aap kya kar rahe hain
+aap kahan hain
+aap kab aayenge
+aap bata dijiye
+aap call kar lena
+aap chinta mat kijiye
+aapka kya plan hai
+aapko pata hai
+aapko kaisa laga
+aapse baat karni thi
+aapse milna hai
+ye kya hai
+ye kya hua
+ye kya kar diya
+ye kaise hua
+ye sahi hai
+ye galat hai
+ye bahut accha hai
+ye dekh
+ye dekho
+ye sun
+ye le
+ye bhi theek hai
+ye mera hai
+ye tumhara hai
+wo kya hai
+wo kahan hai
+wo aa raha hai
+wo nahi aa raha
+wo bol raha tha
+wo kaun hai
+wo theek hai
+wo pagal hai
+wo mera dost hai
+wo gaya
+usko bol de
+usko call kar
+usko pata hai
+usko bata de
+usne kaha
+usne bola
+usne call kiya tha
+uska kya hua
+uska phone nahi lag raha
+phone nahi lag raha
+phone kar
+phone kar lena
+phone karna
+phone uthao
+phone utha
+phone kyun nahi utha rahe
+phone band hai
+phone charge nahi hai
+phone mein battery nahi hai
+call kar
+call kar lena
+call karna
+call karo
+call kar dena
+call karta hoon
+call karunga
+call nahi lag raha
+call uthao
+call utha
+call back karna
+message kar
+message kar dena
+message karna
+message karta hoon
+message dekh
+message bhej
+message bhej de
+msg kr dena
+msg kr
+msg krna
+reply kar
+reply nahi aaya
+reply kyu nahi kar raha
+reply kar dena
+photo bhej
+photo bhej de
+photo dekh
+photo achi hai
+location bhej
+location bhej do
+location share kar
+link bhej
+link bhej de
+bhej de
+bhej do
+bhej diya
+bhej raha hoon
+bhej dunga
+dekh le
+dekh lena
+dekh lo
+dekh liya
+dekh raha hoon
+dekh na
+dekhte hain
+dekhte hain kya hota hai
+dekhna
+dekho na
+chal theek hai
+chal koi nahi
+chal na
+chal bhai
+chal yaar
+chal milte hain
+chal phir
+chal baad mein baat karte hain
+chalo theek hai
+chalo milte hain
+chalo chalte hain
+chalo koi nahi
+chalo phir
+chalo kal milte hain
+chalo kuch khate hain
+chalte hain
+chalta hoon
+chalta hoon bhai
+koi nahi
+koi baat nahi
+koi na
+koi problem nahi
+koi problem hai kya
+koi dikkat nahi
+koi dikkat hai kya
+koi nahi hai
+koi aaya tha
+kuch nahi
+kuch nahi yaar
+kuch nahi bas
+kuch nahi hua
+kuch khaya
+kuch khaya kya
+kuch khas nahi
+kuch bhi
+kuch bhi bol raha hai
+kuch aur
+kuch samajh nahi aa raha
+kuch kaam hai
+kuch kaam tha
+kuch toh gadbad hai
+bas aise hi
+bas thoda
+bas ho gaya
+bas kar
+bas kar bhai
+bas aa raha hoon
+bas pahuch raha hoon
+bas nikal raha hoon
+bas 5 minute
+bas 2 minute
+bas yaar
+paanch minute mein aata hoon
+10 minute mein aa raha hoon
+5 minute mein aata hoon
+2 minute ruk
+5 minute ruk
+10 minute lagenge
+aa raha hoon
+aa rahi hoon
+aa raha hai
+aa rahe hain
+aa rahe ho kya
+aa jao
+aa ja
+aa gaya
+aa gayi
+aa gaya kya
+aa jaunga
+aa jaungi
+aa jayega
+aa sakte ho
+aa sakta hoon
+aa jana
+ja raha hoon
+ja rahi hoon
+ja raha hai
+ja rahe hain
+ja rahe ho kya
+ja na
+ja rahe hain kal
+jaa raha hoon
+kar raha hoon
+kar rahi hoon
+kar raha hai
+kar rahe hain
+kar rahe ho
+kar liya
+kar diya
+kar dunga
+kar dungi
+kar lunga
+kar lungi
+kar lena
+kar dena
+kar do
+kar lo
+kar le
+kar de
+kar na
+kar sakte ho
+kar sakta hoon
+kar sakte hain
+ho gaya
+ho gayi
+ho gaya kya
+ho gaya bhai
+ho jayega
+ho jaega
+ho jaunga
+ho sakta hai
+ho raha hai
+ho rahi hai
+ho kya
+ho na
+hoga na
+ho toh batao
+khana kha liya
+khana khaya
+khana kha liya kya
+khana kha lo
+khana khane chalein
+khana bana rahi hoon
+khana kya bana hai
+khana khake call karta hoon
+chai peete hain
+chai pi lo
+chai piyega
+chai piyoge
+chai peene chalein
+chai pe chalein
+paani de
+paani pila do
+bhookh lagi hai
+bhookh nahi hai
+neend aa rahi hai
+neend nahi aa rahi
+neend nahi aayi
+tabiyat kaisi hai
+tabiyat theek nahi hai
+tabiyat kharab hai
+tabiyat theek hai
+tabiyat kharab ho gayi
+aaj tabiyat theek nahi hai
+sir dard ho raha hai
+bukhar hai
+dawai le li
+dawai kha lo
+doctor ke paas jaana hai
+aaj chutti hai
+kal chutti hai
+aaj chutti le li
+chutti mil gayi
+chutti chahiye
+sir aaj chutti chahiye
+sir main aaj nahi aa paunga
+sir kal aa jaunga
+sir report bhej di hai
+sir meeting kab hai
+sir kaam ho gaya
+sir thoda late ho jaunga
+good morning bhai
+good night bhai
+good night yaar
+good morning sir
+happy birthday bhai
+happy birthday yaar
+janamdin mubarak ho
+bahut bahut badhai
+bahut bahut shukriya
+bahut bahut thanks
+thanks bhai
+thanks yaar
+thank you bhai
+sorry yaar
+sorry bhai
+sorry late ho gaya
+sorry maine dekha nahi
+sorry galti ho gayi
+galti ho gayi
+meri galti hai
+meri galti thi
+meri baat suno
+meri baat sun
+meri baat nahi maan raha
+mera phone kharab ho gaya
+mera dost hai
+mera naam
+mera mood nahi hai
+mera kaam ho gaya
+mera ghar
+mere paas nahi hai
+mere paas paise nahi hain
+mere paas time nahi hai
+mere ghar aa jao
+mere saath chal
+mere saath chalo
+mere liye bhi
+mere liye kuch lana
+mere dost
+tera kya plan hai
+tera kya scene hai
+tera kya hua
+tera kaam ho gaya
+tera phone kahan hai
+teri tabiyat kaisi hai
+tere ghar aa raha hoon
+tere paas hai kya
+tere paas paise hain kya
+tere saath hoon
+tere liye
+tumhara kya plan hai
+tumhara naam kya hai
+tumhari tabiyat kaisi hai
+tumse baat karni hai
+tumse milna hai
+tumne khana khaya
+tumne dekha kya
+tumne kya kiya
+tumhe kya chahiye
+tumhe kya lagta hai
+tumhe pata hai
+hum kal milte hain
+hum aa rahe hain
+hum nikal gaye
+hum kab milenge
+hum kya karein
+hum wahan pahuch gaye
+humein jaana hai
+hamara plan
+hamare ghar aana
+chalo movie dekhte hain
+movie dekhne chalein
+movie kaisi thi
+movie kab hai
+movie mast thi
+movie dekhi kya
+party kab hai
+party kahan hai
+party de
+party chahiye
+paise nahi hain
+paise bhej do
+paise chahiye
+paise mil gaye
+paise de de
+paise wapas kar
+paise wapas kar dunga
+gpay kar de
+gpay kar dunga
+paytm kar de
+upi kar do
+upi kar diya
+payment kar diya
+payment ho gaya
+kaam ho gaya
+kaam ho gaya kya
+kaam nahi hua
+kaam kar raha hoon
+kaam chal raha hai
+kaam kaisa chal raha hai
+kaam hai
+kaam mein busy hoon
+kaam khatam karke call karta hoon
+padhai kaisi chal rahi hai
+padhai kar raha hoon
+exam kab hai
+exam kaisa gaya
+exam hai kal
+kal exam hai
+college kab aa raha hai
+college aa raha hai kya
+college mein milte hain
+class hai kya
+class kab hai
+class mein hoon
+class chal rahi hai
+aaj class nahi hai
+notes bhej de
+notes de de
+assignment ho gaya kya
+assignment kab submit karna hai
+school se aa gaye
+baarish ho rahi hai
+baarish ho rahi hai yaar
+bahut baarish ho rahi hai
+traffic bahut hai
+traffic mein phasa hoon
+traffic mein hoon
+raste mein hoon
+raste mein hoon bhai
+rasta batao
+rasta bhool gaya
+cab book kar li
+cab mil nahi rahi
+auto nahi mil raha
+metro mein hoon
+train late hai
+flight late hai
+ticket book kar li
+ticket book kar di
+mummy bula rahi hai
+mummy ne bulaya hai
+mummy papa ghar pe hain
+papa se baat karta hoon
+papa ko bata dena
+mummy ko bol dena
+didi kahan hai
+bhaiya kab aayenge
+bhaiya ko bolo
+yaar kya kar raha hai
+yaar bahut bore ho raha hoon
+yaar tu sach mein pagal hai
+yaar mujhe nahi pata
+yaar kuch samajh nahi aa raha
+yaar aaj bahut thak gaya
+yaar kya bolu
+yaar sach mein
+yaar tu bhi na
+yaar ye kya hai
+yaar bahut mushkil hai
+yaar chhod na
+yaar sun na
+bhai sun
+bhai sun na
+bhai ek baat bata
+bhai ek kaam kar
+bhai kya kar raha hai
+bhai kahan hai
+bhai kab aa raha hai
+bhai bahut mast hai
+bhai tu kya bol raha hai
+bhai bahut sahi
+bhai sahi hai
+bhai paise bhej de
+bhai call kar
+bhai help kar de
+bhai thoda help kar
+bhai pagal hai kya
+bhai tension mat le
+bhai aaj nahi
+bhai aaj kya plan hai
+bhai kal kya plan hai
+bhai kal chalte hain
+bhai chal na
+bhai reply kar
+bhai sach mein
+bhai mast hai
+tension mat le
+tension mat lo
+tension nahi hai
+tension kyu le raha hai
+chinta mat karo
+ghabrao mat
+sach mein
+sach bol
+sach bolu toh
+sach mein kya
+pakka na
+pakka aa raha hai
+pakka aaunga
+pakka kar lena
+pakka hai na
+sahi hai
+sahi hai bhai
+sahi baat hai
+sahi bola
+sahi kaha
+bilkul sahi
+bilkul nahi
+bilkul theek
+bilkul theek hai
+badhiya hai
+badhiya bhai
+badhiya hai yaar
+mast hai
+mast hai bhai
+mast tha
+mast laga
+ekdum mast
+ekdum sahi
+ekdum badhiya
+ekdum theek
+zabardast hai
+gazab hai
+kamaal hai
+kamaal kar diya
+kamaal ho gaya
+wah bhai wah
+wah kya baat hai
+arre yaar
+arre bhai
+arre wah
+arre kya hua
+arre sun
+arre nahi
+arre haan
+oye sun
+oye kya kar raha hai
+abe sun
+abe yaar
+abe kya kar raha hai
+jo bhi ho
+jo bhi hai
+jo karna hai karo
+jab aao tab batana
+jab free ho call karna
+agar time ho toh aa jana
+agar nahi aa sakte toh bata dena
+agar free ho toh call karna
+isliye nahi aaya
+kyunki mujhe kaam tha
+kyunki kal chutti hai
+lekin mujhe nahi pata
+lekin kyun
+lekin abhi nahi
+phir kya hua
+phir milte hain
+phir baat karte hain
+phir call karta hoon
+phir kab milenge
+phir se bol
+phir se bhej
+phir bata dena
+toh phir
+toh kya hua
+toh kya karein
+toh theek hai
+toh chal
+aur bata
+aur sunao
+aur kya
+aur kuch
+aur kya chahiye
+aur sab
+aur kya hal hai
+ya phir
+ya nahi
+aa raha hai ya nahi
+sab kuch
+sab kuch theek hai
+sab kuch mast hai
+sab sahi hai
+sab ho jayega
+sab theek ho jayega
+sab badhiya
+sab log
+yahan aa
+yahan aa jao
+yahan aao
+yahan hoon
+yahan nahi hoon
+yahan kya kar rahe ho
+wahan kaise jaana hai
+wahan pahuch gaya
+wahan kya hai
+wahan koi nahi hai
+idhar aa
+idhar aao
+udhar dekh
+kidhar hai
+kidhar ho
+kidhar hai bhai
+kitna door hai
+kitna paisa hai
+kitni der lagegi
+kitni der mein aaoge
+kitni baar bola
+kitni baar bolu
+bahut door hai
+paas mein hai
+paas hi hai
+pehle bata dena
+pehle call kar lena
+pehle khana kha le
+pehle kyu nahi bataya
+kyun nahi bataya
+bataya nahi
+bataya tha
+baad mein
+uske baad
+iske baad
+us din
+ek din
+har din
+har baar
+har roz
+roz ka
+aaj subah
+aaj shaam
+aaj raat
+aaj shaam ko milte hain
+aaj raat ko call karna
+aaj kuch nahi
+aaj nahi kal
+aaj mat aana
+aaj bahut thak gaya
+aaj bahut kaam hai
+aaj bahut garmi hai
+aaj bahut maza aaya
+aaj kaisa din tha
+aaj ka din
+aaj bhi nahi
+subah se
+subah jaldi uthna hai
+subah call karna
+shaam ko aana
+shaam ko milte hain
+raat ko
+raat ko baat karte hain
+raat ko call karunga
+raat bahut ho gayi
+so ja
+so jao
+so gaya tha
+so raha tha
+good night so ja
+uth gaya
+uth gaya kya
+uth ja
+uth jao
+yaad hai
+yaad hai na
+yaad nahi
+yaad aa rahi hai
+yaad aa gaya
+tumhari yaad aa rahi hai
+bhool gaya
+bhool gaya yaar
+bhool mat jaana
+bhoolna mat
+miss kar raha hoon
+miss you yaar
+love you yaar
+love you bhai
+i love you yaar
+i will come kal
+i will come kal around 8 baje
+i am ghar par
+i am ghar pe
+i am coming kal
+i am on the way bhai
+i am on the way yaar
+i will call you baad mein
+i will call you kal
+i will do it kal
+i don't know yaar
+i don't know bhai
+let's milte tomorrow
+let's meet kal
+let's go yaar
+let's go bhai
+please bhai
+please yaar
+please help kar do
+please call kar lena
+please aa jao
+please bata do
+please mat karo
+meeting hai kal
+meeting cancel ho gayi
+meeting postpone ho gayi
+report bhej do
+report bhej di
+mail kar do
+mail bhej diya
+mail check karo
+mail kar dunga
+deadline kal hai
+deadline kab hai
+project kaisa chal raha hai
+project ho gaya
+project khatam ho gaya
+presentation ready hai
+presentation kal hai
+boss bula raha hai
+boss ne bola
+team ko bata do
+client ka call aaya
+client ne bola
+salary aa gayi
+salary kab aayegi
+leave chahiye
+leave le li
+wfh hai aaj
+aaj wfh hai
+weekend pe milte hain
+weekend pe chalein
+sunday ko milte hain
+sunday ko free ho
+monday ko milte hain
+monday se shuru
+next week milte hain
+next week aa raha hoon
+last week gaya tha
+birthday kab hai
+gift kya lena hai
+shaadi kab hai
+shaadi mein aa rahe ho
+shaadi mein milte hain
+diwali pe ghar aa raha hoon
+holi pe kya plan hai
+cricket dekh raha hoon
+match kaun jeet raha hai
+match dekh raha hoon
+match kab hai
+india jeet gaya
+game khelte hain
+game khelega
+pubg khelega
+bgmi khelega
+gym ja raha hoon
+gym se aa raha hoon
+gym nahi gaya
+walk pe ja raha hoon
+bazaar ja raha hoon
+market se kuch lana hai
+kuch lana hai kya
+doodh le aana
+sabzi le aana
+chai bana do
+khana bana do
+pani de do
+gaadi nikal
+gaadi kharab ho gayi
+gaadi kahan hai
+bike pe aa raha hoon
+petrol khatam ho gaya
+charger hai kya
+charger de
+wifi ka password kya hai
+net nahi chal raha
+net slow hai
+wifi nahi chal raha
+laptop kharab ho gaya
+laptop lana
+kal kya scene hai
+kal kya karna hai
+kal kya plan hai
+kal kya scene hai
+kal kya karna hai

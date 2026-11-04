@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcresult
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/BoliKeyKit/.build/
+
+# Signing and secrets: never commit
+*.mobileprovision
+*.provisionprofile
+*.p12
+*.cer
+*.certSigningRequest
+Config/Signing.local.xcconfig
+.env
+*.secret
+
+# Raw language-data downloads (fetched by Tools/fetch_sources.sh, derived counts are committed)
+Data/raw/
+
+# Python
+__pycache__/
+*.pyc
