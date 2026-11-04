@@ -9,7 +9,7 @@ let engineTargets: [(name: String, deps: [String])] = [
     ("PersonalizationEngine", ["LanguageCore", "StorageEngine"]),
     ("CorrectionEngine", ["LanguageCore", "HinglishEngine", "LanguageDetectionEngine", "PersonalizationEngine"]),
     ("PredictionEngine", ["LanguageCore", "HinglishEngine", "LanguageDetectionEngine", "PersonalizationEngine"]),
-    ("AIWritingEngine", ["LanguageCore", "HinglishEngine"]),
+    ("AIWritingEngine", ["LanguageCore", "HinglishEngine", "StorageEngine"]),
     ("KeyboardInputEngine", []),
     ("PrivacyManager", ["StorageEngine", "PersonalizationEngine"]),
 ]
@@ -23,7 +23,7 @@ let package = Package(
         .library(name: "KeyboardUI", targets: ["KeyboardUI"]),
     ],
     targets: [
-        .target(name: "LanguageCore", resources: [.copy("Resources")]),
+        .target(name: "LanguageCore", resources: [.copy("LanguageData")]),
     ]
     + engineTargets.map { .target(name: $0.name, dependencies: $0.deps.map { .byName(name: $0) }) }
     + [

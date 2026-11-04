@@ -58,7 +58,7 @@ public final class Lexicon {
     public enum LoadError: Error { case missing(String) }
 
     private func resource(_ name: String, in bundle: Bundle) throws -> Data {
-        let url = bundle.url(forResource: name, withExtension: "tsv", subdirectory: "Resources")
+        let url = bundle.url(forResource: name, withExtension: "tsv", subdirectory: "LanguageData")
             ?? bundle.url(forResource: name, withExtension: "tsv")
         guard let url else { throw LoadError.missing(name) }
         return try Data(contentsOf: url, options: .mappedIfSafe)

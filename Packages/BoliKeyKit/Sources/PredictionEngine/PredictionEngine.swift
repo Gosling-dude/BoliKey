@@ -41,7 +41,11 @@ public final class PredictionEngine {
         let analysis = detector.analyze(context)
         if analysis.dominant == .hindiDevanagari { return Blend(hinglish: 0, english: 0, devanagari: true) }
         let hasWords = analysis.tokens.contains { $0.token.kind == .word }
-        let share = hasWords ? Float(analysis.hindiShare) : preference
+        // With no sentence yet there is no evidence, so the chosen language decides outright.
+        if !hasWords {
+            return preference >= 0.5 ? Blend(hinglish: 1, english: 0) : Blend(hinglish: 0, english: 1)
+        }
+        let share = Float(analysis.hindiShare)
         // Evidence from the sentence counts for more than the preference, without erasing it.
         let hindi = min(0.95, max(0.05, share * 0.75 + preference * 0.25))
         return Blend(hinglish: hindi, english: 1 - hindi)

@@ -9,7 +9,7 @@ Inputs
   Data/english/corpus.txt     hand-written conversational English messages
   Data/raw/*                  see Tools/fetch_sources.sh and NOTICE.md
 
-Outputs, in Packages/BoliKeyKit/Sources/LanguageCore/Resources
+Outputs, in Packages/BoliKeyKit/Sources/LanguageCore/LanguageData
   words.tsv    word, flags, hindi count, english count, canonical, devanagari, gloss
   ngrams.tsv   model (h/e/d), order, context, next word, count
   chargrams.tsv  character trigram log likelihood per language, for out of vocabulary words
@@ -23,7 +23,7 @@ import re
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-OUT = os.path.join(ROOT, "Packages/BoliKeyKit/Sources/LanguageCore/Resources")
+OUT = os.path.join(ROOT, "Packages/BoliKeyKit/Sources/LanguageCore/LanguageData")
 RAW = os.path.join(ROOT, "Data/raw")
 
 # Pruning limits. These decide the size of the shipped model.

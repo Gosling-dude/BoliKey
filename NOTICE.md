@@ -1,7 +1,7 @@
 # Third-party data notices
 
 BoliKey's language model is built by `Tools/build_language_data.py`. Raw downloads are not stored in this
-repository, only the derived counts in `Packages/BoliKeyKit/Sources/LanguageCore/Resources`.
+repository, only the derived counts in `Packages/BoliKeyKit/Sources/LanguageCore/LanguageData`.
 
 | Data | Source | Licence | Used for |
 |---|---|---|---|

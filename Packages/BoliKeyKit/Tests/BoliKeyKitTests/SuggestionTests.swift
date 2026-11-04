@@ -94,3 +94,17 @@ final class SuggestionTests: XCTestCase {
         XCTAssertGreaterThan(Lexicon.shared.latinTrie.count, 30_000)
     }
 }
+
+final class SentenceStartTests: XCTestCase {
+    func testHinglishModeStartsWithHinglish() {
+        let words = makeEngine().suggestions(before: "").map { $0.insertion.lowercased() }
+        XCTAssertEqual(words.count, 3)
+        XCTAssertFalse(words.contains("i"), "\(words)")
+        XCTAssertTrue(words.contains { Lexicon.shared.entry($0)?.flags.contains(.hinglish) == true }, "\(words)")
+    }
+    func testEnglishModeStartsWithEnglish() {
+        var settings = KeyboardSettings()
+        settings.languageMode = .english
+        XCTAssertTrue(makeEngine(settings: settings).suggestions(before: "").map(\.insertion).contains("I"))
+    }
+}

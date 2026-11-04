@@ -233,10 +233,17 @@ public final class InputController {
 /// A plain text buffer implementing the proxy, used by tests and the in-app preview.
 public final class StringTextProxy: TextProxying {
     public var text: String
+    public var onChange: ((String) -> Void)?
     public init(_ text: String = "") { self.text = text }
     public var contextBeforeCursor: String? { text }
     public var contextAfterCursor: String? { nil }
-    public func insert(_ s: String) { text += s }
-    public func deleteBackward() { if !text.isEmpty { text.removeLast() } }
+    public func insert(_ s: String) {
+        text += s
+        onChange?(text)
+    }
+    public func deleteBackward() {
+        if !text.isEmpty { text.removeLast() }
+        onChange?(text)
+    }
     public func moveCursor(by offset: Int) {}
 }

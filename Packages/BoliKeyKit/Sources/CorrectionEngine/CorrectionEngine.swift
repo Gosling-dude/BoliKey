@@ -100,7 +100,11 @@ public final class CorrectionEngine {
         // A clean swap or doubled letter is still a typo, and that holds in either language.
         if hindiLike, best.cost > 0.6, !phonetic.contains(best.word) { return false }
         // Two plausible fixes mean we do not know which one the user meant.
-        if let runnerUp, best.score - runnerUp.score < 0.55 { return false }
+        // A strictly cheaper edit, such as a swap against a substitution, is stronger evidence on its own.
+        if let runnerUp {
+            let margin: Float = best.cost + 0.04 < runnerUp.cost ? 0.25 : 0.55
+            if best.score - runnerUp.score < margin { return false }
+        }
         return true
     }
 

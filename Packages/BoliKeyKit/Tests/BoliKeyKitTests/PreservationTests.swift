@@ -62,6 +62,12 @@ final class PreservationTests: XCTestCase {
         }
     }
 
+    func testSwapIsCorrectedWhateverTheContext() {
+        XCTAssertEqual(type("see teh "), "see the ")
+        XCTAssertEqual(type("I am at teh "), "I am at the ")
+        XCTAssertEqual(type("kya hte "), "kya the ")
+    }
+
     func testCorrectionKeepsCapitalisation() {
         XCTAssertEqual(type("Teh "), "The ")
     }

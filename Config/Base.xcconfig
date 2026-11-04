@@ -1,0 +1,13 @@
+// Shared settings. A personal signing team goes in Config/Signing.local.xcconfig, which is git-ignored:
+//   DEVELOPMENT_TEAM = ABCDE12345
+#include? "Signing.local.xcconfig"
+MARKETING_VERSION = 0.1.0
+CURRENT_PROJECT_VERSION = 1
+IPHONEOS_DEPLOYMENT_TARGET = 17.0
+SWIFT_VERSION = 5.0
+TARGETED_DEVICE_FAMILY = 1,2
+CODE_SIGN_STYLE = Automatic
+CODE_SIGN_IDENTITY[sdk=iphonesimulator*] = -
+SDKROOT = iphoneos
+SUPPORTED_PLATFORMS = iphoneos iphonesimulator
+ENABLE_USER_SCRIPT_SANDBOXING = YES
