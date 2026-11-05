@@ -4,7 +4,22 @@
 
 BoliKey is a native iPhone keyboard for people who mix languages. It treats Hinglish as a real way of writing, so `bhai kal milte hai` stays exactly as you typed it, and it offers suggestions in the language you are actually using. Everything runs on the device.
 
-> **Status: pre-release, tested on the iOS simulator only.** It has not run on a physical iPhone yet. See [QA_REPORT.md](QA_REPORT.md) and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
+> **Status: pre-release, keyboard tested on the iOS simulator only.** The app installs and opens on a physical iPhone, but the keyboard has not been tested there yet. See [QA_REPORT.md](QA_REPORT.md) and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/phrase-prediction.png" alt="BoliKey suggesting Kal kya plan hai, Kal kya scene hai and Kal kya karna hai after typing Kal kya" width="260"></td>
+    <td align="center"><img src="docs/screenshots/writing-styles.png" alt="BoliKey writing styles offering casual, professional, friendly and formal versions of Kal meeting hai kya" width="260"></td>
+    <td align="center"><img src="docs/screenshots/dark-mode.png" alt="BoliKey in dark mode suggesting milte after typing Bhai kal mil" width="260"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Predicts whole phrases</b><br>Type <code>kal kya</code>, get <code>plan hai</code></td>
+    <td align="center"><b>Rewrites only when you ask</b><br>Pick a style, or keep your words</td>
+    <td align="center"><b>Dark mode</b><br>Follows your iPhone's setting</td>
+  </tr>
+</table>
+
+<sub>Real keyboard, captured on the iOS simulator. The microphone at the bottom right is Apple's own Dictation key, not a BoliKey feature.</sub>
 
 ## What it does
 
@@ -18,6 +33,14 @@ BoliKey is a native iPhone keyboard for people who mix languages. It treats Hing
 | **Six writing styles** | On request, `kal meeting hai kya` can become `Is there a meeting scheduled for tomorrow?` |
 | **Learns from your choices only** | It learns from suggestions you tap, never from what you simply type. |
 | **Private** | No network code, no analytics, no account. |
+
+## Voice typing (planned)
+
+> **Not built yet.** This is the design for a future version, and it has not been tested with real speech.
+
+Voice typing will turn what you say into text. Speak, and your words appear as ordinary text that you can edit before sending. **It will not send a voice message**: the person you are chatting with gets text, and nothing is sent until you press send yourself.
+
+iOS does not give keyboards access to the microphone, so voice typing will go through the BoliKey app. See the [voice design](ARCHITECTURE.md#voice-design-not-built).
 
 ## Quick start
 
