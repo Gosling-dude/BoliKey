@@ -6,20 +6,13 @@ BoliKey is a native iPhone keyboard for people who mix languages. It treats Hing
 
 > **Status: pre-release, keyboard tested on the iOS simulator only.** The app installs and opens on a physical iPhone, but the keyboard has not been tested there yet. See [QA_REPORT.md](QA_REPORT.md) and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
 
-<table>
-  <tr>
-    <td align="center"><img src="docs/screenshots/phrase-prediction.png" alt="BoliKey suggesting Kal kya plan hai, Kal kya scene hai and Kal kya karna hai after typing Kal kya" width="260"></td>
-    <td align="center"><img src="docs/screenshots/writing-styles.png" alt="BoliKey writing styles offering casual, professional, friendly and formal versions of Kal meeting hai kya" width="260"></td>
-    <td align="center"><img src="docs/screenshots/dark-mode.png" alt="BoliKey in dark mode suggesting milte after typing Bhai kal mil" width="260"></td>
-  </tr>
-  <tr>
-    <td align="center"><b>Predicts whole phrases</b><br>Type <code>kal kya</code>, get <code>plan hai</code></td>
-    <td align="center"><b>Rewrites only when you ask</b><br>Pick a style, or keep your words</td>
-    <td align="center"><b>Dark mode</b><br>Follows your iPhone's setting</td>
-  </tr>
-</table>
+<p align="center">
+  <a href="docs/media/bolikey-demo.mp4"><img src="docs/media/bolikey-demo.gif" alt="BoliKey demo: Hinglish stays as typed, phrase prediction, a spelling option applied on tap, a professional rewrite, the Devanagari keyboard, and dark mode" width="320"></a>
+</p>
 
-<sub>Real keyboard, captured on the iOS simulator. The microphone at the bottom right is Apple's own Dictation key, not a BoliKey feature.</sub>
+**In the demo:** Hinglish stays as typed, `kal kya` predicts `plan hai`, `mai thik hu` offers a spelling you can tap, `kal meeting hai kya` becomes a professional sentence on request, then the Hindi keyboard and dark mode.
+
+<sub>Real keyboard, recorded on the iOS simulator at 2x speed and typed by an automated test. [Watch the sharper MP4](docs/media/bolikey-demo.mp4). The microphone at the bottom right is Apple's own Dictation key, not a BoliKey feature, and voice typing is not shown because it is [not built yet](#voice-typing-planned).</sub>
 
 ## What it does
 
