@@ -52,6 +52,7 @@ public final class BoliKeyEngine {
     public let hinglish: HinglishEngine
     public private(set) var detector: LanguageDetector
     public let transliterator: Transliterator
+    public let phonetic: PhoneticHindi
     public let personalization: PersonalizationEngine
     public let correction: CorrectionEngine
     public let prediction: PredictionEngine
@@ -70,6 +71,7 @@ public final class BoliKeyEngine {
         hinglish = HinglishEngine(lexicon: lexicon)
         detector = LanguageDetector(lexicon: lexicon)
         transliterator = Transliterator(lexicon: lexicon)
+        phonetic = PhoneticHindi(lexicon: lexicon)
         personalization = PersonalizationEngine(store: store, lexicon: lexicon)
         correction = CorrectionEngine(lexicon: lexicon, hinglish: hinglish, detector: detector, personal: personalization)
         prediction = PredictionEngine(lexicon: lexicon, detector: detector, personal: personalization)
@@ -99,7 +101,11 @@ public final class BoliKeyEngine {
 
     /// The replacement to apply automatically, or nil to preserve the word.
     public func autoCorrection(for word: String, context: String) -> String? {
-        guard fieldPolicy.mayAutoCorrect, settings.autoCorrectEnabled else { return nil }
+        guard fieldPolicy.mayAutoCorrect else { return nil }
+        // Typing Hindi in English letters, the word becomes Devanagari. That is the input method,
+        // not a correction, so it does not depend on the typo setting.
+        if phoneticHindiActive { return hindiSpelling(for: word) }
+        guard settings.autoCorrectEnabled else { return nil }
         switch correction.decide(word: word, context: context, autoCorrectEnabled: true) {
         case .preserve: return nil
         case .correct(let best, _): return Self.matchCase(of: word, in: best.word)
@@ -161,6 +167,7 @@ public final class BoliKeyEngine {
     }
 
     private func midWordSuggestions(typed: String, context: String) -> [Suggestion] {
+        if phoneticHindiActive, PhoneticHindi.isRoman(typed) { return phoneticSuggestions(typed: typed) }
         let head = String(context.dropLast(typed.count))
         let sentence = Tokenizer.currentSentence(in: context)
         let b = blend(context)
@@ -207,6 +214,40 @@ public final class BoliKeyEngine {
         if settings.devanagariSuggestionsEnabled, !isDevanagari, hinglish.isHindi(typed), let last = out.indices.last, out.count == 3 {
             let deva = transliterator.toDevanagari(word: typed)
             out[last] = Suggestion(kind: .transliteration, display: deva, replacing: typed, insertion: deva)
+        }
+        return out
+    }
+
+    // MARK: Hindi in English letters
+
+    /// Typing Hindi on the English keys, with words turned into Devanagari as they are finished.
+    public var phoneticHindiActive: Bool { settings.languageMode == .hindi && settings.phoneticHindiEnabled }
+
+    /// What a word typed in English letters becomes when it is finished, or nil to keep it as typed.
+    /// The user's own choice comes first, and an undone conversion is not repeated.
+    public func hindiSpelling(for word: String) -> String? {
+        guard PhoneticHindi.isRoman(word) else { return nil }
+        if let chosen = personalization.hindiSpelling(of: word) {
+            return chosen.lowercased() == word.lowercased() ? nil : chosen
+        }
+        guard let converted = phonetic.conversion(of: word),
+              !personalization.hasRejected(typed: word, corrected: converted) else { return nil }
+        return converted
+    }
+
+    /// The word as typed, what it will become, and other Hindi spellings or longer words to pick.
+    private func phoneticSuggestions(typed: String) -> [Suggestion] {
+        var out: [Suggestion] = []
+        func add(_ s: Suggestion) {
+            guard out.count < 3, !out.contains(where: { $0.insertion == s.insertion }) else { return }
+            out.append(s)
+        }
+        add(Suggestion(kind: .preserve, display: "“\(typed)”", replacing: typed, insertion: typed))
+        if let target = hindiSpelling(for: typed) {
+            add(Suggestion(kind: .transliteration, display: target, replacing: typed, insertion: target, willAutoApply: true))
+        }
+        for spelling in phonetic.candidates(for: typed) + phonetic.completions(of: typed) {
+            add(Suggestion(kind: .transliteration, display: spelling, replacing: typed, insertion: spelling))
         }
         return out
     }
@@ -267,6 +308,10 @@ public final class BoliKeyEngine {
         if suggestion.kind == .improvement || suggestion.insertion.contains(" ") && suggestion.kind == .preserve { return }
         let head = String(context.dropLast(suggestion.replacing.count))
         let previous = Tokenizer.trailingWord(in: head.trimmingCharacters(in: .whitespaces))
+        // Picking a Hindi spelling, or keeping English letters, decides that word from now on.
+        if phoneticHindiActive, PhoneticHindi.isRoman(suggestion.replacing), [.transliteration, .preserve].contains(suggestion.kind) {
+            personalization.recordHindiSpelling(roman: suggestion.replacing, choice: suggestion.insertion)
+        }
         if suggestion.kind == .preserve {
             personalization.recordPreserved(word: suggestion.insertion)
         } else {

@@ -20,7 +20,6 @@ Everything else waits on what this turns up.
 ## Version 1
 
 - Voice-to-text through the companion app. See [ARCHITECTURE.md](ARCHITECTURE.md#voice-design-not-built).
-- A Roman-to-Devanagari typing mode.
 - Better context: predictions from more than two previous words.
 - App Store preparation: privacy nutrition label, screenshots, review notes explaining the Full Access request.
 

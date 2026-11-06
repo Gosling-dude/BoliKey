@@ -409,6 +409,29 @@ final class CompanionAppUITests: KeyboardTestCase {
         XCTAssertEqual(value(of: field), "See teh ", "With correction off the typo must stay")
     }
 
+    func testHindiInEnglishLettersBecomesDevanagari() {
+        launch()
+        goToTab("Settings")
+        element("settings-language").tap()
+        element("language-hindi").tap()
+        let toggle = app.switches["toggle-phonetic-hindi"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 3))
+        toggle.switches.firstMatch.exists ? toggle.switches.firstMatch.tap() : toggle.tap()
+        shot("phonetic-hindi-setting")
+        goToTab("Try")
+        let field = openTryField()
+        XCTAssertTrue(element("key.n").waitForExistence(timeout: 2), "The English keys, in Hindi")
+        type("namaste ")
+        XCTAssertEqual(value(of: field), "नमस्ते ")
+        type("kal milte hai")
+        XCTAssertNotNil(waitForSuggestion("है"), "What the word will become is shown before it happens")
+        shot("phonetic-hindi")
+        type(" ")
+        XCTAssertEqual(value(of: field), "नमस्ते कल मिलते है ")
+        element("key.Delete").tap()
+        XCTAssertEqual(value(of: field), "नमस्ते कल मिलते hai", "One backspace brings back what was typed")
+    }
+
     func testDictionaryWordReachesKeyboard() {
         launch()
         goToTab("Dictionary")

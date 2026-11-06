@@ -134,17 +134,25 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     private func applyFieldTraits() {
         guard let host else { return }
         let policy = PrivacyManager.policy(for: host.fieldContext)
-        input.configuration.autoCorrectAllowed = policy.mayAutoCorrect && settings.autoCorrectEnabled
+        input.configuration.autoCorrectAllowed = policy.mayAutoCorrect && wordsChangeAtSpace
         input.configuration.autoCapitalizationMode = host.autoCapitalizationMode
         if let engine {
             engineQueue.async { engine.fieldPolicy = policy }
         }
     }
 
+    /// Typing Hindi in English letters on the usual keys.
+    private var typesHindiPhonetically: Bool { settings.languageMode == .hindi && settings.phoneticHindiEnabled }
+
+    /// Whether finishing a word may change it: a typo fix, or Hindi turning into Devanagari.
+    private var wordsChangeAtSpace: Bool { settings.autoCorrectEnabled || typesHindiPhonetically }
+
     private func applySettingsToUI() {
-        input.configuration.autoCapitalizeEnabled = settings.autoCapitalizeEnabled
+        // Devanagari has no capital letters.
+        input.configuration.autoCapitalizeEnabled = settings.autoCapitalizeEnabled && !typesHindiPhonetically
         input.configuration.doubleSpacePeriodEnabled = settings.doubleSpacePeriodEnabled
-        input.configuration.autoCorrectAllowed = settings.autoCorrectEnabled
+        input.configuration.autoCorrectAllowed = wordsChangeAtSpace
+        input.configuration.dandaAfterDevanagari = settings.languageMode == .hindi
         bar.setLanguage(settings.languageMode)
         bar.showsStyleButton = settings.styleControlEnabled
     }
@@ -161,13 +169,13 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     }
 
     private func basePage() -> KeyboardPage {
-        settings.languageMode == .hindi ? .devanagari : .letters
+        settings.languageMode == .hindi && !settings.phoneticHindiEnabled ? .devanagari : .letters
     }
 
     private func rebuildKeys() {
         guard let host else { return }
         if page == .letters || page == .devanagari { page = basePage() }
-        let spaceLabel = settings.languageMode == .hindi ? "स्पेस" : "BoliKey"
+        let spaceLabel = settings.languageMode == .hindi ? (settings.phoneticHindiEnabled ? "हिन्दी" : "स्पेस") : "BoliKey"
         var rows = KeyboardLayouts.rows(for: page, uppercase: input.shift.isUppercase)
         rows.append(KeyboardLayouts.bottomRow(page: page, needsGlobe: host.needsGlobeKey, returnLabel: host.returnKeyLabel, spaceLabel: spaceLabel, base: basePage()))
         grid.setKeys(rows, shift: page == .letters ? input.shift : .off)
@@ -333,6 +341,8 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         let store = storeFactory()
         store.writePrivate(KeyboardLocalState(languageMode: settings.languageMode, activeProfileID: settings.activeProfileID, basedOnRevision: settings.revision), file: StoreFile.keyboardState)
         bar.setLanguage(settings.languageMode)
+        applySettingsToUI()
+        applyFieldTraits()
         page = basePage()
         rebuildKeys()
         input.syncAutoCapitalization()

@@ -24,6 +24,8 @@ public struct InputConfiguration: Equatable, Sendable {
     public var autoCapitalizationMode: AutoCapitalizationMode = .sentences
     public var doubleSpacePeriodEnabled = true
     public var autoCorrectAllowed = true
+    /// A full stop typed after Hindi, or the double-space shortcut there, writes a danda: ।
+    public var dandaAfterDevanagari = false
     public init() {}
 }
 
@@ -84,6 +86,11 @@ public final class InputController {
             applyCorrectionIfNeeded(separator: raw)
         }
         lastCorrection = (raw.first.map { isWordCharacter($0) } ?? false) ? nil : lastCorrection
+        // After the word before it became Devanagari, so that "namaste." ends in a danda.
+        if raw == ".", configuration.dandaAfterDevanagari, let last = proxy.contextBeforeCursor?.last, Self.isDevanagari(last) {
+            text = "।"
+            if let c = lastCorrection { lastCorrection = AppliedCorrection(typed: c.typed, corrected: c.corrected, separator: text) }
+        }
         proxy.insert(text)
         lastSpaceTime = 0
         let after = shift.afterCharacter
@@ -107,7 +114,7 @@ public final class InputController {
         if configuration.doubleSpacePeriodEnabled, t - lastSpaceTime < 0.4, before.hasSuffix(" "),
            let mark = before.dropLast().last, mark.isLetter || mark.isNumber || isMarkCharacter(mark) {
             proxy.deleteBackward()
-            proxy.insert(". ")
+            proxy.insert(configuration.dandaAfterDevanagari && Self.isDevanagari(mark) ? "। " : ". ")
             lastSpaceTime = 0
             autoSpaceAdded = false
             syncAutoCapitalization()
@@ -257,6 +264,10 @@ public final class InputController {
 
     private func isMarkCharacter(_ ch: Character) -> Bool {
         ch.unicodeScalars.contains { $0.properties.generalCategory == .nonspacingMark || $0.properties.generalCategory == .spacingMark }
+    }
+
+    static func isDevanagari(_ ch: Character) -> Bool {
+        ch.unicodeScalars.contains { (0x0900...0x097F).contains($0.value) }
     }
 
     static func trailingWord(in text: String) -> String {

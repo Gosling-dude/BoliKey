@@ -75,6 +75,8 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
     public var devanagariSuggestionsEnabled = false
     public var styleControlEnabled = true
     public var languageMode: LanguageMode = .hinglish
+    /// In Hindi, type in English letters on the usual keys and get Devanagari: namaste becomes नमस्ते.
+    public var phoneticHindiEnabled = false
     public var activeProfileID: String = "friends"
     public var profiles: [LanguageProfile] = LanguageProfile.defaults
     public var onboardingCompleted = false
@@ -101,6 +103,7 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
         devanagariSuggestionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .devanagariSuggestionsEnabled) ?? d.devanagariSuggestionsEnabled
         styleControlEnabled = try c.decodeIfPresent(Bool.self, forKey: .styleControlEnabled) ?? d.styleControlEnabled
         languageMode = try c.decodeIfPresent(LanguageMode.self, forKey: .languageMode) ?? d.languageMode
+        phoneticHindiEnabled = try c.decodeIfPresent(Bool.self, forKey: .phoneticHindiEnabled) ?? d.phoneticHindiEnabled
         activeProfileID = try c.decodeIfPresent(String.self, forKey: .activeProfileID) ?? d.activeProfileID
         profiles = try c.decodeIfPresent([LanguageProfile].self, forKey: .profiles) ?? d.profiles
         onboardingCompleted = try c.decodeIfPresent(Bool.self, forKey: .onboardingCompleted) ?? d.onboardingCompleted

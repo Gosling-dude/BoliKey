@@ -24,7 +24,7 @@ Each engine is a separate Swift package target with its own dependencies, so the
 |---|---|---|
 | 1. Language detection | `LanguageDetectionEngine` | Script decides Devanagari. Roman text goes through a two-state HMM (Viterbi) over word counts, with character trigram naive Bayes for unknown words. |
 | 2. Hinglish vocabulary | `HinglishEngine`, `LanguageCore` | Authored lexicon with spelling variants, expanded verb table, phonetic keys, elongation handling. |
-| 3. Transliteration | `TransliterationEngine` | Lexicon first, then longest-match phonetic rules. |
+| 3. Transliteration | `TransliterationEngine` | Lexicon first, then longest-match phonetic rules. Typing Hindi in English letters spells each word several ways with a beam search, and a spelling found in the Devanagari vocabulary wins. |
 | 4. Prediction | `PredictionEngine` | Interpolated trigram and bigram models for each language, blended by the sentence's language. Beam search for phrases. |
 | 5. Personalisation | `PersonalizationEngine` | Counts from explicit choices, re-ranking predictions at lookup. |
 | 6. Rewriting | `AIWritingEngine` | Transparent pattern rules, behind a `RewriteProvider` protocol for a future model. |
