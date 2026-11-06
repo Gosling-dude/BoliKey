@@ -25,10 +25,13 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     private let storeFactory: () -> SharedStore
     private let input: InputController
     private var theme: KeyboardTheme
+    /// Paints the theme's background behind everything. Classic leaves it clear.
+    private let backdrop = UIView()
     private let bar: SuggestionBar
     private let grid: KeyGridView
     private lazy var emojiPanel: EmojiPanel = makeEmojiPanel()
     private lazy var rewritePanel: RewritePanel = makeRewritePanel()
+    private var panelsLoaded: (emoji: Bool, rewrite: Bool) = (false, false)
     private var page: KeyboardPage = .letters
     private var settings = KeyboardSettings()
     private var globeControl: UIControl?
@@ -52,6 +55,8 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         bar = SuggestionBar(theme: theme)
         grid = KeyGridView(theme: theme)
         super.init(frame: .zero)
+        backdrop.isUserInteractionEnabled = false
+        addSubview(backdrop)
         addSubview(bar)
         addSubview(grid)
         bar.delegate = self
@@ -60,6 +65,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         input.onStateChange = { [weak self] in self?.shiftChanged() }
         grid.globeFrameDidChange = { [weak self] frame in self?.placeGlobe(frame) }
         settings = SettingsStore.load(from: storeFactory())
+        applyTheme()
         applySettingsToUI()
         rebuildKeys()
         loadEngine()
@@ -97,12 +103,9 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         applySettingsToUI()
         applyFieldTraits()
         haptics.prepare()
-        // A reused keyboard can open in a field with a different appearance.
-        if let host {
-            theme = .resolve(dark: host.usesDarkAppearance)
-            bar.apply(theme: theme)
-            grid.apply(theme: theme)
-        }
+        // A reused keyboard can open in a field with a different appearance, or with a theme
+        // chosen in the app since it was last open.
+        applyTheme()
         if let host, host.prefersNumericPage, page == .letters {
             page = .numbers
         }
@@ -117,14 +120,22 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     }
 
     public func appearanceDidChange() {
+        applyTheme()
+        rebuildKeys()
+    }
+
+    /// The chosen theme's colours, in the field's light or dark appearance.
+    private func applyTheme() {
         guard let host else { return }
-        theme = .resolve(dark: host.usesDarkAppearance)
+        theme = .resolve(palette: KeyboardPalette.named(settings.keyboardTheme), dark: host.usesDarkAppearance)
+        backdrop.backgroundColor = theme.keyboardBackground
         bar.apply(theme: theme)
         grid.apply(theme: theme)
-        emojiPanel.apply(theme: theme)
-        rewritePanel.apply(theme: theme)
-        rewritePanel.backgroundColor = theme.panelBackground
-        rebuildKeys()
+        if panelsLoaded.emoji { emojiPanel.apply(theme: theme) }
+        if panelsLoaded.rewrite {
+            rewritePanel.apply(theme: theme)
+            rewritePanel.backgroundColor = theme.panelBackground
+        }
     }
 
     public func globeNeedChanged() {
@@ -161,6 +172,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+        backdrop.frame = bounds
         bar.frame = CGRect(x: 0, y: 0, width: bounds.width, height: Self.suggestionBarHeight)
         let content = CGRect(x: 0, y: Self.suggestionBarHeight, width: bounds.width, height: bounds.height - Self.suggestionBarHeight)
         grid.frame = content.insetBy(dx: 0, dy: 0)
@@ -379,6 +391,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     }
 
     private func makeRewritePanel() -> RewritePanel {
+        panelsLoaded.rewrite = true
         let panel = RewritePanel(theme: theme)
         panel.backgroundColor = theme.panelBackground
         panel.onClose = { [weak self] in self?.rewritePanel.removeFromSuperview() }
@@ -419,6 +432,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     // MARK: Emoji
 
     private func makeEmojiPanel() -> EmojiPanel {
+        panelsLoaded.emoji = true
         let panel = EmojiPanel(theme: theme)
         panel.onEmoji = { [weak self] emoji in
             self?.input.insertLiteral(emoji)

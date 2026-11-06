@@ -9,6 +9,7 @@ struct SettingsView: View {
             List {
                 Section {
                     NavigationLink("Keyboard") { KeyboardSettingsScreen() }.accessibilityIdentifier("settings-keyboard")
+                    NavigationLink("Theme") { ThemeSettingsScreen() }.accessibilityIdentifier("settings-theme")
                     NavigationLink("Language") { LanguageSettingsScreen() }.accessibilityIdentifier("settings-language")
                     NavigationLink("AI Preferences") { AIPreferencesScreen() }.accessibilityIdentifier("settings-ai")
                     NavigationLink("Privacy") { PrivacyDashboardScreen() }.accessibilityIdentifier("settings-privacy")

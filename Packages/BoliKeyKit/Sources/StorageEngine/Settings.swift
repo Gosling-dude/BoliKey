@@ -74,6 +74,8 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
     public var predictionsEnabled = true
     public var devanagariSuggestionsEnabled = false
     public var styleControlEnabled = true
+    /// The keyboard's colours, by theme ID. An ID this version does not know shows Classic.
+    public var keyboardTheme = "classic"
     public var languageMode: LanguageMode = .hinglish
     /// In Hindi, type in English letters on the usual keys and get Devanagari: namaste becomes नमस्ते.
     public var phoneticHindiEnabled = false
@@ -102,6 +104,7 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
         predictionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .predictionsEnabled) ?? d.predictionsEnabled
         devanagariSuggestionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .devanagariSuggestionsEnabled) ?? d.devanagariSuggestionsEnabled
         styleControlEnabled = try c.decodeIfPresent(Bool.self, forKey: .styleControlEnabled) ?? d.styleControlEnabled
+        keyboardTheme = try c.decodeIfPresent(String.self, forKey: .keyboardTheme) ?? d.keyboardTheme
         languageMode = try c.decodeIfPresent(LanguageMode.self, forKey: .languageMode) ?? d.languageMode
         phoneticHindiEnabled = try c.decodeIfPresent(Bool.self, forKey: .phoneticHindiEnabled) ?? d.phoneticHindiEnabled
         activeProfileID = try c.decodeIfPresent(String.self, forKey: .activeProfileID) ?? d.activeProfileID
