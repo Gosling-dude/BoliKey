@@ -28,6 +28,7 @@ Each engine is a separate Swift package target with its own dependencies, so the
 | 4. Prediction | `PredictionEngine` | Interpolated trigram and bigram models for each language, blended by the sentence's language. Beam search for phrases. |
 | 5. Personalisation | `PersonalizationEngine` | Counts from explicit choices, re-ranking predictions at lookup. |
 | 6. Rewriting | `AIWritingEngine` | Transparent pattern rules, behind a `RewriteProvider` protocol for a future model. |
+| 7. Emoji | `EmojiEngine` | A hand-written table of Hinglish, English and Hindi keywords, and Unicode names, searched by word prefix. |
 
 ### Why homographs are capped
 
@@ -55,7 +56,7 @@ Edit costs reflect how people actually mistype: swaps, neighbouring QWERTY keys,
 |---|---|---|
 | `settings.json` | App | Preferences and profiles |
 | `dictionary.json` | App | Words the user added |
-| `learned.json` | Keyboard | Counts from explicit choices |
+| `learned.json` | Keyboard | Counts from explicit choices, and the emoji picked recently |
 | `keyboard-state.json` | Keyboard, always private | Language or profile picked on the keyboard |
 
 iOS may stop a keyboard without Full Access from writing to the App Group. So every read checks shared and private storage, and a failed shared write falls back to the extension's own container.

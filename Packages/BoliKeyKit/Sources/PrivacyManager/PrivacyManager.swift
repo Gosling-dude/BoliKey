@@ -50,6 +50,7 @@ public enum PrivacyManager {
             .init(id: "phrases", title: "Learned phrases", detail: "Full phrases you tapped in the suggestion bar.", count: learned.phraseCounts.count),
             .init(id: "spellings", title: "Preferred spellings", detail: "Your spelling of a word, such as nhi for nahi.", count: learned.preferredSpellings.count),
             .init(id: "rejections", title: "Undone corrections", detail: "Autocorrections you reversed, so they are not repeated.", count: learned.rejectedCorrections.count),
+            .init(id: "emoji", title: "Recent emoji", detail: "Emoji you picked, shown first in the emoji panel.", count: learned.recentEmoji.count),
         ]
     }
 }

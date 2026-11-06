@@ -40,12 +40,27 @@ public struct LearnedData: Codable, Equatable, Sendable {
     public var rejectedCorrections: Set<String> = []
     /// Canonical word to the spelling this user prefers: "nahi" to "nhi".
     public var preferredSpellings: [String: String] = [:]
+    /// Emoji the user picked, most recent first.
+    public var recentEmoji: [String] = []
     public var resetGeneration = 0
 
     public init() {}
 
     public var isEmpty: Bool {
         wordCounts.isEmpty && bigramCounts.isEmpty && phraseCounts.isEmpty && rejectedCorrections.isEmpty && preferredSpellings.isEmpty
+            && recentEmoji.isEmpty
+    }
+
+    // Tolerates missing keys, so a file from an older version keeps what it learned.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        wordCounts = try c.decodeIfPresent([String: Int].self, forKey: .wordCounts) ?? [:]
+        bigramCounts = try c.decodeIfPresent([String: Int].self, forKey: .bigramCounts) ?? [:]
+        phraseCounts = try c.decodeIfPresent([String: Int].self, forKey: .phraseCounts) ?? [:]
+        rejectedCorrections = try c.decodeIfPresent(Set<String>.self, forKey: .rejectedCorrections) ?? []
+        preferredSpellings = try c.decodeIfPresent([String: String].self, forKey: .preferredSpellings) ?? [:]
+        recentEmoji = try c.decodeIfPresent([String].self, forKey: .recentEmoji) ?? []
+        resetGeneration = try c.decodeIfPresent(Int.self, forKey: .resetGeneration) ?? 0
     }
 }
 
@@ -110,6 +125,11 @@ public final class PersonalizationEngine {
         isEnabled ? learned.preferredSpellings[canonical.lowercased()] : nil
     }
 
+    public static let recentEmojiLimit = 24
+
+    /// Emoji the user picked, most recent first.
+    public var recentEmoji: [String] { isEnabled ? learned.recentEmoji : [] }
+
     /// Personal words and learned phrases starting with `prefix`, most used first.
     public func completions(of prefix: String, limit: Int) -> [String] {
         let lower = prefix.lowercased()
@@ -163,6 +183,17 @@ public final class PersonalizationEngine {
     public func recordPreserved(word: String) {
         guard isEnabled else { return }
         learned.wordCounts[word.lowercased(), default: 0] += 1
+        dirty = true
+    }
+
+    /// The user picked an emoji, from the panel or the suggestion bar.
+    public func recordEmoji(_ emoji: String) {
+        guard isEnabled, !emoji.isEmpty else { return }
+        learned.recentEmoji.removeAll { $0 == emoji }
+        learned.recentEmoji.insert(emoji, at: 0)
+        if learned.recentEmoji.count > Self.recentEmojiLimit {
+            learned.recentEmoji.removeLast(learned.recentEmoji.count - Self.recentEmojiLimit)
+        }
         dirty = true
     }
 

@@ -73,6 +73,8 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
     public var personalizationEnabled = true
     public var predictionsEnabled = true
     public var devanagariSuggestionsEnabled = false
+    /// Offers an emoji in the suggestion bar for words such as "party" and "chai".
+    public var emojiSuggestionsEnabled = true
     public var styleControlEnabled = true
     public var languageMode: LanguageMode = .hinglish
     public var activeProfileID: String = "friends"
@@ -99,6 +101,7 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
         personalizationEnabled = try c.decodeIfPresent(Bool.self, forKey: .personalizationEnabled) ?? d.personalizationEnabled
         predictionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .predictionsEnabled) ?? d.predictionsEnabled
         devanagariSuggestionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .devanagariSuggestionsEnabled) ?? d.devanagariSuggestionsEnabled
+        emojiSuggestionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .emojiSuggestionsEnabled) ?? d.emojiSuggestionsEnabled
         styleControlEnabled = try c.decodeIfPresent(Bool.self, forKey: .styleControlEnabled) ?? d.styleControlEnabled
         languageMode = try c.decodeIfPresent(LanguageMode.self, forKey: .languageMode) ?? d.languageMode
         activeProfileID = try c.decodeIfPresent(String.self, forKey: .activeProfileID) ?? d.activeProfileID

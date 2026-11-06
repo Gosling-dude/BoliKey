@@ -126,6 +126,18 @@ public enum KeyboardLayouts {
         keys.append(KeyDefinition(action: .returnKey, label: returnLabel, width: 2.0, accessibilityLabel: returnLabel))
         return keys
     }
+
+    /// The bottom row while searching for emoji: back to the emoji panel, a space for the query,
+    /// and back to the letters. It has the same total width as the usual row.
+    public static func emojiSearchBottomRow(needsGlobe: Bool) -> [KeyDefinition] {
+        var keys = [KeyDefinition(action: .page(.emoji), label: "emoji", width: 1.5, accessibilityLabel: "Emoji")]
+        if needsGlobe {
+            keys.append(KeyDefinition(action: .nextKeyboard, label: "globe", width: 1.2, accessibilityLabel: "Next keyboard"))
+        }
+        keys.append(KeyDefinition(action: .space, label: "space", width: needsGlobe ? 4.9 : 6.1, accessibilityLabel: "Space"))
+        keys.append(KeyDefinition(action: .page(.letters), label: "ABC", width: 2.0, accessibilityLabel: "Done searching"))
+        return keys
+    }
 }
 
 public enum EmojiCatalog {
@@ -133,7 +145,18 @@ public enum EmojiCatalog {
         public let name: String
         public let symbol: String
         public let emoji: [String]
+        public init(name: String, symbol: String, emoji: [String]) {
+            self.name = name
+            self.symbol = symbol
+            self.emoji = emoji
+        }
     }
+
+    /// Every emoji in the panel, once each.
+    public static let allEmoji: [String] = {
+        var seen = Set<String>()
+        return categories.flatMap(\.emoji).filter { seen.insert($0).inserted }
+    }()
 
     public static let categories: [Category] = [
         .init(name: "Smileys", symbol: "😀", emoji: "😀 😃 😄 😁 😆 😅 🤣 😂 🙂 😉 😊 😇 🥰 😍 🤩 😘 😗 😚 😋 😛 😜 🤪 😝 🤑 🤗 🤭 🤫 🤔 🤐 🤨 😐 😑 😶 😏 😒 🙄 😬 😌 😔 😪 🤤 😴 😷 🤒 🤕 🤢 🤮 🥵 🥶 🥴 😵 🤯 🤠 🥳 😎 🤓 🧐 😕 😟 🙁 😮 😯 😲 😳 🥺 😦 😧 😨 😰 😥 😢 😭 😱 😖 😣 😞 😓 😩 😫 🥱 😤 😡 😠 🤬 😈 💀 💩 🤡 👻 👽 🤖".split(separator: " ").map(String.init)),
@@ -141,7 +164,7 @@ public enum EmojiCatalog {
         .init(name: "Hearts", symbol: "❤️", emoji: "❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 💋 💯 💢 💥 💫 💦 💨 🔥 ✨ ⭐ 🌟 🎉 🎊 🎈 🎁 🏆 🥇".split(separator: " ").map(String.init)),
         .init(name: "Food", symbol: "🍕", emoji: "☕ 🍵 🥤 🍺 🍻 🥂 🍾 🍷 🍹 🍕 🍔 🍟 🌭 🥪 🌮 🌯 🍜 🍝 🍛 🍚 🍙 🍱 🍲 🥘 🍳 🥗 🍿 🧂 🥟 🍰 🎂 🧁 🍫 🍬 🍭 🍩 🍪 🍦 🍎 🍌 🍉 🍇 🍓 🥭 🍍 🥥".split(separator: " ").map(String.init)),
         .init(name: "Places", symbol: "🚗", emoji: "🚗 🚕 🛺 🚌 🚓 🚑 🏍️ 🛵 🚲 🚆 🚇 ✈️ 🚀 🏠 🏢 🏫 🏥 🏦 🏨 🛕 🕌 ⛪ 🏖️ ⛰️ 🌄 🌅 🌃 🌧️ ⛈️ ☀️ 🌙 ⭐ 🌈 ❄️ 🌊".split(separator: " ").map(String.init)),
-        .init(name: "Objects", symbol: "📱", emoji: "📱 💻 ⌨️ 🖥️ 🎧 📷 📹 📺 🎮 🕹️ 📚 📖 ✏️ 📝 📌 📎 📅 ⏰ ⌛ 💰 💵 💳 🔑 🔒 💡 🔋 🛒 🎵 🎶 🎤 🎬 ⚽ 🏏 🏀 🏸 🎯 💊 🩺".split(separator: " ").map(String.init)),
+        .init(name: "Objects", symbol: "📱", emoji: "📱 💻 ⌨️ 🖥️ 🎧 📷 📹 📺 🎮 🕹️ 📚 📖 ✏️ 📝 📌 📎 📅 ⏰ ⌛ 💰 💵 💳 🔑 🔒 💡 🔋 🛒 🎵 🎶 🎤 🎬 ⚽ 🏏 🏀 🏸 🎯 💊 🩺 🪔 🎆 🧨 🎨 💍".split(separator: " ").map(String.init)),
         .init(name: "Flags", symbol: "🇮🇳", emoji: "🇮🇳 🏳️ 🏴 🏁 🚩 🇺🇸 🇬🇧 🇦🇪 🇨🇦 🇦🇺 🇸🇬 🇳🇵 🇧🇩 🇱🇰 🇯🇵 🇩🇪 🇫🇷".split(separator: " ").map(String.init)),
     ]
 }

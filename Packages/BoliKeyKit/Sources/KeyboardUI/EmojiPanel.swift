@@ -6,10 +6,14 @@ final class EmojiPanel: UIView, UICollectionViewDataSource, UICollectionViewDele
     var onEmoji: ((String) -> Void)?
     var onBackspace: (() -> Void)?
     var onDismiss: (() -> Void)?
+    var onSearch: (() -> Void)?
     private let collection: UICollectionView
     private let tabs = UIStackView()
-    private let categories = EmojiCatalog.categories
+    /// The recent row, when there is one, then the fixed categories.
+    private var sections = EmojiCatalog.categories
     private var theme: KeyboardTheme
+
+    static let recentName = "Recent"
 
     private final class Cell: UICollectionViewCell {
         let label = UILabel()
@@ -56,6 +60,16 @@ final class EmojiPanel: UIView, UICollectionViewDataSource, UICollectionViewDele
         rebuildTabs()
     }
 
+    /// Shows the emoji picked most recently first. An empty list hides the row.
+    func setRecents(_ recents: [String]) {
+        let recentSection = recents.isEmpty ? [] : [EmojiCatalog.Category(name: Self.recentName, symbol: "🕘", emoji: recents)]
+        let updated = recentSection + EmojiCatalog.categories
+        guard updated.map(\.emoji) != sections.map(\.emoji) else { return }
+        sections = updated
+        collection.reloadData()
+        rebuildTabs()
+    }
+
     private func rebuildTabs() {
         tabs.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let abc = UIButton(type: .custom)
@@ -66,7 +80,14 @@ final class EmojiPanel: UIView, UICollectionViewDataSource, UICollectionViewDele
         abc.accessibilityIdentifier = "emoji-back"
         abc.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
         tabs.addArrangedSubview(abc)
-        for (index, category) in categories.enumerated() {
+        let search = UIButton(type: .custom)
+        search.setImage(UIImage(systemName: "magnifyingglass", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .semibold)), for: .normal)
+        search.tintColor = theme.keyText
+        search.accessibilityLabel = "Search emoji"
+        search.accessibilityIdentifier = "emoji-search"
+        search.addTarget(self, action: #selector(searchTapped), for: .touchUpInside)
+        tabs.addArrangedSubview(search)
+        for (index, category) in sections.enumerated() {
             let b = UIButton(type: .custom)
             b.setTitle(category.symbol, for: .normal)
             b.titleLabel?.font = .systemFont(ofSize: 18)
@@ -91,13 +112,20 @@ final class EmojiPanel: UIView, UICollectionViewDataSource, UICollectionViewDele
         collection.collectionViewLayout.invalidateLayout()
     }
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int { categories.count }
+    /// Opens at the start, so the recent row is the first thing seen.
+    func scrollToStart() {
+        guard !sections.isEmpty else { return }
+        collection.layoutIfNeeded()
+        collection.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
+    }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { categories[section].emoji.count }
+    func numberOfSections(in collectionView: UICollectionView) -> Int { sections.count }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { sections[section].emoji.count }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "c", for: indexPath) as! Cell
-        let emoji = categories[indexPath.section].emoji[indexPath.item]
+        let emoji = sections[indexPath.section].emoji[indexPath.item]
         cell.label.text = emoji
         cell.isAccessibilityElement = true
         cell.accessibilityLabel = emoji
@@ -110,7 +138,7 @@ final class EmojiPanel: UIView, UICollectionViewDataSource, UICollectionViewDele
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        onEmoji?(categories[indexPath.section].emoji[indexPath.item])
+        onEmoji?(sections[indexPath.section].emoji[indexPath.item])
     }
 
     @objc private func tabTapped(_ sender: UIButton) {
@@ -119,5 +147,6 @@ final class EmojiPanel: UIView, UICollectionViewDataSource, UICollectionViewDele
 
     @objc private func dismissTapped() { onDismiss?() }
     @objc private func backspaceTapped() { onBackspace?() }
+    @objc private func searchTapped() { onSearch?() }
 }
 #endif

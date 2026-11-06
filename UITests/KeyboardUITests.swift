@@ -283,6 +283,61 @@ final class KeyboardUITests: KeyboardTestCase {
         XCTAssertTrue(element("key.q").waitForExistence(timeout: 2))
     }
 
+    func testEmojiSuggestionKeepsTheWord() {
+        launch()
+        let field = openTryField()
+        type("aaj party")
+        let emoji = waitForSuggestion("🎉")
+        XCTAssertNotNil(emoji, "An emoji is offered for party")
+        shot("emoji-suggestion")
+        XCTAssertEqual(value(of: field), "Aaj party", "Offered, not applied")
+        emoji?.tap()
+        XCTAssertEqual(value(of: field), "Aaj party 🎉 ")
+    }
+
+    func testEmojiSearchTypesIntoTheSearchNotTheField() {
+        launch()
+        let field = openTryField()
+        type("ok ")
+        element("key.Emoji").tap()
+        let search = element("emoji-search")
+        XCTAssertTrue(search.waitForExistence(timeout: 2))
+        search.tap()
+        XCTAssertTrue(element("emoji-search-query").waitForExistence(timeout: 2))
+        type("chai")
+        XCTAssertEqual(value(of: field), "Ok ", "The search never reaches the field")
+        let result = element("emoji-result-0")
+        XCTAssertTrue(result.waitForExistence(timeout: 2))
+        XCTAssertEqual(result.label, "☕")
+        shot("emoji-search")
+        result.tap()
+        XCTAssertEqual(value(of: field), "Ok ☕")
+        element("key.Done searching").tap()
+        XCTAssertTrue(element("language-indicator").waitForExistence(timeout: 2), "Back to the letters and the suggestion bar")
+        type("a")
+        XCTAssertEqual(value(of: field), "Ok ☕a")
+    }
+
+    func testPickedEmojiLeadTheRecentRow() {
+        launch()
+        let field = openTryField()
+        element("key.Emoji").tap()
+        XCTAssertTrue(element("emoji-search").waitForExistence(timeout: 2))
+        element("emoji-search").tap()
+        type("chai")
+        XCTAssertTrue(element("emoji-result-0").waitForExistence(timeout: 2))
+        element("emoji-result-0").tap()
+        element("emoji-search-close").tap()
+        let grid = element("emoji-grid")
+        XCTAssertTrue(grid.waitForExistence(timeout: 2))
+        let first = grid.cells.firstMatch
+        let deadline = Date().addingTimeInterval(3)
+        while first.label != "☕" && Date() < deadline { Thread.sleep(forTimeInterval: 0.1) }
+        XCTAssertEqual(first.label, "☕", "The emoji just used comes first")
+        shot("emoji-recent")
+        XCTAssertEqual(value(of: field), "☕")
+    }
+
     func testLanguageSwitchToDevanagari() {
         launch()
         let field = openTryField()

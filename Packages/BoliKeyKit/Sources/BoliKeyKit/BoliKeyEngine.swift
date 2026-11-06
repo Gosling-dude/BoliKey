@@ -9,6 +9,7 @@
 @_exported import AIWritingEngine
 @_exported import KeyboardInputEngine
 @_exported import PrivacyManager
+@_exported import EmojiEngine
 import Foundation
 
 public struct Suggestion: Equatable, Sendable {
@@ -24,6 +25,8 @@ public struct Suggestion: Equatable, Sendable {
         case improvement
         case transliteration
         case expansion
+        /// An emoji for the word just typed. It is added after the word, which stays.
+        case emoji
     }
 
     public let kind: Kind
@@ -56,6 +59,7 @@ public final class BoliKeyEngine {
     public let correction: CorrectionEngine
     public let prediction: PredictionEngine
     public let writing: WritingEngine
+    public let emoji: EmojiLexicon
     public let store: SharedStore
     public var settings: KeyboardSettings {
         didSet { applySettings() }
@@ -74,6 +78,7 @@ public final class BoliKeyEngine {
         correction = CorrectionEngine(lexicon: lexicon, hinglish: hinglish, detector: detector, personal: personalization)
         prediction = PredictionEngine(lexicon: lexicon, detector: detector, personal: personalization)
         writing = WritingEngine(lexicon: lexicon, hinglish: hinglish)
+        emoji = .shared
         applySettings()
     }
 
@@ -150,6 +155,10 @@ public final class BoliKeyEngine {
             let text = capitalizedIfSentenceStart(word.text, head: context)
             out.append(Suggestion(kind: .nextWord, display: text, replacing: "", insertion: text))
         }
+        // Right after "party ", the emoji is what comes next.
+        if let last = Tokenizer.tokenize(sentence).last, last.kind == .word {
+            place(emojiSuggestion(for: last.text, afterSpace: true), in: &out)
+        }
         return out
     }
 
@@ -208,7 +217,37 @@ public final class BoliKeyEngine {
             let deva = transliterator.toDevanagari(word: typed)
             out[last] = Suggestion(kind: .transliteration, display: deva, replacing: typed, insertion: deva)
         }
+        place(emojiSuggestion(for: typed, afterSpace: false), in: &out)
         return out
+    }
+
+    // MARK: Emoji
+
+    /// An emoji for `word`, inserted after it. The word itself is never replaced.
+    private func emojiSuggestion(for word: String, afterSpace: Bool) -> Suggestion? {
+        guard settings.emojiSuggestionsEnabled, !word.isEmpty else { return nil }
+        let found = emoji.emoji(for: word).first ?? emoji.emoji(for: lexicon.canonical(of: word)).first
+        guard let found else { return nil }
+        return Suggestion(kind: .emoji, display: found, replacing: "", insertion: afterSpace ? found : " " + found)
+    }
+
+    /// An emoji takes a free slot, or the last one holding a prediction. It never pushes out the
+    /// original, a correction, a better sentence, an expansion or a transliteration.
+    private func place(_ suggestion: Suggestion?, in out: inout [Suggestion]) {
+        guard let suggestion else { return }
+        if out.count < 3 {
+            out.append(suggestion)
+        } else if let slot = out.lastIndex(where: { [.completion, .nextWord, .phrase].contains($0.kind) }) {
+            out[slot] = suggestion
+        }
+    }
+
+    /// Call when the user picks an emoji from the panel or the bar. It is kept for the panel's
+    /// recent row, and only when the field allows learning.
+    public func didUseEmoji(_ emoji: String) {
+        guard fieldPolicy.mayLearn else { return }
+        personalization.recordEmoji(emoji)
+        personalization.persist()
     }
 
     private func correctionSuggestion(_ candidate: Candidate, typed: String) -> Suggestion {
@@ -263,6 +302,10 @@ public final class BoliKeyEngine {
     /// Call when the user taps a suggestion. This is the main thing the keyboard learns from.
     public func didAccept(_ suggestion: Suggestion, context: String) {
         guard fieldPolicy.mayLearn else { return }
+        if suggestion.kind == .emoji {
+            didUseEmoji(suggestion.display)
+            return
+        }
         // Whole sentences are the user's own writing. Choosing one is not a phrase worth keeping.
         if suggestion.kind == .improvement || suggestion.insertion.contains(" ") && suggestion.kind == .preserve { return }
         let head = String(context.dropLast(suggestion.replacing.count))

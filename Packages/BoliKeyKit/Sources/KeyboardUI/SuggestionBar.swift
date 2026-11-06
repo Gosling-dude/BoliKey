@@ -89,7 +89,7 @@ final class SuggestionBar: UIView {
                 button.isHidden = false
                 button.setTitle(s.display, for: .normal)
                 button.setTitleColor(theme.suggestionText, for: .normal)
-                button.titleLabel?.font = .systemFont(ofSize: 15, weight: s.willAutoApply ? .semibold : .regular)
+                button.titleLabel?.font = s.kind == .emoji ? .systemFont(ofSize: 24) : .systemFont(ofSize: 15, weight: s.willAutoApply ? .semibold : .regular)
                 button.backgroundColor = s.willAutoApply ? theme.highlightBackground : .clear
                 button.accessibilityLabel = accessibilityText(for: s)
             } else {
@@ -107,6 +107,7 @@ final class SuggestionBar: UIView {
         case .preserve: return "Keep as typed: \(s.insertion)"
         case .correction: return "Correct to \(s.insertion)"
         case .improvement: return "Change to \(s.insertion)"
+        case .emoji: return "Add \(s.display)"
         default: return s.display
         }
     }

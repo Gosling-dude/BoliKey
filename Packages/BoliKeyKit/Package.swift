@@ -12,6 +12,7 @@ let engineTargets: [(name: String, deps: [String])] = [
     ("AIWritingEngine", ["LanguageCore", "HinglishEngine", "StorageEngine"]),
     ("KeyboardInputEngine", []),
     ("PrivacyManager", ["StorageEngine", "PersonalizationEngine"]),
+    ("EmojiEngine", []),
 ]
 
 let package = Package(

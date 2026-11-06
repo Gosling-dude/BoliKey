@@ -35,6 +35,7 @@ private struct KeyboardSettingsScreen: View {
             Section("Suggestions") {
                 Toggle("Show Suggestions", isOn: $model.settings.predictionsEnabled).accessibilityIdentifier("toggle-predictions")
                 Toggle("Offer Devanagari for Hindi Words", isOn: $model.settings.devanagariSuggestionsEnabled)
+                Toggle("Suggest Emoji", isOn: $model.settings.emojiSuggestionsEnabled).accessibilityIdentifier("toggle-emoji")
                 Toggle("Show Writing Style Control", isOn: $model.settings.styleControlEnabled)
             }
             Section("Typing") {
