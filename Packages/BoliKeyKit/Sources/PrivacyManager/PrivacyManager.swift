@@ -49,6 +49,7 @@ public enum PrivacyManager {
             .init(id: "pairs", title: "Learned word pairs", detail: "Two-word sequences from suggestions you tapped.", count: learned.bigramCounts.count),
             .init(id: "phrases", title: "Learned phrases", detail: "Full phrases you tapped in the suggestion bar.", count: learned.phraseCounts.count),
             .init(id: "spellings", title: "Preferred spellings", detail: "Your spelling of a word, such as nhi for nahi.", count: learned.preferredSpellings.count),
+            .init(id: "hindi", title: "Hindi spellings you chose", detail: "How a word typed in English letters should appear in Hindi, such as सीता for sita.", count: learned.hindiSpellings.count),
             .init(id: "rejections", title: "Undone corrections", detail: "Autocorrections you reversed, so they are not repeated.", count: learned.rejectedCorrections.count),
         ]
     }

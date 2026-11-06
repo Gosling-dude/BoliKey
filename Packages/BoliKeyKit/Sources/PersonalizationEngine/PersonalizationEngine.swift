@@ -40,12 +40,28 @@ public struct LearnedData: Codable, Equatable, Sendable {
     public var rejectedCorrections: Set<String> = []
     /// Canonical word to the spelling this user prefers: "nahi" to "nhi".
     public var preferredSpellings: [String: String] = [:]
+    /// What a word typed in English letters should become in Hindi, as this user chose it:
+    /// "sita" to "सीता". A word mapped to itself stays in English letters.
+    public var hindiSpellings: [String: String] = [:]
     public var resetGeneration = 0
 
     public init() {}
 
     public var isEmpty: Bool {
         wordCounts.isEmpty && bigramCounts.isEmpty && phraseCounts.isEmpty && rejectedCorrections.isEmpty && preferredSpellings.isEmpty
+            && hindiSpellings.isEmpty
+    }
+
+    // Tolerates missing keys, so a file from an older version keeps what it learned.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        wordCounts = try c.decodeIfPresent([String: Int].self, forKey: .wordCounts) ?? [:]
+        bigramCounts = try c.decodeIfPresent([String: Int].self, forKey: .bigramCounts) ?? [:]
+        phraseCounts = try c.decodeIfPresent([String: Int].self, forKey: .phraseCounts) ?? [:]
+        rejectedCorrections = try c.decodeIfPresent(Set<String>.self, forKey: .rejectedCorrections) ?? []
+        preferredSpellings = try c.decodeIfPresent([String: String].self, forKey: .preferredSpellings) ?? [:]
+        hindiSpellings = try c.decodeIfPresent([String: String].self, forKey: .hindiSpellings) ?? [:]
+        resetGeneration = try c.decodeIfPresent(Int.self, forKey: .resetGeneration) ?? 0
     }
 }
 
@@ -110,6 +126,12 @@ public final class PersonalizationEngine {
         isEnabled ? learned.preferredSpellings[canonical.lowercased()] : nil
     }
 
+    /// The Hindi spelling this user chose for a word typed in English letters, or the word itself
+    /// when they chose to keep it in English.
+    public func hindiSpelling(of roman: String) -> String? {
+        isEnabled ? learned.hindiSpellings[roman.lowercased()] : nil
+    }
+
     /// Personal words and learned phrases starting with `prefix`, most used first.
     public func completions(of prefix: String, limit: Int) -> [String] {
         let lower = prefix.lowercased()
@@ -163,6 +185,17 @@ public final class PersonalizationEngine {
     public func recordPreserved(word: String) {
         guard isEnabled else { return }
         learned.wordCounts[word.lowercased(), default: 0] += 1
+        dirty = true
+    }
+
+    /// The user picked how a word typed in English letters should appear: in Devanagari, or as typed.
+    public func recordHindiSpelling(roman: String, choice: String) {
+        guard isEnabled, !roman.isEmpty, !choice.isEmpty else { return }
+        learned.hindiSpellings[roman.lowercased()] = choice
+        // Keeps the file small: past the limit, another choice makes room.
+        if learned.hindiSpellings.count > 2_000, let other = learned.hindiSpellings.keys.first(where: { $0 != roman.lowercased() }) {
+            learned.hindiSpellings[other] = nil
+        }
         dirty = true
     }
 
