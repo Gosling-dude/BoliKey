@@ -20,6 +20,7 @@ No iPhone or signing identity was available. Until these are tested on a device,
 - **Typing Hindi in English letters** finds a word in the lexicon or the Devanagari vocabulary, so there `sita` gives `सीता`. Any other word is spelled by rule, so `pardesi` gives `पर्देसी`, not `परदेसी`, until the right spelling is picked once. Common English words stay in English letters, which can be wrong for a word that is also Hindi.
 - Words that are common in both languages, like `main` and `to`, can still be mislabelled in very short sentences. This only affects ranking, because nothing is changed automatically on the strength of a language tag.
 - Marathi, Punjabi and the other planned languages are not available. Their text is preserved but gets no suggestions.
+- Rupee amounts are recognised in Roman script and Western digits only: `500 rs` and `2 lakh`, not `५०० रुपये`.
 
 ## Writing styles
 

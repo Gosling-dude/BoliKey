@@ -24,6 +24,7 @@ BoliKey is a native iPhone keyboard for people who mix languages. It treats Hing
 | **Types Hindi in English letters** | Optional. In Hindi, type `namaste` on the English keys and get `नमस्ते` when the word ends. A word the lexicon lacks is spelled several ways and the one real Hindi text uses wins, so `bharat` becomes `भारत`. One backspace brings back what you typed. |
 | **Predicts offline** | Word completion, next word and phrases: `kal kya` offers `plan hai`, `scene hai`, `karna hai`. |
 | **Offers, never imposes** | `mai thik hu` offers `main theek hu` and `main bilkul theek hu`. Nothing changes until you tap. |
+| **Writes rupees properly** | `500 rs`, `rs 500` and `500/-` offer `₹500`. `1.5 lakh` offers `₹1,50,000`, grouped the Indian way. A bare number is never touched: it may be a phone number or a year. |
 | **Six writing styles** | On request, `kal meeting hai kya` can become `Is there a meeting scheduled for tomorrow?` |
 | **Themes** | Six colour themes, from Classic, which follows light and dark mode, to Indigo, Saffron, Chai, Mint and Midnight's pure black. Key and suggestion text in every theme meets WCAG AA contrast. |
 | **Learns from your choices only** | It learns from suggestions you tap, never from what you simply type. |
