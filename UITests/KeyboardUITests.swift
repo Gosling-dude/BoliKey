@@ -234,6 +234,22 @@ final class KeyboardUITests: KeyboardTestCase {
         XCTAssertEqual(value(of: field), "Ok5.#")
     }
 
+    func testRupeeAmountIsOfferedTheIndianWay() {
+        launch()
+        let field = openTryField()
+        element("key.Numbers").tap()
+        XCTAssertTrue(element("key.1").waitForExistence(timeout: 2))
+        // A space on the numbers page goes back to the letters.
+        type("150000 ")
+        type("rs")
+        let amount = waitForSuggestion("₹1,50,000")
+        XCTAssertNotNil(amount, "Lakh grouping, with the rupee sign")
+        XCTAssertEqual(value(of: field), "150000 rs", "Offered, not applied")
+        shot("rupee-amount")
+        amount?.tap()
+        XCTAssertEqual(value(of: field), "₹1,50,000 ")
+    }
+
     func testHoldingBackspaceRepeats() {
         launch()
         let field = openTryField()

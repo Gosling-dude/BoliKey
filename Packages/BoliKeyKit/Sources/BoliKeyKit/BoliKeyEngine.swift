@@ -22,6 +22,8 @@ public struct Suggestion: Equatable, Sendable {
         case phrase
         /// An optional better sentence: conventional spelling, punctuation or phrasing.
         case improvement
+        /// A rupee amount written the usual way: "1.5 lakh" as "₹1,50,000".
+        case amount
         case transliteration
         case expansion
     }
@@ -111,7 +113,14 @@ public final class BoliKeyEngine {
     public func suggestions(before context: String) -> [Suggestion] {
         guard fieldPolicy.mayPredict, settings.predictionsEnabled else { return [] }
         let typed = Tokenizer.trailingWord(in: context)
-        return typed.isEmpty ? nextWordSuggestions(context) : midWordSuggestions(typed: typed, context: context)
+        var out = typed.isEmpty ? nextWordSuggestions(context) : midWordSuggestions(typed: typed, context: context)
+        // An amount is what was just typed, written the usual way, so it comes first.
+        if let amount = RupeeAmount.match(endingAt: context) {
+            out.removeAll { $0.insertion == amount.formatted }
+            out.insert(Suggestion(kind: .amount, display: amount.formatted, replacing: amount.replacing, insertion: amount.formatted), at: 0)
+            out = Array(out.prefix(3))
+        }
+        return out
     }
 
     private func blend(_ context: String) -> PredictionEngine.Blend {
@@ -264,7 +273,7 @@ public final class BoliKeyEngine {
     public func didAccept(_ suggestion: Suggestion, context: String) {
         guard fieldPolicy.mayLearn else { return }
         // Whole sentences are the user's own writing. Choosing one is not a phrase worth keeping.
-        if suggestion.kind == .improvement || suggestion.insertion.contains(" ") && suggestion.kind == .preserve { return }
+        if suggestion.kind == .improvement || suggestion.kind == .amount || suggestion.insertion.contains(" ") && suggestion.kind == .preserve { return }
         let head = String(context.dropLast(suggestion.replacing.count))
         let previous = Tokenizer.trailingWord(in: head.trimmingCharacters(in: .whitespaces))
         if suggestion.kind == .preserve {
