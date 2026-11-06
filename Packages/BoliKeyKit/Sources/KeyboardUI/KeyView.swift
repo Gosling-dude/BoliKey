@@ -73,6 +73,14 @@ final class KeyView: UIView {
         label.text = text
     }
 
+    /// While the space bar moves the cursor, the keys go blank, like a trackpad.
+    func setTrackpadAppearance(_ on: Bool) {
+        UIView.animate(withDuration: 0.12, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
+            self.label.alpha = on ? 0 : 1
+            self.icon.alpha = on ? 0 : 1
+        }
+    }
+
     func refreshContent(shift: ShiftState) {
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .regular)
         func setIcon(_ name: String) {

@@ -30,6 +30,7 @@ There is no cloud or on-device model. A `RewriteProvider` protocol exists for on
 
 - URL and email fields do not get dedicated `.` `/` `@` keys.
 - The return key is not disabled for empty fields that ask for it.
+- The space-bar cursor moves left and right only. It has no line-to-line movement and no text selection. Apps decide how much of the text around the cursor a keyboard can see, and a drag stops at the edge of that.
 - No swipe typing, no text replacement import, no key customisation.
 - The Devanagari layout is custom and not a standard such as InScript. Typing conjuncts needs the `्` key, and there is no Roman-to-Devanagari typing mode, other than the optional suggestion and the style panel's conversion.
 - Personalised learning needs the user to tap suggestions, so it builds slowly. That is the privacy trade-off.
