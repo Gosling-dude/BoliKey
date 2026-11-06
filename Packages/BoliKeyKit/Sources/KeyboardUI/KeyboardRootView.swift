@@ -33,6 +33,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     private var settings = KeyboardSettings()
     private var globeControl: UIControl?
     private let haptics = UIImpactFeedbackGenerator(style: .light)
+    private let cursorHaptics = UISelectionFeedbackGenerator()
 
     private let engineQueue = DispatchQueue(label: "com.sumitxfermi.bolikey.engine", qos: .userInitiated)
     private var engine: BoliKeyEngine?
@@ -195,8 +196,10 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
 
     // MARK: KeyGridDelegate
 
+    private var hapticsAllowed: Bool { settings.hapticsEnabled && host?.hapticsAllowed == true }
+
     func gridDidTouchDownKey(_ grid: KeyGridView) {
-        if settings.hapticsEnabled, host?.hapticsAllowed == true {
+        if hapticsAllowed {
             haptics.impactOccurred()
         }
         if settings.keyClickEnabled { host?.playKeyClick() }
@@ -247,9 +250,27 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         refreshSuggestions()
     }
 
-    func grid(_ grid: KeyGridView, moveCursorBy offset: Int) {
-        host?.textProxy.moveCursor(by: offset)
+    func gridDidBeginCursorDrag(_ grid: KeyGridView) {
+        input.beginCursorDrag()
+        if hapticsAllowed {
+            cursorHaptics.prepare()
+            haptics.impactOccurred()
+        }
+    }
+
+    func grid(_ grid: KeyGridView, moveCursorBy characters: Int) {
+        guard input.moveCursor(byCharacters: characters) != 0 else { return }
+        if hapticsAllowed { cursorHaptics.selectionChanged() }
+    }
+
+    func gridDidEndCursorDrag(_ grid: KeyGridView) {
+        input.endCursorDrag()
         refreshSuggestions()
+        // The field reports the new cursor position asynchronously. Look again once it has.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.input.syncAutoCapitalization()
+            self?.refreshSuggestions()
+        }
     }
 
     // MARK: Suggestions
@@ -267,6 +288,11 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         // Secure fields: the context is never read at all.
         let policy = PrivacyManager.policy(for: host.fieldContext)
         guard policy.mayReadContext, policy.mayPredict else {
+            bar.setSuggestions([])
+            return
+        }
+        // Inside a word, a completion would leave the rest of the word stuck to its end.
+        if let next = host.textProxy.contextAfterCursor?.first, Tokenizer.isWordCharacter(next) {
             bar.setSuggestions([])
             return
         }

@@ -243,6 +243,31 @@ final class KeyboardUITests: KeyboardTestCase {
         XCTAssertLessThan(remaining, 10, "Holding delete keeps deleting")
     }
 
+    func testHoldingSpaceAndDraggingMovesTheCursor() {
+        launch()
+        let field = openTryField()
+        type("kal milte hai")
+        let start = element("key.Space").coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // Held past the long press, then dragged 40 points left: one character for every 9 points.
+        start.press(forDuration: 0.7, thenDragTo: start.withOffset(CGVector(dx: -40, dy: 0)))
+        XCTAssertEqual(value(of: field), "Kal milte hai", "Moving the cursor types no space")
+        shot("space-cursor")
+        type("x")
+        XCTAssertEqual(value(of: field), "Kal miltex hai", "Four characters to the left of the end")
+    }
+
+    func testSlidingOnSpaceMovesTheCursorWithoutHolding() {
+        launch()
+        let field = openTryField()
+        type("kal milte hai")
+        let start = element("key.Space").coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // The first 14 points start the slide, the next 31 move three characters.
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: -45, dy: 0)))
+        XCTAssertEqual(value(of: field), "Kal milte hai")
+        type("x")
+        XCTAssertEqual(value(of: field), "Kal milte xhai")
+    }
+
     func testLandscapeLayout() {
         launch()
         let field = openTryField()

@@ -26,6 +26,7 @@ BoliKey is a native iPhone keyboard for people who mix languages. It treats Hing
 | **Six writing styles** | On request, `kal meeting hai kya` can become `Is there a meeting scheduled for tomorrow?` |
 | **Learns from your choices only** | It learns from suggestions you tap, never from what you simply type. |
 | **Private** | No network code, no analytics, no account. |
+| **Space bar cursor** | Slide along the space bar, or hold it, to move the cursor. The keys go blank like a trackpad, and the cursor never stops inside an emoji or a Hindi letter. |
 
 ## Voice typing (planned)
 
