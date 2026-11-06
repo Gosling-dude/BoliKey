@@ -74,6 +74,28 @@ class KeyboardTestCase: XCTestCase {
     }
 
     func value(of field: XCUIElement) -> String { (field.value as? String) ?? "" }
+
+    /// The colour on screen at a point, from a screenshot.
+    func pixel(at point: CGPoint) -> (r: CGFloat, g: CGFloat, b: CGFloat) {
+        let image = XCUIScreen.main.screenshot().image
+        guard let cg = image.cgImage else { return (1, 1, 1) }
+        let scale = CGFloat(cg.width) / image.size.width
+        let x = Int(point.x * scale), y = Int(point.y * scale)
+        var data = [UInt8](repeating: 0, count: 4)
+        data.withUnsafeMutableBytes { bytes in
+            guard let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                          space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return }
+            context.draw(cg, in: CGRect(x: -CGFloat(x), y: CGFloat(y - cg.height + 1), width: CGFloat(cg.width), height: CGFloat(cg.height)))
+        }
+        return (CGFloat(data[0]) / 255, CGFloat(data[1]) / 255, CGFloat(data[2]) / 255)
+    }
+
+    /// The keyboard's background, sampled between the top two rows of keys.
+    func keyboardBackground(in target: XCUIApplication? = nil) -> (r: CGFloat, g: CGFloat, b: CGFloat) {
+        let q = element("key.q", in: target), a = element("key.a", in: target)
+        XCTAssertTrue(q.waitForExistence(timeout: 3))
+        return pixel(at: CGPoint(x: q.frame.midX, y: (q.frame.maxY + a.frame.minY) / 2))
+    }
 }
 
 final class KeyboardUITests: KeyboardTestCase {
@@ -495,6 +517,27 @@ final class CompanionAppUITests: KeyboardTestCase {
         type("hi")
         XCTAssertEqual(element("preview-text").label, "Hi")
         shot("in-app-preview")
+    }
+
+    func testThemeChoiceReachesTheKeyboard() {
+        launch()
+        _ = openTryField()
+        let classic = keyboardBackground()
+        XCTAssertGreaterThan(min(classic.r, classic.g, classic.b), 0.5, "Classic shows the light system background: \(classic)")
+        element("keyboard-done").tap()
+        goToTab("Settings")
+        element("settings-theme").tap()
+        let midnight = element("theme-midnight")
+        XCTAssertTrue(midnight.waitForExistence(timeout: 3))
+        shot("themes")
+        midnight.tap()
+        XCTAssertEqual(midnight.value as? String, "Selected")
+        goToTab("Try")
+        _ = openTryField()
+        Thread.sleep(forTimeInterval: 0.5)
+        let black = keyboardBackground()
+        shot("theme-midnight")
+        XCTAssertLessThan(max(black.r, black.g, black.b), 0.08, "Midnight paints the keyboard black: \(black)")
     }
 
     func testSettingsScreensOpen() {

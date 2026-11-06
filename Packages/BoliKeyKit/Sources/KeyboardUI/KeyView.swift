@@ -63,7 +63,7 @@ final class KeyView: UIView {
     private func applyColors() {
         let base = isFunctionKey ? theme.functionKeyBackground : theme.keyBackground
         backgroundColor = isPressed ? theme.keyPressed : (isAccented ? theme.accent : base)
-        let text: UIColor = (isAccented && !isPressed) ? .white : theme.keyText
+        let text: UIColor = (isAccented && !isPressed) ? theme.accentText : theme.keyText
         label.textColor = text
         icon.tintColor = text
         layer.shadowColor = theme.shadow.cgColor
@@ -170,8 +170,8 @@ final class KeyPopupView: UIView {
     private func updateSelection() {
         for (i, l) in labels.enumerated() {
             let isSelected = options.count > 1 && i == selectedIndex
-            l.backgroundColor = isSelected ? BoliBrand.indigo : .clear
-            l.textColor = isSelected ? .white : theme.keyText
+            l.backgroundColor = isSelected ? theme.popupSelection : .clear
+            l.textColor = isSelected ? theme.accentText : theme.keyText
         }
     }
 

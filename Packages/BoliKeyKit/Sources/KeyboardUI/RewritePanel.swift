@@ -74,7 +74,7 @@ final class RewritePanel: UIView {
             b.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
             let isActive = profile.id == activeProfileID
             b.backgroundColor = isActive ? theme.accent : theme.keyBackground
-            b.setTitleColor(isActive ? .white : theme.keyText, for: .normal)
+            b.setTitleColor(isActive ? theme.accentText : theme.keyText, for: .normal)
             b.layer.cornerRadius = 13
             b.layer.cornerCurve = .continuous
             b.tag = index

@@ -74,6 +74,8 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
     public var predictionsEnabled = true
     public var devanagariSuggestionsEnabled = false
     public var styleControlEnabled = true
+    /// The keyboard's colours, by theme ID. An ID this version does not know shows Classic.
+    public var keyboardTheme = "classic"
     public var languageMode: LanguageMode = .hinglish
     public var activeProfileID: String = "friends"
     public var profiles: [LanguageProfile] = LanguageProfile.defaults
@@ -100,6 +102,7 @@ public struct KeyboardSettings: Codable, Equatable, Sendable {
         predictionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .predictionsEnabled) ?? d.predictionsEnabled
         devanagariSuggestionsEnabled = try c.decodeIfPresent(Bool.self, forKey: .devanagariSuggestionsEnabled) ?? d.devanagariSuggestionsEnabled
         styleControlEnabled = try c.decodeIfPresent(Bool.self, forKey: .styleControlEnabled) ?? d.styleControlEnabled
+        keyboardTheme = try c.decodeIfPresent(String.self, forKey: .keyboardTheme) ?? d.keyboardTheme
         languageMode = try c.decodeIfPresent(LanguageMode.self, forKey: .languageMode) ?? d.languageMode
         activeProfileID = try c.decodeIfPresent(String.self, forKey: .activeProfileID) ?? d.activeProfileID
         profiles = try c.decodeIfPresent([LanguageProfile].self, forKey: .profiles) ?? d.profiles

@@ -24,6 +24,7 @@ BoliKey is a native iPhone keyboard for people who mix languages. It treats Hing
 | **Predicts offline** | Word completion, next word and phrases: `kal kya` offers `plan hai`, `scene hai`, `karna hai`. |
 | **Offers, never imposes** | `mai thik hu` offers `main theek hu` and `main bilkul theek hu`. Nothing changes until you tap. |
 | **Six writing styles** | On request, `kal meeting hai kya` can become `Is there a meeting scheduled for tomorrow?` |
+| **Themes** | Six colour themes, from Classic, which follows light and dark mode, to Indigo, Saffron, Chai, Mint and Midnight's pure black. Key and suggestion text in every theme meets WCAG AA contrast. |
 | **Learns from your choices only** | It learns from suggestions you tap, never from what you simply type. |
 | **Private** | No network code, no analytics, no account. |
 

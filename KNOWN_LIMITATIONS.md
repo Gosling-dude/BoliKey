@@ -36,6 +36,7 @@ There is no cloud or on-device model. A `RewriteProvider` protocol exists for on
 - The emoji list is a fixed, curated set with no search or recents.
 - iPad runs the iPhone layout scaled up, and has not been tuned or tested.
 - VoiceOver labels are set on all keys, but no one has tested it with VoiceOver running.
+- Themes are colours only, with no photo backgrounds. On iPhones with Face ID, iOS draws the strip under the keyboard with its own globe and microphone, and that strip keeps the system colour. Themes have only been seen on the simulator.
 
 ## Companion app
 
