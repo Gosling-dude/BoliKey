@@ -9,6 +9,7 @@ struct SettingsView: View {
             List {
                 Section {
                     NavigationLink("Keyboard") { KeyboardSettingsScreen() }.accessibilityIdentifier("settings-keyboard")
+                    NavigationLink("Theme") { ThemeSettingsScreen() }.accessibilityIdentifier("settings-theme")
                     NavigationLink("Language") { LanguageSettingsScreen() }.accessibilityIdentifier("settings-language")
                     NavigationLink("AI Preferences") { AIPreferencesScreen() }.accessibilityIdentifier("settings-ai")
                     NavigationLink("Privacy") { PrivacyDashboardScreen() }.accessibilityIdentifier("settings-privacy")
@@ -63,6 +64,14 @@ private struct LanguageSettingsScreen: View {
                 LanguagePicker(selection: $model.settings.languageMode)
                 Text("Each word is recognised on its own, so English and Hindi can mix in one sentence whichever you choose. This choice sets which predictions come first.")
                     .font(.footnote).foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 6) {
+                    Toggle("Type Hindi in English Letters", isOn: $model.settings.phoneticHindiEnabled)
+                        .accessibilityIdentifier("toggle-phonetic-hindi")
+                    Text("In Hindi, the keyboard shows the English keys. Type namaste and it becomes नमस्ते when the word ends. One backspace right after brings back what you typed, and the Hindi spelling you pick is remembered.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+                .padding(14)
+                .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color(.secondarySystemBackground)))
                 Text("Planned: \(LanguagePack.planned.map(\.displayName).joined(separator: ", "))")
                     .font(.footnote).foregroundStyle(.secondary)
             }

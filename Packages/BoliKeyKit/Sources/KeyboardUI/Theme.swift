@@ -1,5 +1,6 @@
 #if canImport(UIKit)
 import UIKit
+import KeyboardInputEngine
 
 /// BoliKey's visual identity, shared by the keyboard and the app.
 public enum BoliBrand {
@@ -8,49 +9,52 @@ public enum BoliBrand {
     public static let tagline = "Type the way you talk."
 }
 
+extension UIColor {
+    public convenience init(_ c: RGBA) {
+        self.init(red: CGFloat(c.r), green: CGFloat(c.g), blue: CGFloat(c.b), alpha: CGFloat(c.a))
+    }
+}
+
 struct KeyboardTheme {
+    /// Nil leaves the system's keyboard background showing.
+    let keyboardBackground: UIColor?
     let keyBackground: UIColor
     let keyPressed: UIColor
     let functionKeyBackground: UIColor
     let keyText: UIColor
     let shadow: UIColor
     let accent: UIColor
+    let accentText: UIColor
     let separator: UIColor
     let suggestionText: UIColor
     let secondaryText: UIColor
     let highlightBackground: UIColor
     let popupBackground: UIColor
     let panelBackground: UIColor
+    let popupSelection: UIColor
 
     static func resolve(dark: Bool) -> KeyboardTheme {
-        if dark {
-            return KeyboardTheme(
-                keyBackground: UIColor(white: 0.42, alpha: 0.55),
-                keyPressed: UIColor(white: 0.62, alpha: 0.7),
-                functionKeyBackground: UIColor(white: 0.26, alpha: 0.55),
-                keyText: .white,
-                shadow: UIColor(white: 0, alpha: 0.5),
-                accent: UIColor(red: 1.00, green: 0.62, blue: 0.30, alpha: 1),
-                separator: UIColor(white: 1, alpha: 0.16),
-                suggestionText: .white,
-                secondaryText: UIColor(white: 1, alpha: 0.6),
-                highlightBackground: UIColor(white: 1, alpha: 0.16),
-                popupBackground: UIColor(white: 0.36, alpha: 1),
-                panelBackground: UIColor(white: 0.12, alpha: 1))
-        }
+        resolve(palette: .classic, dark: dark)
+    }
+
+    static func resolve(palette: KeyboardPalette, dark: Bool) -> KeyboardTheme {
+        let c = palette.colors(dark: dark)
         return KeyboardTheme(
-            keyBackground: .white,
-            keyPressed: UIColor(white: 0.84, alpha: 1),
-            functionKeyBackground: UIColor(red: 0.68, green: 0.70, blue: 0.75, alpha: 1),
-            keyText: .black,
-            shadow: UIColor(white: 0, alpha: 0.32),
-            accent: BoliBrand.indigo,
-            separator: UIColor(white: 0, alpha: 0.14),
-            suggestionText: .black,
-            secondaryText: UIColor(white: 0, alpha: 0.55),
-            highlightBackground: .white,
-            popupBackground: .white,
-            panelBackground: UIColor(red: 0.84, green: 0.85, blue: 0.87, alpha: 1))
+            keyboardBackground: c.background.map { UIColor($0) },
+            keyBackground: UIColor(c.key),
+            keyPressed: UIColor(c.keyPressed),
+            functionKeyBackground: UIColor(c.functionKey),
+            keyText: UIColor(c.keyText),
+            shadow: UIColor(c.shadow),
+            accent: UIColor(c.accent),
+            accentText: UIColor(c.accentText),
+            separator: UIColor(c.separator),
+            suggestionText: UIColor(c.suggestionText),
+            secondaryText: UIColor(c.secondaryText),
+            highlightBackground: UIColor(c.highlight),
+            popupBackground: UIColor(c.popup),
+            panelBackground: UIColor(c.panel),
+            popupSelection: UIColor(c.popupSelection))
     }
 }
 #endif

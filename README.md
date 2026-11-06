@@ -21,12 +21,16 @@ BoliKey is a native iPhone keyboard for people who mix languages. It treats Hing
 | **Preserves your words** | Hinglish, English, Devanagari and mixed sentences are never rewritten or translated on their own. |
 | **Corrects only real typos** | `teh` becomes `the`, and one backspace restores what you typed and remembers that choice. You can turn this off. |
 | **Understands each word** | Language is detected per word, so `I will come kal around 8 baje` is understood as a mix. |
+| **Types Hindi in English letters** | Optional. In Hindi, type `namaste` on the English keys and get `नमस्ते` when the word ends. A word the lexicon lacks is spelled several ways and the one real Hindi text uses wins, so `bharat` becomes `भारत`. One backspace brings back what you typed. |
 | **Predicts offline** | Word completion, next word and phrases: `kal kya` offers `plan hai`, `scene hai`, `karna hai`. |
 | **Emoji from your words** | `party` offers 🎉 and `chai` offers ☕, added after the word and never instead of it. Search the emoji panel in Hinglish or English, and your recent emoji come first. |
 | **Offers, never imposes** | `mai thik hu` offers `main theek hu` and `main bilkul theek hu`. Nothing changes until you tap. |
+| **Writes rupees properly** | `500 rs`, `rs 500` and `500/-` offer `₹500`. `1.5 lakh` offers `₹1,50,000`, grouped the Indian way. A bare number is never touched: it may be a phone number or a year. |
 | **Six writing styles** | On request, `kal meeting hai kya` can become `Is there a meeting scheduled for tomorrow?` |
+| **Themes** | Six colour themes, from Classic, which follows light and dark mode, to Indigo, Saffron, Chai, Mint and Midnight's pure black. Key and suggestion text in every theme meets WCAG AA contrast. |
 | **Learns from your choices only** | It learns from suggestions you tap, never from what you simply type. |
 | **Private** | No network code, no analytics, no account. |
+| **Space bar cursor** | Slide along the space bar, or hold it, to move the cursor. The keys go blank like a trackpad, and the cursor never stops inside an emoji or a Hindi letter. |
 
 ## Voice typing (planned)
 

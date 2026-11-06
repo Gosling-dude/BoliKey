@@ -25,6 +25,8 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     private let storeFactory: () -> SharedStore
     private let input: InputController
     private var theme: KeyboardTheme
+    /// Paints the theme's background behind everything. Classic leaves it clear.
+    private let backdrop = UIView()
     private let bar: SuggestionBar
     private let grid: KeyGridView
     private lazy var emojiPanel: EmojiPanel = makeEmojiPanel()
@@ -33,10 +35,12 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     /// The emoji search, or nil when not searching. While searching, keys type into it, never into the field.
     private var emojiSearchQuery: String?
     private var recentEmoji: [String] = []
+    private var panelsLoaded: (emoji: Bool, rewrite: Bool, emojiSearch: Bool) = (false, false, false)
     private var page: KeyboardPage = .letters
     private var settings = KeyboardSettings()
     private var globeControl: UIControl?
     private let haptics = UIImpactFeedbackGenerator(style: .light)
+    private let cursorHaptics = UISelectionFeedbackGenerator()
 
     private let engineQueue = DispatchQueue(label: "com.sumitxfermi.bolikey.engine", qos: .userInitiated)
     private var engine: BoliKeyEngine?
@@ -55,6 +59,8 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         bar = SuggestionBar(theme: theme)
         grid = KeyGridView(theme: theme)
         super.init(frame: .zero)
+        backdrop.isUserInteractionEnabled = false
+        addSubview(backdrop)
         addSubview(bar)
         addSubview(grid)
         bar.delegate = self
@@ -63,6 +69,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         input.onStateChange = { [weak self] in self?.shiftChanged() }
         grid.globeFrameDidChange = { [weak self] frame in self?.placeGlobe(frame) }
         settings = SettingsStore.load(from: storeFactory())
+        applyTheme()
         applySettingsToUI()
         rebuildKeys()
         loadEngine()
@@ -102,12 +109,9 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         applySettingsToUI()
         applyFieldTraits()
         haptics.prepare()
-        // A reused keyboard can open in a field with a different appearance.
-        if let host {
-            theme = .resolve(dark: host.usesDarkAppearance)
-            bar.apply(theme: theme)
-            grid.apply(theme: theme)
-        }
+        // A reused keyboard can open in a field with a different appearance, or with a theme
+        // chosen in the app since it was last open.
+        applyTheme()
         if let host, host.prefersNumericPage, page == .letters {
             page = .numbers
         }
@@ -122,15 +126,23 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     }
 
     public func appearanceDidChange() {
+        applyTheme()
+        rebuildKeys()
+    }
+
+    /// The chosen theme's colours, in the field's light or dark appearance.
+    private func applyTheme() {
         guard let host else { return }
-        theme = .resolve(dark: host.usesDarkAppearance)
+        theme = .resolve(palette: KeyboardPalette.named(settings.keyboardTheme), dark: host.usesDarkAppearance)
+        backdrop.backgroundColor = theme.keyboardBackground
         bar.apply(theme: theme)
         grid.apply(theme: theme)
-        emojiPanel.apply(theme: theme)
-        emojiSearchBar.apply(theme: theme)
-        rewritePanel.apply(theme: theme)
-        rewritePanel.backgroundColor = theme.panelBackground
-        rebuildKeys()
+        if panelsLoaded.emoji { emojiPanel.apply(theme: theme) }
+        if panelsLoaded.emojiSearch { emojiSearchBar.apply(theme: theme) }
+        if panelsLoaded.rewrite {
+            rewritePanel.apply(theme: theme)
+            rewritePanel.backgroundColor = theme.panelBackground
+        }
     }
 
     public func globeNeedChanged() {
@@ -140,17 +152,25 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     private func applyFieldTraits() {
         guard let host else { return }
         let policy = PrivacyManager.policy(for: host.fieldContext)
-        input.configuration.autoCorrectAllowed = policy.mayAutoCorrect && settings.autoCorrectEnabled
+        input.configuration.autoCorrectAllowed = policy.mayAutoCorrect && wordsChangeAtSpace
         input.configuration.autoCapitalizationMode = host.autoCapitalizationMode
         if let engine {
             engineQueue.async { engine.fieldPolicy = policy }
         }
     }
 
+    /// Typing Hindi in English letters on the usual keys.
+    private var typesHindiPhonetically: Bool { settings.languageMode == .hindi && settings.phoneticHindiEnabled }
+
+    /// Whether finishing a word may change it: a typo fix, or Hindi turning into Devanagari.
+    private var wordsChangeAtSpace: Bool { settings.autoCorrectEnabled || typesHindiPhonetically }
+
     private func applySettingsToUI() {
-        input.configuration.autoCapitalizeEnabled = settings.autoCapitalizeEnabled
+        // Devanagari has no capital letters.
+        input.configuration.autoCapitalizeEnabled = settings.autoCapitalizeEnabled && !typesHindiPhonetically
         input.configuration.doubleSpacePeriodEnabled = settings.doubleSpacePeriodEnabled
-        input.configuration.autoCorrectAllowed = settings.autoCorrectEnabled
+        input.configuration.autoCorrectAllowed = wordsChangeAtSpace
+        input.configuration.dandaAfterDevanagari = settings.languageMode == .hindi
         bar.setLanguage(settings.languageMode)
         bar.showsStyleButton = settings.styleControlEnabled
     }
@@ -159,6 +179,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+        backdrop.frame = bounds
         bar.frame = CGRect(x: 0, y: 0, width: bounds.width, height: Self.suggestionBarHeight)
         let content = CGRect(x: 0, y: Self.suggestionBarHeight, width: bounds.width, height: bounds.height - Self.suggestionBarHeight)
         grid.frame = content.insetBy(dx: 0, dy: 0)
@@ -168,7 +189,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     }
 
     private func basePage() -> KeyboardPage {
-        settings.languageMode == .hindi ? .devanagari : .letters
+        settings.languageMode == .hindi && !settings.phoneticHindiEnabled ? .devanagari : .letters
     }
 
     private func rebuildKeys() {
@@ -181,7 +202,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
             return
         }
         if page == .letters || page == .devanagari { page = basePage() }
-        let spaceLabel = settings.languageMode == .hindi ? "स्पेस" : "BoliKey"
+        let spaceLabel = settings.languageMode == .hindi ? (settings.phoneticHindiEnabled ? "हिन्दी" : "स्पेस") : "BoliKey"
         var rows = KeyboardLayouts.rows(for: page, uppercase: input.shift.isUppercase)
         rows.append(KeyboardLayouts.bottomRow(page: page, needsGlobe: host.needsGlobeKey, returnLabel: host.returnKeyLabel, spaceLabel: spaceLabel, base: basePage()))
         grid.setKeys(rows, shift: page == .letters ? input.shift : .off)
@@ -210,8 +231,10 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
 
     // MARK: KeyGridDelegate
 
+    private var hapticsAllowed: Bool { settings.hapticsEnabled && host?.hapticsAllowed == true }
+
     func gridDidTouchDownKey(_ grid: KeyGridView) {
-        if settings.hapticsEnabled, host?.hapticsAllowed == true {
+        if hapticsAllowed {
             haptics.impactOccurred()
         }
         if settings.keyClickEnabled { host?.playKeyClick() }
@@ -274,9 +297,27 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         refreshSuggestions()
     }
 
-    func grid(_ grid: KeyGridView, moveCursorBy offset: Int) {
-        host?.textProxy.moveCursor(by: offset)
+    func gridDidBeginCursorDrag(_ grid: KeyGridView) {
+        input.beginCursorDrag()
+        if hapticsAllowed {
+            cursorHaptics.prepare()
+            haptics.impactOccurred()
+        }
+    }
+
+    func grid(_ grid: KeyGridView, moveCursorBy characters: Int) {
+        guard input.moveCursor(byCharacters: characters) != 0 else { return }
+        if hapticsAllowed { cursorHaptics.selectionChanged() }
+    }
+
+    func gridDidEndCursorDrag(_ grid: KeyGridView) {
+        input.endCursorDrag()
         refreshSuggestions()
+        // The field reports the new cursor position asynchronously. Look again once it has.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.input.syncAutoCapitalization()
+            self?.refreshSuggestions()
+        }
     }
 
     // MARK: Suggestions
@@ -294,6 +335,11 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         // Secure fields: the context is never read at all.
         let policy = PrivacyManager.policy(for: host.fieldContext)
         guard policy.mayReadContext, policy.mayPredict else {
+            bar.setSuggestions([])
+            return
+        }
+        // Inside a word, a completion would leave the rest of the word stuck to its end.
+        if let next = host.textProxy.contextAfterCursor?.first, Tokenizer.isWordCharacter(next) {
             bar.setSuggestions([])
             return
         }
@@ -334,6 +380,8 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
         let store = storeFactory()
         store.writePrivate(KeyboardLocalState(languageMode: settings.languageMode, activeProfileID: settings.activeProfileID, basedOnRevision: settings.revision), file: StoreFile.keyboardState)
         bar.setLanguage(settings.languageMode)
+        applySettingsToUI()
+        applyFieldTraits()
         page = basePage()
         rebuildKeys()
         input.syncAutoCapitalization()
@@ -370,6 +418,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     }
 
     private func makeRewritePanel() -> RewritePanel {
+        panelsLoaded.rewrite = true
         let panel = RewritePanel(theme: theme)
         panel.backgroundColor = theme.panelBackground
         panel.onClose = { [weak self] in self?.rewritePanel.removeFromSuperview() }
@@ -410,6 +459,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     // MARK: Emoji
 
     private func makeEmojiPanel() -> EmojiPanel {
+        panelsLoaded.emoji = true
         let panel = EmojiPanel(theme: theme)
         panel.onEmoji = { [weak self] emoji in self?.insertEmoji(emoji) }
         panel.onBackspace = { [weak self] in
@@ -453,6 +503,7 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
     // MARK: Emoji search
 
     private func makeEmojiSearchBar() -> EmojiSearchBar {
+        panelsLoaded.emojiSearch = true
         let bar = EmojiSearchBar(theme: theme)
         bar.onSelect = { [weak self] emoji in self?.insertEmoji(emoji) }
         bar.onClose = { [weak self] in self?.endEmojiSearch(showingPanel: true) }

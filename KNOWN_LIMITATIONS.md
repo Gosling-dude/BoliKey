@@ -17,8 +17,10 @@ No iPhone or signing identity was available. Until these are tested on a device,
 - **Hinglish spellings are endless.** An unlisted spelling is preserved, which is the safe failure, but it gets weaker suggestions.
 - **English predictions lean formal in places.** Tatoeba sentences are translation exercises rather than chat.
 - **Devanagari predictions rest on about 14,500 sentences**, and transliteration of unknown words is approximate. It does not handle schwa deletion, so `sita` gives `सित`.
+- **Typing Hindi in English letters** finds a word in the lexicon or the Devanagari vocabulary, so there `sita` gives `सीता`. Any other word is spelled by rule, so `pardesi` gives `पर्देसी`, not `परदेसी`, until the right spelling is picked once. Common English words stay in English letters, which can be wrong for a word that is also Hindi.
 - Words that are common in both languages, like `main` and `to`, can still be mislabelled in very short sentences. This only affects ranking, because nothing is changed automatically on the strength of a language tag.
 - Marathi, Punjabi and the other planned languages are not available. Their text is preserved but gets no suggestions.
+- Rupee amounts are recognised in Roman script and Western digits only: `500 rs` and `2 lakh`, not `५०० रुपये`.
 
 ## Writing styles
 
@@ -30,12 +32,14 @@ There is no cloud or on-device model. A `RewriteProvider` protocol exists for on
 
 - URL and email fields do not get dedicated `.` `/` `@` keys.
 - The return key is not disabled for empty fields that ask for it.
+- The space-bar cursor moves left and right only. It has no line-to-line movement and no text selection. Apps decide how much of the text around the cursor a keyboard can see, and a drag stops at the edge of that.
 - No swipe typing, no text replacement import, no key customisation.
-- The Devanagari layout is custom and not a standard such as InScript. Typing conjuncts needs the `्` key, and there is no Roman-to-Devanagari typing mode, other than the optional suggestion and the style panel's conversion.
+- The Devanagari layout is custom and not a standard such as InScript, and typing conjuncts on it needs the `्` key. Typing Hindi in English letters is an option in Settings, Language.
 - Personalised learning needs the user to tap suggestions, so it builds slowly. That is the privacy trade-off.
 - The emoji panel is a fixed, curated set. Emoji suggestions and search come from a hand-written table of about 330 Hinglish, English and Hindi words, plus each emoji's English Unicode name, so plenty of words have no emoji.
 - iPad runs the iPhone layout scaled up, and has not been tuned or tested.
 - VoiceOver labels are set on all keys, but no one has tested it with VoiceOver running.
+- Themes are colours only, with no photo backgrounds. On iPhones with Face ID, iOS draws the strip under the keyboard with its own globe and microphone, and that strip keeps the system colour. Themes have only been seen on the simulator.
 
 ## Companion app
 

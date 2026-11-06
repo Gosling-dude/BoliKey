@@ -74,6 +74,28 @@ class KeyboardTestCase: XCTestCase {
     }
 
     func value(of field: XCUIElement) -> String { (field.value as? String) ?? "" }
+
+    /// The colour on screen at a point, from a screenshot.
+    func pixel(at point: CGPoint) -> (r: CGFloat, g: CGFloat, b: CGFloat) {
+        let image = XCUIScreen.main.screenshot().image
+        guard let cg = image.cgImage else { return (1, 1, 1) }
+        let scale = CGFloat(cg.width) / image.size.width
+        let x = Int(point.x * scale), y = Int(point.y * scale)
+        var data = [UInt8](repeating: 0, count: 4)
+        data.withUnsafeMutableBytes { bytes in
+            guard let context = CGContext(data: bytes.baseAddress, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                                          space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return }
+            context.draw(cg, in: CGRect(x: -CGFloat(x), y: CGFloat(y - cg.height + 1), width: CGFloat(cg.width), height: CGFloat(cg.height)))
+        }
+        return (CGFloat(data[0]) / 255, CGFloat(data[1]) / 255, CGFloat(data[2]) / 255)
+    }
+
+    /// The keyboard's background, sampled between the top two rows of keys.
+    func keyboardBackground(in target: XCUIApplication? = nil) -> (r: CGFloat, g: CGFloat, b: CGFloat) {
+        let q = element("key.q", in: target), a = element("key.a", in: target)
+        XCTAssertTrue(q.waitForExistence(timeout: 3))
+        return pixel(at: CGPoint(x: q.frame.midX, y: (q.frame.maxY + a.frame.minY) / 2))
+    }
 }
 
 final class KeyboardUITests: KeyboardTestCase {
@@ -234,6 +256,22 @@ final class KeyboardUITests: KeyboardTestCase {
         XCTAssertEqual(value(of: field), "Ok5.#")
     }
 
+    func testRupeeAmountIsOfferedTheIndianWay() {
+        launch()
+        let field = openTryField()
+        element("key.Numbers").tap()
+        XCTAssertTrue(element("key.1").waitForExistence(timeout: 2))
+        // A space on the numbers page goes back to the letters.
+        type("150000 ")
+        type("rs")
+        let amount = waitForSuggestion("₹1,50,000")
+        XCTAssertNotNil(amount, "Lakh grouping, with the rupee sign")
+        XCTAssertEqual(value(of: field), "150000 rs", "Offered, not applied")
+        shot("rupee-amount")
+        amount?.tap()
+        XCTAssertEqual(value(of: field), "₹1,50,000 ")
+    }
+
     func testHoldingBackspaceRepeats() {
         launch()
         let field = openTryField()
@@ -241,6 +279,31 @@ final class KeyboardUITests: KeyboardTestCase {
         element("key.Delete").press(forDuration: 1.3)
         let remaining = value(of: field).count
         XCTAssertLessThan(remaining, 10, "Holding delete keeps deleting")
+    }
+
+    func testHoldingSpaceAndDraggingMovesTheCursor() {
+        launch()
+        let field = openTryField()
+        type("kal milte hai")
+        let start = element("key.Space").coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // Held past the long press, then dragged 40 points left: one character for every 9 points.
+        start.press(forDuration: 0.7, thenDragTo: start.withOffset(CGVector(dx: -40, dy: 0)))
+        XCTAssertEqual(value(of: field), "Kal milte hai", "Moving the cursor types no space")
+        shot("space-cursor")
+        type("x")
+        XCTAssertEqual(value(of: field), "Kal miltex hai", "Four characters to the left of the end")
+    }
+
+    func testSlidingOnSpaceMovesTheCursorWithoutHolding() {
+        launch()
+        let field = openTryField()
+        type("kal milte hai")
+        let start = element("key.Space").coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // The first 14 points start the slide, the next 31 move three characters.
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: -45, dy: 0)))
+        XCTAssertEqual(value(of: field), "Kal milte hai")
+        type("x")
+        XCTAssertEqual(value(of: field), "Kal milte xhai")
     }
 
     func testLandscapeLayout() {
@@ -439,6 +502,29 @@ final class CompanionAppUITests: KeyboardTestCase {
         XCTAssertEqual(value(of: field), "See teh ", "With correction off the typo must stay")
     }
 
+    func testHindiInEnglishLettersBecomesDevanagari() {
+        launch()
+        goToTab("Settings")
+        element("settings-language").tap()
+        element("language-hindi").tap()
+        let toggle = app.switches["toggle-phonetic-hindi"]
+        XCTAssertTrue(toggle.waitForExistence(timeout: 3))
+        toggle.switches.firstMatch.exists ? toggle.switches.firstMatch.tap() : toggle.tap()
+        shot("phonetic-hindi-setting")
+        goToTab("Try")
+        let field = openTryField()
+        XCTAssertTrue(element("key.n").waitForExistence(timeout: 2), "The English keys, in Hindi")
+        type("namaste ")
+        XCTAssertEqual(value(of: field), "नमस्ते ")
+        type("kal milte hai")
+        XCTAssertNotNil(waitForSuggestion("है"), "What the word will become is shown before it happens")
+        shot("phonetic-hindi")
+        type(" ")
+        XCTAssertEqual(value(of: field), "नमस्ते कल मिलते है ")
+        element("key.Delete").tap()
+        XCTAssertEqual(value(of: field), "नमस्ते कल मिलते hai", "One backspace brings back what was typed")
+    }
+
     func testDictionaryWordReachesKeyboard() {
         launch()
         goToTab("Dictionary")
@@ -550,6 +636,27 @@ final class CompanionAppUITests: KeyboardTestCase {
         type("hi")
         XCTAssertEqual(element("preview-text").label, "Hi")
         shot("in-app-preview")
+    }
+
+    func testThemeChoiceReachesTheKeyboard() {
+        launch()
+        _ = openTryField()
+        let classic = keyboardBackground()
+        XCTAssertGreaterThan(min(classic.r, classic.g, classic.b), 0.5, "Classic shows the light system background: \(classic)")
+        element("keyboard-done").tap()
+        goToTab("Settings")
+        element("settings-theme").tap()
+        let midnight = element("theme-midnight")
+        XCTAssertTrue(midnight.waitForExistence(timeout: 3))
+        shot("themes")
+        midnight.tap()
+        XCTAssertEqual(midnight.value as? String, "Selected")
+        goToTab("Try")
+        _ = openTryField()
+        Thread.sleep(forTimeInterval: 0.5)
+        let black = keyboardBackground()
+        shot("theme-midnight")
+        XCTAssertLessThan(max(black.r, black.g, black.b), 0.08, "Midnight paints the keyboard black: \(black)")
     }
 
     func testSettingsScreensOpen() {

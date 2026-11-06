@@ -6,7 +6,10 @@ protocol KeyGridDelegate: AnyObject {
     func grid(_ grid: KeyGridView, didTrigger action: KeyAction)
     func grid(_ grid: KeyGridView, didChooseAlternate text: String)
     func gridDidRepeatBackspace(_ grid: KeyGridView, byWord: Bool)
-    func grid(_ grid: KeyGridView, moveCursorBy offset: Int)
+    func gridDidBeginCursorDrag(_ grid: KeyGridView)
+    /// Whole characters, negative to the left.
+    func grid(_ grid: KeyGridView, moveCursorBy characters: Int)
+    func gridDidEndCursorDrag(_ grid: KeyGridView)
     func gridDidTouchDownKey(_ grid: KeyGridView)
 }
 
@@ -23,6 +26,11 @@ final class KeyGridView: UIView {
     private let horizontalGap: CGFloat = 6
     private let verticalGap: CGFloat = 11
     private let sideInset: CGFloat = 3
+    /// Sliding this far along the space bar moves the cursor without waiting for a long press.
+    static let cursorSlideThreshold: CGFloat = 14
+    /// Finger travel for each character the cursor moves.
+    static let cursorStep: CGFloat = 9
+    private static let cursorHoldDelay: TimeInterval = 0.4
 
     private final class ActiveTouch {
         let key: KeyView
@@ -31,6 +39,7 @@ final class KeyGridView: UIView {
         var repeats = 0
         var showingAlternates = false
         var draggingCursor = false
+        /// Where the finger was at the last whole cursor step, or its latest position before a drag.
         var lastCursorX: CGFloat
         init(key: KeyView, x: CGFloat) {
             self.key = key
@@ -41,6 +50,8 @@ final class KeyGridView: UIView {
     private var active: [ObjectIdentifier: ActiveTouch] = [:]
     private var pendingOrder: [ObjectIdentifier] = []
     private var popup: KeyPopupView?
+    /// The touch moving the cursor. While there is one, the keyboard is a trackpad and other keys do nothing.
+    private var cursorTouch: ActiveTouch?
 
     init(theme: KeyboardTheme) {
         self.theme = theme
@@ -151,7 +162,7 @@ final class KeyGridView: UIView {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let point = touch.location(in: self)
-            guard let key = key(at: point) else { continue }
+            guard cursorTouch == nil, let key = key(at: point) else { continue }
             // Rollover: the previous character is committed the moment another finger lands.
             commitPendingCharacters()
             let state = ActiveTouch(key: key, x: point.x)
@@ -183,8 +194,9 @@ final class KeyGridView: UIView {
         case .shift:
             delegate?.grid(self, didTrigger: .shift)
         case .space:
-            state.timer = .scheduledTimer(withTimeInterval: 0.4, repeats: false) { [weak state] _ in
-                state?.draggingCursor = true
+            state.timer = .scheduledTimer(withTimeInterval: Self.cursorHoldDelay, repeats: false) { [weak self, weak state] _ in
+                guard let self, let state else { return }
+                self.beginCursorDrag(state, from: state.lastCursorX)
             }
         default:
             break
@@ -211,14 +223,47 @@ final class KeyGridView: UIView {
             let point = touch.location(in: self)
             if state.showingAlternates, let popup {
                 popup.select(x: touch.location(in: popup).x)
-            } else if state.draggingCursor {
-                let delta = point.x - state.lastCursorX
-                if abs(delta) >= 9 {
-                    delegate?.grid(self, moveCursorBy: delta > 0 ? 1 : -1)
-                    state.lastCursorX = point.x
+            } else if state.key.definition.action == .space {
+                if !state.draggingCursor {
+                    let slide = point.x - state.startX
+                    if abs(slide) >= Self.cursorSlideThreshold {
+                        // Counted from where the slide crossed the threshold, so a quick flick moves too.
+                        beginCursorDrag(state, from: state.startX + (slide > 0 ? 1 : -1) * Self.cursorSlideThreshold)
+                    } else {
+                        state.lastCursorX = point.x
+                    }
                 }
+                if state.draggingCursor { advanceCursor(state, to: point.x) }
             }
         }
+    }
+
+    // MARK: Cursor
+
+    private func beginCursorDrag(_ state: ActiveTouch, from x: CGFloat) {
+        guard !state.draggingCursor, cursorTouch == nil else { return }
+        state.timer?.invalidate()
+        state.draggingCursor = true
+        state.lastCursorX = x
+        cursorTouch = state
+        hidePopup()
+        keyViews.joined().forEach { $0.setTrackpadAppearance(true) }
+        delegate?.gridDidBeginCursorDrag(self)
+    }
+
+    private func advanceCursor(_ state: ActiveTouch, to x: CGFloat) {
+        // The remainder carries over, so a slow drag and a fast one move the same distance.
+        let steps = Int((x - state.lastCursorX) / Self.cursorStep)
+        guard steps != 0 else { return }
+        state.lastCursorX += CGFloat(steps) * Self.cursorStep
+        delegate?.grid(self, moveCursorBy: steps)
+    }
+
+    private func endCursorDrag() {
+        guard cursorTouch != nil else { return }
+        cursorTouch = nil
+        keyViews.joined().forEach { $0.setTrackpadAppearance(false) }
+        delegate?.gridDidEndCursorDrag(self)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -226,6 +271,7 @@ final class KeyGridView: UIView {
             let id = ObjectIdentifier(touch)
             guard let state = active.removeValue(forKey: id) else { continue }
             pendingOrder.removeAll { $0 == id }
+            if state.draggingCursor { advanceCursor(state, to: touch.location(in: self).x) }
             finish(state)
         }
     }
@@ -238,6 +284,7 @@ final class KeyGridView: UIView {
             state.timer?.invalidate()
             state.key.isPressed = false
             hidePopup()
+            if state === cursorTouch { endCursorDrag() }
         }
     }
 
@@ -255,7 +302,11 @@ final class KeyGridView: UIView {
         case .backspace, .shift:
             break
         case .space:
-            if !state.draggingCursor { delegate?.grid(self, didTrigger: .space) }
+            if state.draggingCursor {
+                endCursorDrag()
+            } else {
+                delegate?.grid(self, didTrigger: .space)
+            }
         default:
             delegate?.grid(self, didTrigger: state.key.definition.action)
         }
@@ -281,6 +332,7 @@ final class KeyGridView: UIView {
         active.removeAll()
         pendingOrder.removeAll()
         hidePopup()
+        endCursorDrag()
     }
 
     // MARK: Popups

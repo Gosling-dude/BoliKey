@@ -63,7 +63,7 @@ final class KeyView: UIView {
     private func applyColors() {
         let base = isFunctionKey ? theme.functionKeyBackground : theme.keyBackground
         backgroundColor = isPressed ? theme.keyPressed : (isAccented ? theme.accent : base)
-        let text: UIColor = (isAccented && !isPressed) ? .white : theme.keyText
+        let text: UIColor = (isAccented && !isPressed) ? theme.accentText : theme.keyText
         label.textColor = text
         icon.tintColor = text
         layer.shadowColor = theme.shadow.cgColor
@@ -71,6 +71,14 @@ final class KeyView: UIView {
 
     func setLabel(_ text: String) {
         label.text = text
+    }
+
+    /// While the space bar moves the cursor, the keys go blank, like a trackpad.
+    func setTrackpadAppearance(_ on: Bool) {
+        UIView.animate(withDuration: 0.12, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
+            self.label.alpha = on ? 0 : 1
+            self.icon.alpha = on ? 0 : 1
+        }
     }
 
     func refreshContent(shift: ShiftState) {
@@ -170,8 +178,8 @@ final class KeyPopupView: UIView {
     private func updateSelection() {
         for (i, l) in labels.enumerated() {
             let isSelected = options.count > 1 && i == selectedIndex
-            l.backgroundColor = isSelected ? BoliBrand.indigo : .clear
-            l.textColor = isSelected ? .white : theme.keyText
+            l.backgroundColor = isSelected ? theme.popupSelection : .clear
+            l.textColor = isSelected ? theme.accentText : theme.keyText
         }
     }
 

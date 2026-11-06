@@ -7,6 +7,8 @@ public protocol TextProxying: AnyObject {
     var contextAfterCursor: String? { get }
     func insert(_ text: String)
     func deleteBackward()
+    /// Moves the cursor by `offset` UTF-16 code units, which is how
+    /// `adjustTextPosition(byCharacterOffset:)` counts. Negative moves left.
     func moveCursor(by offset: Int)
 }
 
@@ -22,6 +24,8 @@ public struct InputConfiguration: Equatable, Sendable {
     public var autoCapitalizationMode: AutoCapitalizationMode = .sentences
     public var doubleSpacePeriodEnabled = true
     public var autoCorrectAllowed = true
+    /// A full stop typed after Hindi, or the double-space shortcut there, writes a danda: ।
+    public var dandaAfterDevanagari = false
     public init() {}
 }
 
@@ -45,6 +49,7 @@ public final class InputController {
     /// A space the keyboard added itself after a suggestion. Punctuation replaces it.
     private var autoSpaceAdded = false
     private let doubleTapWindow: TimeInterval = 0.35
+    private var cursorDrag: CursorDragSession?
     public var now: () -> TimeInterval = { Date().timeIntervalSinceReferenceDate }
 
     public init(proxy: TextProxying) {
@@ -81,6 +86,11 @@ public final class InputController {
             applyCorrectionIfNeeded(separator: raw)
         }
         lastCorrection = (raw.first.map { isWordCharacter($0) } ?? false) ? nil : lastCorrection
+        // After the word before it became Devanagari, so that "namaste." ends in a danda.
+        if raw == ".", configuration.dandaAfterDevanagari, let last = proxy.contextBeforeCursor?.last, Self.isDevanagari(last) {
+            text = "।"
+            if let c = lastCorrection { lastCorrection = AppliedCorrection(typed: c.typed, corrected: c.corrected, separator: text) }
+        }
         proxy.insert(text)
         lastSpaceTime = 0
         let after = shift.afterCharacter
@@ -104,7 +114,7 @@ public final class InputController {
         if configuration.doubleSpacePeriodEnabled, t - lastSpaceTime < 0.4, before.hasSuffix(" "),
            let mark = before.dropLast().last, mark.isLetter || mark.isNumber || isMarkCharacter(mark) {
             proxy.deleteBackward()
-            proxy.insert(". ")
+            proxy.insert(configuration.dandaAfterDevanagari && Self.isDevanagari(mark) ? "। " : ". ")
             lastSpaceTime = 0
             autoSpaceAdded = false
             syncAutoCapitalization()
@@ -165,6 +175,44 @@ public final class InputController {
         syncAutoCapitalization()
     }
 
+    // MARK: Cursor
+
+    /// Starts a space-bar drag, capturing the text around the cursor once.
+    public func beginCursorDrag() {
+        cursorDrag = CursorDragSession(before: proxy.contextBeforeCursor ?? "", after: proxy.contextAfterCursor ?? "")
+        forgetRecentEdits()
+    }
+
+    /// Moves the cursor by whole characters, negative to the left. Returns how many it moved.
+    @discardableResult
+    public func moveCursor(byCharacters steps: Int) -> Int {
+        guard steps != 0 else { return 0 }
+        var session = cursorDrag ?? CursorDragSession(before: proxy.contextBeforeCursor ?? "", after: proxy.contextAfterCursor ?? "")
+        var (offset, moved) = session.offset(forSteps: steps)
+        // Already at the edge of what the app shared: it may share more now that the cursor is there.
+        if moved == 0, session.extend(before: proxy.contextBeforeCursor ?? "", after: proxy.contextAfterCursor ?? "") {
+            (offset, moved) = session.offset(forSteps: steps)
+        }
+        if cursorDrag != nil { cursorDrag = session }
+        guard offset != 0 else { return 0 }
+        proxy.moveCursor(by: offset)
+        forgetRecentEdits()
+        return moved
+    }
+
+    public func endCursorDrag() {
+        cursorDrag = nil
+        syncAutoCapitalization()
+    }
+
+    /// Undoing a correction, replacing an automatic space and the double-space period all refer to
+    /// the text just typed. Once the cursor has moved, none of them apply.
+    private func forgetRecentEdits() {
+        lastCorrection = nil
+        autoSpaceAdded = false
+        lastSpaceTime = 0
+    }
+
     /// Replaces `replacing`, the end of the text, with `text`.
     public func accept(replacing: String, with text: String, addSpace: Bool) {
         lastCorrection = nil
@@ -199,6 +247,8 @@ public final class InputController {
     private func applyCorrectionIfNeeded(separator: String) {
         lastCorrection = nil
         guard configuration.autoCorrectAllowed, let delegate, let before = proxy.contextBeforeCursor else { return }
+        // With the cursor inside a word, the letters before it are only part of that word.
+        if let next = proxy.contextAfterCursor?.first, isWordCharacter(next) { return }
         let word = Self.trailingWord(in: before)
         guard !word.isEmpty else { return }
         let context = String(before.dropLast(word.count))
@@ -214,6 +264,10 @@ public final class InputController {
 
     private func isMarkCharacter(_ ch: Character) -> Bool {
         ch.unicodeScalars.contains { $0.properties.generalCategory == .nonspacingMark || $0.properties.generalCategory == .spacingMark }
+    }
+
+    static func isDevanagari(_ ch: Character) -> Bool {
+        ch.unicodeScalars.contains { (0x0900...0x097F).contains($0.value) }
     }
 
     static func trailingWord(in text: String) -> String {
@@ -232,18 +286,50 @@ public final class InputController {
 
 /// A plain text buffer implementing the proxy, used by tests and the in-app preview.
 public final class StringTextProxy: TextProxying {
-    public var text: String
+    /// Setting the text puts the cursor at its end.
+    public var text: String {
+        get { storage }
+        set {
+            storage = newValue
+            cursor = newValue.utf16.count
+        }
+    }
     public var onChange: ((String) -> Void)?
-    public init(_ text: String = "") { self.text = text }
-    public var contextBeforeCursor: String? { text }
-    public var contextAfterCursor: String? { nil }
+    private var storage: String
+    /// The cursor, in UTF-16 code units from the start, like a text field's.
+    public private(set) var cursor: Int
+
+    public init(_ text: String = "") {
+        storage = text
+        cursor = text.utf16.count
+    }
+
+    private var cursorIndex: String.Index { String.Index(utf16Offset: cursor, in: storage) }
+
+    public var contextBeforeCursor: String? { String(storage[..<cursorIndex]) }
+    public var contextAfterCursor: String? { String(storage[cursorIndex...]) }
+
     public func insert(_ s: String) {
-        text += s
-        onChange?(text)
+        storage.insert(contentsOf: s, at: cursorIndex)
+        cursor += s.utf16.count
+        onChange?(storage)
     }
+
     public func deleteBackward() {
-        if !text.isEmpty { text.removeLast() }
-        onChange?(text)
+        let end = cursorIndex
+        if end > storage.startIndex {
+            let start = storage.index(before: end)
+            cursor -= storage[start..<end].utf16.count
+            storage.removeSubrange(start..<end)
+        }
+        onChange?(storage)
     }
-    public func moveCursor(by offset: Int) {}
+
+    /// Moves like a text field, which never leaves the cursor inside a character.
+    public func moveCursor(by offset: Int) {
+        let target = max(0, min(storage.utf16.count, cursor + offset))
+        var boundaries = storage.indices.map { $0.utf16Offset(in: storage) }
+        boundaries.append(storage.utf16.count)
+        cursor = offset < 0 ? (boundaries.last { $0 <= target } ?? 0) : (boundaries.first { $0 >= target } ?? storage.utf16.count)
+    }
 }
