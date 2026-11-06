@@ -52,6 +52,9 @@ final class KeyGridView: UIView {
     private var popup: KeyPopupView?
     /// The touch moving the cursor. While there is one, the keyboard is a trackpad and other keys do nothing.
     private var cursorTouch: ActiveTouch?
+    /// Off while the keys type into something other than the field, such as the emoji search.
+    /// The space bar then only types a space.
+    var allowsCursorDrag = true
 
     init(theme: KeyboardTheme) {
         self.theme = theme
@@ -241,7 +244,7 @@ final class KeyGridView: UIView {
     // MARK: Cursor
 
     private func beginCursorDrag(_ state: ActiveTouch, from x: CGFloat) {
-        guard !state.draggingCursor, cursorTouch == nil else { return }
+        guard allowsCursorDrag, !state.draggingCursor, cursorTouch == nil else { return }
         state.timer?.invalidate()
         state.draggingCursor = true
         state.lastCursorX = x

@@ -381,6 +381,26 @@ final class KeyboardUITests: KeyboardTestCase {
         XCTAssertEqual(value(of: field), "Ok ☕a")
     }
 
+    func testSpaceBarInEmojiSearchNeverMovesTheCursor() {
+        launch()
+        let field = openTryField()
+        type("ok ")
+        element("key.Emoji").tap()
+        XCTAssertTrue(element("emoji-search").waitForExistence(timeout: 2))
+        element("emoji-search").tap()
+        XCTAssertTrue(element("emoji-search-query").waitForExistence(timeout: 2))
+        type("chai")
+        let space = element("key.Space").coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        // On the letters, this hold and drag moves the cursor four characters to the left.
+        space.press(forDuration: 0.7, thenDragTo: space.withOffset(CGVector(dx: -40, dy: 0)))
+        XCTAssertEqual(value(of: field), "Ok ", "The space went into the search")
+        let result = element("emoji-result-0")
+        XCTAssertTrue(result.waitForExistence(timeout: 2))
+        XCTAssertEqual(result.label, "☕")
+        result.tap()
+        XCTAssertEqual(value(of: field), "Ok ☕", "The emoji goes where the cursor was")
+    }
+
     func testPickedEmojiLeadTheRecentRow() {
         launch()
         let field = openTryField()

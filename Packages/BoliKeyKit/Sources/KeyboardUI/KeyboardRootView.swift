@@ -194,6 +194,9 @@ public final class KeyboardRootView: UIView, KeyGridDelegate, SuggestionBarDeleg
 
     private func rebuildKeys() {
         guard let host else { return }
+        // A search's space bar types into the search. Moving the cursor in the field would put the
+        // emoji somewhere the user did not choose.
+        grid.allowsCursorDrag = emojiSearchQuery == nil
         // Emoji keywords are in Roman letters, so a search always gets the English layout.
         if emojiSearchQuery != nil {
             var rows = KeyboardLayouts.rows(for: .letters, uppercase: false)
